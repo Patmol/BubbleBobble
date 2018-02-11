@@ -55,16 +55,16 @@
 
 \section{Introduction}
 
-L'object de ce projet est de r\'ealiser notre propre version du jeu video Bubble-Bobble~\cite{strategywiki}. Ce jeu video sera r\'ealis\'e \`a l'aide du langage de programmation C ainsi qu'avec la biblioth\`eque graphique OpenGL et de la biblioth\`eque GLUT. 
+L'object de ce projet est de r\'ealiser notre propre version du jeu vid\'eo Bubble-Bobble~\cite{strategywiki}. Ce jeu vid\'eo sera r\'ealis\'e \`a l'aide du langage de programmation C ainsi qu'avec les biblioth\`eques graphiques OpenGL et GLUT. 
 
-La r\'ealisation du jeu est divis\'e en 2 \'etapes, une première \'etape sera de r\'ealiser le coeur du jeu, c'est \`a dire, un personne fonctionnel, la pr\'esence d'ennemis le tout dans un seul niveau. La deuxi\`eme partie sera libre et l'objectif de celle-ci sera d'am\'eliorer de la meilleur des façons possible le jeu via, par exemple, l'ajout d'une intelligence artificielle pour les ennemis, la cr\'eation de plusieurs ennemis, de plusieurs niveaux, ...
+La r\'ealisation du jeu est divis\'ee en 2 \'etapes. Une première \'etape, impos\'ee, sera de r\'ealiser le coeur du jeu, c'est \`a dire un personnage fonctionnel et la pr\'esence d'ennemis, le tout dans un seul niveau. La deuxi\`eme partie sera libre et l'objectif de celle-ci sera d'am\'eliorer le jeu de la meilleur des fa\c cons via, par exemple, l'ajout d'une intelligence artificielle pour les ennemis, la cr\'eation de plusieurs ennemis, de plusieurs niveaux, ...
 
 \section{Projet}
 \subsection{Pr\'esentation des \'ecrans}
 
-\subsubsection{Accueil}
+\subsubsection{\'Ecran d'accueil}
 
-L'\'ecran sera affich\'e \`a l'ouveture du programme. Sur cet \'ecran (Figure~\ref{fig:mainScreen}), il y aura le titre du jeu ainsi qu'un menu de s\'election permettant d'acc\'eder aux autres \'ecrans de l'application.
+L'\'ecran d'accueil sera affich\'e \`a l'ouveture du programme. Sur cet \'ecran (Figure~\ref{fig:mainScreen}), il y aura le titre du jeu ainsi qu'un menu de s\'election permettant d'acc\'eder aux autres \'ecrans de l'application.
 
 \begin{figure}[htbp]
 	\begin{center}
@@ -74,9 +74,9 @@ L'\'ecran sera affich\'e \`a l'ouveture du programme. Sur cet \'ecran (Figure~\r
 	\end{center}
 \end{figure}
 
-\subsubsection{Contr\^oles}
+\subsubsection{\'Ecran de contr\^oles}
 
-Cet \'ecran (Figure~\ref{fig:loadingScreen}) sera affich\'e avant chaque partie afin de pr\'esenter au joueur les contr\^oles du jeu afin qu'il puisse facilement savoir comment jouer au jeu.
+Cet \'ecran (Figure~\ref{fig:loadingScreen}) sera affich\'e avant chaque partie afin de pr\'esenter au joueur les contr\^oles du jeu afin qu'il puisse facilement comprendre comment jouer au jeu.
 
 \begin{figure}[htbp]
 	\begin{center}
@@ -86,9 +86,9 @@ Cet \'ecran (Figure~\ref{fig:loadingScreen}) sera affich\'e avant chaque partie 
 	\end{center}
 \end{figure}
 
-\subsubsection{Jeu}
+\subsubsection{\'Ecran de jeu}
 
-\'Ecran principal de l'application (Figure~\ref{fig:gameScreen}). Il pr\'esentera le niveau ainsi que certaines informations au joueur. Le score du joueur sera affich\'e en haut \`a gauche, le niveau en haut \`a droite et le nombre de vie, en bas \`a gauche.
+Sur l'\'ecran de jeu (Figure~\ref{fig:gameScreen}), \'ecran principal de l'application, diff\'erentes informations seront donn\'ees au joueur, telles que le niveau, le score (affich\'e en haut \`a gauche), le niveau (en haut \`a droite) et le nombre de vie, (en bas \`a gauche).
 
 \begin{figure}[htb]
 	\begin{center}
@@ -100,45 +100,45 @@ Cet \'ecran (Figure~\ref{fig:loadingScreen}) sera affich\'e avant chaque partie 
 
 \subsection{Fonctionnement du coeur du jeu}
 
-Cette section d\'ecrira les différents \'el\'ements pour le fonctionnement du jeu. Comment le monde est repr\'esent\'e ou comment la d\'etection entre deux \'el\'ements du jeu sera d\'etect\'e.
+Cette section d\'ecrira les différents \'el\'ements pour le fonctionnement du jeu, \`a savoir comment le monde est repr\'esent\'e ou comment la d\'etection entre deux \'el\'ements du jeu sera faite.
 
 \subsubsection{Repr\'esentation de la carte}
 
-La carte sera divis\'e en une grille de 32 cellules de large sur 25 cellules de haut. Chaque cellule de cette grille sera un mur ou une zone vide. Ensuite, chaque bloc aura une taille de 32 pixels de large sur 32 pixels de haut et sera rempli avec une texture.
+La carte sera divis\'ee en une grille de 32 cellules de large sur 25 cellules de haut. Chaque cellule de cette grille sera un mur ou une zone vide. Ensuite, chaque bloc aura une taille de 32 pixels de large sur 32 pixels de haut et sera rempli avec une texture.
 
 \subsubsection{Repr\'esentation des personnages}
 
-Les personnages du jeu, que \c ca soit pour le joueur ou pour les ennemis, seront repr\'esent\'es \`a l'aide d'une image qui sera positionn\'ee sur un axe x-y. Le personnage sera entour\'e d'une ``hitbox"~\cite{valve-hitbox}. La hitbox sera un rectangle qui entour le personnage (voir exemple figure~\ref{fig:hitbox}). Ce rectangle permettra de savoir quand deux \'el\'ements entre en collision. En effet, lorsque le rectangle d'une ``hitbox" rencontre le rectangle d'une autre ``hitbox", cela signifie que deux \'el\'ements du jeu se sont rencontr\'es.
+Les personnages du jeu, que cela soit pour le personnage joueur ou pour les ennemis, seront repr\'esent\'es \`a l'aide d'une image qui sera positionn\'ee sur un axe x-y. Le personnage sera entour\'e d'une ``hitbox"~\cite{valve-hitbox} (voir exemple figure~\ref{fig:hitbox}), un rectangle qui permettra de savoir quand deux \'el\'ements entre en collision. C'est \`a dire, lorsque les deux rectangles d'une ``hitbox" se rencontrent. 
 
 \begin{figure}[htb]
 	\begin{center}
 		\includegraphics[width=100px]{Images/Hitbox.png}
-		\caption{La ``hitbox" est repr\'esent\'ee en rouge}
+		\caption{La ``hitbox" est repr\'esent\'ee en rouge, celle-ci sera invisible en jeu}
 		\label{fig:hitbox}
 	\end{center}
 \end{figure}
 
-Le m\^eme syst\`eme sera utilis\'e pour les bulles lanc\'ees par le joueur. M\^eme si les bulles sont repr\'esent\'es via une image ronde, les ``hitboxs" de celles-ci seront aussi des rectangles afin de faciliter les calculs li\'es \`a la d\'etection de ``hit".
+Le m\^eme syst\`eme sera utilis\'e pour les bulles lanc\'ees par le joueur. M\^eme si une bulle repr\'esent\'ee par une image ronde, la ``hitbox" de celle-ci sera aussi un rectangle afin de faciliter les calculs li\'es \`a la d\'etection de ``hit".
 
 \subsubsection{Gestion des mouvements}
 
-La gestion des mouvements se fera via les touches `Q' (mouvement \`a droite), `D' (mouvement \`a gauche) et `Z' (mouvement de saut). Lorsque le joueur va \`a gauche ou \`a droite, le jeu va v\'erifier que le joueur ne rentre pas en collision avec un mur. Pour cela, on va regarder la position du joueur par rapport au tableau qui repr\'esente la carte. Si le joueur entre dans une cellule du tableau repr\'esentant un mur, il sera arr\^et\'e dans son mouvement.
+La gestion des mouvements se fera via les touches `Q' (mouvement \`a droite), `D' (mouvement \`a gauche) et `Z' (mouvement de saut). Lorsque le joueur va \`a gauche ou \`a droite, le jeu va v\'erifier que le joueur ne rentre pas en collision avec un mur. Pour cela, un algorithme va regarder la position du joueur par rapport au tableau qui repr\'esente la carte. Si le joueur entre dans une cellule du tableau repr\'esentant un mur, il sera arr\^et\'e dans son mouvement.
 
 Lorsque le joueur saute (via la touche `Espace'), le jeu va d\'etecter si celui-ci \'etait en mouvement lors du saut ou non. Si celui-ci n'était pas en mouvement, le saut sera r\'ealis\'e \`a la vertical par rapport \`a sa position de d\'epart. Dans le cas d'un saut alors que le joueur est en mouvement, le saut sera r\'ealis\'e sous la forme d'une hyperbole.
 
-Lors de la chute du joueur (que \c ca soit lors d'un saut ou d'une chute, le joueur aura la possibilit\'e de choisir la direction de sa descente ainsi que de ralentir la chute en appurant sur la touche de saut.
+Lors de la p\'eriode durant laquelle saute le joueur monte, il ne sera pas bloqu\'e par les murs pr\'esents dans le niveau (seul les murs qui entourent la carte seront bloquant). Par contre, lors de la chute, les murs bloqueront le joueur.
 
-Enfin, dernier point li\'e \`a la fonction de saut. Lors de la p\'eriode ou le joueur monte, il ne sera pas bloqué par les murs pr\'esent dans le niveau (seul les murs qui entourent la carte seront bloquant). Par contre, lors de la chute, les murs bloqueront le joueur.
+Enfin, lors de la chute du joueur (que \c ca soit apr\`es un saut ou lors d'une chute, le joueur aura la possibilit\'e de choisir la direction de sa descente, ainsi que de ralentir la chute en appurant sur la touche de saut.
 
 \subsubsection{\'Elimination des ennemis}
 
-Lorsque le joueur lance une bulle sur un ennemi, celui-ci sera directement transform\'e en bonbon. Le joueur devra ensuite aller r\'ecup\'erer pour gagner des points. Les bonbons resteront \`a l'\'ecran un temps d\'efini, apr\'es cela, ils disparaitront de l\'ecran.
+Lorsque le joueur lance une bulle sur un ennemi, celui-ci sera directement transform\'e en bonbon. Le joueur devra ensuite aller le r\'ecup\'erer pour gagner des points. Les bonbons resteront \`a l'\'ecran un temps d\'efini, apr\`es quoi, ils disparaitront de l'\'ecran.
 
 \subsection{Stuctures utilis\'ees}
 
 \subsubsection{Structure de ``hitbox"}
 
-Une ``hitbox" sera repr\'esent\'e via une position dans l'\'ecran de jeu ainsi qu'une hauteur et une largueur.
+Une ``hitbox" sera repr\'esent\'e par une position dans l'\'ecran de jeu ainsi qu'une hauteur et une largueur.
 
 \begin{lstlisting}[style=CStyle]
 typedef struct hitbox {
@@ -151,7 +151,7 @@ typedef struct hitbox {
 
 \subsubsection{Structure de personnage}
 
-Les personnages, que \c ca soit le joueur ou les ennemis, seront repr\'esent\'es \`a l'aide d'une hitbox, un nombre de vie, une chaine de caract\`ere qui donnera le chemin vers la texture du personnage ainsi qu'un bool\'een indiquant s'il s'agit d'un personnage amical ou non.
+Les personnages, que \c ca soit le personnage joueur ou les ennemis, seront repr\'esent\'es \`a l'aide d'une hitbox, un nombre de vie, une chaine de caract\`ere qui donnera le chemin vers la texture du personnage ainsi qu'un bool\'een indiquant s'il s'agit d'un personnage amical ou non.
 
 \begin{lstlisting}[style=CStyle]
 typedef struct personnage {
@@ -162,21 +162,21 @@ typedef struct personnage {
 } Personnage;
 \end{lstlisting}
 
-\subsection{Stuctures de donn\'es dynamiques utilis\'ees}
+\subsection{Stuctures de donn\'ees dynamiques utilis\'ees}
 
 \subsubsection{Gestion des collisions}
 
-Afin de faciliter la recherche de collision entre deux \'el\'ements du jeu, une liste cha\^in\'ee contenant les informations de position et de taille des ``hitbox" sera utilis\'e. Cette liste aura pour but de pouvoir parcourir le plus rapidement possible les ``hitbox" et savoir si deux de celle-ci se croisent.
+Afin de faciliter la recherche de collision entre deux \'el\'ements du jeu, une liste cha\^in\'ee contenant les informations de position et de taille des ``hitbox" sera utilis\'ee. Cette liste aura pour but de parcourir le plus rapidement possible les ``hitbox" et savoir si deux de celles-ci se croisent.
 
 \subsubsection{Ennemis}
 
-Les ennemis seront eux aussi pr\'esent dans une liste cha\^in\'ee afin de pouvoir facilement ajouter ou retirer des ennemis du jeu.
+Les ennemis seront eux aussi pr\'esents dans une liste cha\^in\'ee afin de pouvoir facilement ajouter ou retirer des ennemis du jeu.
 
 \section{Conclusion}
 
-La principale difficult\'e de se projet va r\'esider dans le fait d'optimiser la gestion des hitbox afin que l'application se soit pas ralentie par la recherche de collision. En effet, \`a chaque tour de la boucle principale de GLUT, on va devoir v\'erifier si deux \'el\'ements sont entr\'es en collision, il faut donc optimiser au maximum cette gestion.
+La principale difficult\'e de se projet va r\'esider dans le fait d'optimiser la gestion des hitbox afin que l'application ne soit pas ralentie par la recherche de collision. En effet, \`a chaque tour de la boucle principale de GLUT, on va devoir v\'erifier si deux \'el\'ements sont entr\'es en collision ou non. Il faut donc optimiser au maximum cette gestion.
 
-La deuxi\`eme difficult\'e sera li\'e a la gestion des mouvements du joueur et des ennemis. Ceux-ci pouvant se d\'eplacer librement, il faudra faire attention \`a ne pas bloquer le joueur dans un mur ou alors \`a l'oppos\'e, ne pas l'autoriser \`a se d\'eplacer trop librement sur la carte et donc sortir de celle-ci.
+La deuxi\`eme difficult\'e sera li\'ee \`a la gestion des mouvements du personnage joueur et des ennemis. Ceux-ci pouvant se d\'eplacer librement, il faudra faire attention \`a ne pas bloquer le personnage joueur dans un mur ou \`a l'inverse, ne pas l'autoriser \`a se d\'eplacer trop librement sur la carte et donc sortir de celle-ci.
 
 \section{References}
 
