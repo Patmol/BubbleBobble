@@ -100,15 +100,15 @@ Cet \'ecran (Figure~\ref{fig:loadingScreen}) sera affich\'e avant chaque partie 
 
 \subsection{Fonctionnement du coeur du jeu}
 
-Cette section d'\'ecrira les différents \'el\'ements pour le fonctionnement du jeu. Comment le monde est repr\'esent\'e ou comment la d\'etection entre deux \'el\'ements du jeu sera d\'etect\'e.
+Cette section d\'ecrira les différents \'el\'ements pour le fonctionnement du jeu. Comment le monde est repr\'esent\'e ou comment la d\'etection entre deux \'el\'ements du jeu sera d\'etect\'e.
 
 \subsubsection{Repr\'esentation de la carte}
 
-La carte sera divis\'e en une grille de 32 cellules de large sur 25 cellules de haut. Chaque cellule de cette grille sera un mur ou une zone vide. Ensuite, chaque bloc aura une taille de 25 pixels de large sur 22 pixels de haut.
+La carte sera divis\'e en une grille de 32 cellules de large sur 25 cellules de haut. Chaque cellule de cette grille sera un mur ou une zone vide. Ensuite, chaque bloc aura une taille de 32 pixels de large sur 32 pixels de haut et sera rempli avec une texture.
 
 \subsubsection{Repr\'esentation des personnages}
 
-Les personnages du jeu, que \c ca soit pour le joueur ou pour les ennemis, seront repr\'esent\'es \`a l'aide d'une image qui sera positionn\'ee sur un axe x-y. Le personnage sera entour\'e d'une ``hitbox"~\cite{valve-hitbox}. La hitbox sera un rectangle qui entour le personnage (voir exemple figure~\ref{fig:hitbox}). Ce rectangle permettra de savoir quand deux \'el\'ements entre en collision. En effet, lorsque la position d'une ``hitbox" rencontre une autre ``hitbox", cela signifie que deux personnes se sont rencontr\'es.
+Les personnages du jeu, que \c ca soit pour le joueur ou pour les ennemis, seront repr\'esent\'es \`a l'aide d'une image qui sera positionn\'ee sur un axe x-y. Le personnage sera entour\'e d'une ``hitbox"~\cite{valve-hitbox}. La hitbox sera un rectangle qui entour le personnage (voir exemple figure~\ref{fig:hitbox}). Ce rectangle permettra de savoir quand deux \'el\'ements entre en collision. En effet, lorsque le rectangle d'une ``hitbox" rencontre le rectangle d'une autre ``hitbox", cela signifie que deux \'el\'ements du jeu se sont rencontr\'es.
 
 \begin{figure}[htb]
 	\begin{center}
@@ -118,17 +118,65 @@ Les personnages du jeu, que \c ca soit pour le joueur ou pour les ennemis, seron
 	\end{center}
 \end{figure}
 
-Le m\^eme syst\`eme sera utilis\'e pour les bulles lanc\'ees par le joueur. M\^eme si les bulles sont repr\'esent\'es via une image ronde, la ``hitbox" de celles-ci seront aussi des rectangles afin de faciliter les calculs li\'es \`a la d\'etection de ``hit".
+Le m\^eme syst\`eme sera utilis\'e pour les bulles lanc\'ees par le joueur. M\^eme si les bulles sont repr\'esent\'es via une image ronde, les ``hitboxs" de celles-ci seront aussi des rectangles afin de faciliter les calculs li\'es \`a la d\'etection de ``hit".
+
+\subsubsection{Gestion des mouvements}
+
+La gestion des mouvements se fera via les touches `Q' (mouvement \`a droite), `D' (mouvement \`a gauche) et `Z' (mouvement de saut). Lorsque le joueur va \`a gauche ou \`a droite, le jeu va v\'erifier que le joueur ne rentre pas en collision avec un mur. Pour cela, on va regarder la position du joueur par rapport au tableau qui repr\'esente la carte. Si le joueur entre dans une cellule du tableau repr\'esentant un mur, il sera arr\^et\'e dans son mouvement.
+
+Lorsque le joueur saute (via la touche `Espace'), le jeu va d\'etecter si celui-ci \'etait en mouvement lors du saut ou non. Si celui-ci n'était pas en mouvement, le saut sera r\'ealis\'e \`a la vertical par rapport \`a sa position de d\'epart. Dans le cas d'un saut alors que le joueur est en mouvement, le saut sera r\'ealis\'e sous la forme d'une hyperbole.
+
+Lors de la chute du joueur (que \c ca soit lors d'un saut ou d'une chute, le joueur aura la possibilit\'e de choisir la direction de sa descente ainsi que de ralentir la chute en appurant sur la touche de saut.
+
+Enfin, dernier point li\'e \`a la fonction de saut. Lors de la p\'eriode ou le joueur monte, il ne sera pas bloqué par les murs pr\'esent dans le niveau (seul les murs qui entourent la carte seront bloquant). Par contre, lors de la chute, les murs bloqueront le joueur.
+
+\subsubsection{\'Elimination des ennemis}
+
+Lorsque le joueur lance une bulle sur un ennemi, celui-ci sera directement transform\'e en bonbon. Le joueur devra ensuite aller r\'ecup\'erer pour gagner des points. Les bonbons resteront \`a l'\'ecran un temps d\'efini, apr\'es cela, ils disparaitront de l\'ecran.
 
 \subsection{Stuctures utilis\'ees}
 
-\subsection{D\'ecoupage du code}
+\subsubsection{Structure de ``hitbox"}
+
+Une ``hitbox" sera repr\'esent\'e via une position dans l'\'ecran de jeu ainsi qu'une hauteur et une largueur.
+
+\begin{lstlisting}[style=CStyle]
+typedef struct hitbox {
+	int positionX;
+	int positionY;
+	int hauteur;
+	int largueur;
+} Hitbox;
+\end{lstlisting} 
+
+\subsubsection{Structure de personnage}
+
+Les personnages, que \c ca soit le joueur ou les ennemis, seront repr\'esent\'es \`a l'aide d'une hitbox, un nombre de vie, une chaine de caract\`ere qui donnera le chemin vers la texture du personnage ainsi qu'un bool\'een indiquant s'il s'agit d'un personnage amical ou non.
+
+\begin{lstlisting}[style=CStyle]
+typedef struct personnage {
+	Hitbox hitbox;
+	int nombreVie;
+	char *image;
+	bool amical;
+} Personnage;
+\end{lstlisting}
+
+\subsection{Stuctures de donn\'es dynamiques utilis\'ees}
+
+\subsubsection{Gestion des collisions}
+
+Afin de faciliter la recherche de collision entre deux \'el\'ements du jeu, une liste cha\^in\'ee contenant les informations de position et de taille des ``hitbox" sera utilis\'e. Cette liste aura pour but de pouvoir parcourir le plus rapidement possible les ``hitbox" et savoir si deux de celle-ci se croisent.
+
+\subsubsection{Ennemis}
+
+Les ennemis seront eux aussi pr\'esent dans une liste cha\^in\'ee afin de pouvoir facilement ajouter ou retirer des ennemis du jeu.
 
 \section{Conclusion}
 
 La principale difficult\'e de se projet va r\'esider dans le fait d'optimiser la gestion des hitbox afin que l'application se soit pas ralentie par la recherche de collision. En effet, \`a chaque tour de la boucle principale de GLUT, on va devoir v\'erifier si deux \'el\'ements sont entr\'es en collision, il faut donc optimiser au maximum cette gestion.
 
-La deuxi\`eme difficult\'e sera l'utilisation de la biblioth\`eque GLUT. Celle-ci \'etant une bilioth\`eque ayant d\'ej\`a un certain nombre d'ann\'ee, il peut \^etre difficile de trouver certaines documentations ou alors les exemples pr\'esent\'es pour OpenGL utilisent de nouvelles biblioth\`eques.
+La deuxi\`eme difficult\'e sera li\'e a la gestion des mouvements du joueur et des ennemis. Ceux-ci pouvant se d\'eplacer librement, il faudra faire attention \`a ne pas bloquer le joueur dans un mur ou alors \`a l'oppos\'e, ne pas l'autoriser \`a se d\'eplacer trop librement sur la carte et donc sortir de celle-ci.
 
 \section{References}
 
