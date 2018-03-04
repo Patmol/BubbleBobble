@@ -1,24 +1,23 @@
-TARGET = amaze
-LIBS =
-CC = gcc
+CC=gcc
 CFLAGS = -std=c99 -Wall
+OBJ=texture.o tga.o glut.o main.o
 
-.PHONY: default all clean
+bubble: $(OBJ)
+	$(CC) -o BubbleBobble $(OBJ) $(CFLAGS)
 
-default: $(TARGET)
-all: default
+tga.o: Engine/tga.h Engine/tga.c
+	$(CC) -c Engine/tga.c -o tga.o $(CFLAGS)
 
-OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
-HEADERS = $(wildcard *.h)
+texture.o: Engine/texture.h Engine/texture.c
+	$(CC) -c Engine/texture.c -o texture.o $(CFLAGS)
 
-%.o: %.c $(HEADERS)
-	$(CC) $(CFLAGS) -c $< -o $@
+glut.o: Core/glut.h Core/glut.c
+	$(CC) -c Core/glut.c -o glut.o $(CFLAGS)
 
-.PRECIOUS: $(TARGET) $(OBJECTS)
-
-$(TARGET): $(OBJECTS)
-	$(CC) $(OBJECTS) $(CFLAGS) $(LIBS) -o $@
+main.o: main.c
+	$(CC) -c main.c -o main.o $(CFLAGS)
 
 clean:
-	-rm -f *.o
-	-rm -f $(TARGET)
+	rm -f *.o
+	rm -f BubbleBobble
+	rm -f *~
