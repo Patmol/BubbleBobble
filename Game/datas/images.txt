@@ -1,1 +1,2 @@
-"/images/bloc-level-1.tga" "bloc-level-1"
+images/bloc-level-1.tga bloc-level-1
+images/logo.tga logo

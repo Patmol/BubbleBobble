@@ -8,16 +8,12 @@
 #define _DATA_H_
 
 typedef struct texture {
-    char *name;
-    char *filename;
+    char filename[100];
+    char name[40];
     GLuint textureId;
+    struct texture *next;
 } Texture;
 
-typedef struct textures {
-    struct texture *data;
-    struct textures *next;
-} Textures;
-
-Textures* loadTextures(char* sourcesPath);
+Texture* loadTextures(char* sourcesPath);
 
 #endif

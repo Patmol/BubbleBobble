@@ -473,7 +473,7 @@ struct gl_texture_t * ReadTGAFile(const char *filename) {
     return texinfo;
 }
 
-GLuint loadTGATexture(const char *filename) {
+GLuint loadTGATexture(char filename[]) {
     struct gl_texture_t *tga_tex = NULL;
     GLuint tex_id = 0;
     GLint alignment;
