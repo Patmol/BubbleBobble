@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS = -std=c99 -Wall
+CFLAGS=-Wall -std=c99 -lm -g
 OBJ=texture.o tga.o glut.o main.o
 
 bubble: $(OBJ)
