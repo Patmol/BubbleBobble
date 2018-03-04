@@ -68,7 +68,7 @@ L'\'ecran d'accueil sera affich\'e \`a l'ouveture du programme. Sur cet \'ecran 
 
 \begin{figure}[htbp]
 	\begin{center}
-		\includegraphics[width=400px]{Images/MainScreen.png}
+		\includegraphics[width=320px]{Images/MainScreen.png}
 		\caption{\'Ecran d'accueil}
 		\label{fig:mainScreen}
 	\end{center}
@@ -80,7 +80,7 @@ Cet \'ecran (Figure~\ref{fig:loadingScreen}) sera affich\'e avant chaque partie 
 
 \begin{figure}[htbp]
 	\begin{center}
-		\includegraphics[width=400px]{Images/Loading.png}
+		\includegraphics[width=320px]{Images/Loading.png}
 		\caption{\'Ecran des contr\^oles affich\'es au chargement}
 		\label{fig:loadingScreen}
 	\end{center}
@@ -92,7 +92,7 @@ Sur l'\'ecran de jeu (Figure~\ref{fig:gameScreen}), \'ecran principal de l'appli
 
 \begin{figure}[htb]
 	\begin{center}
-		\includegraphics[width=400px]{Images/Game.png}
+		\includegraphics[width=320px]{Images/Game.png}
 		\caption{\'Ecran de jeu}
 		\label{fig:gameScreen}
 	\end{center}
@@ -124,7 +124,7 @@ Le m\^eme syst\`eme sera utilis\'e pour les bulles lanc\'ees par le joueur. M\^e
 
 La gestion des mouvements se fera via les touches `Q' (mouvement \`a droite), `D' (mouvement \`a gauche) et `Z' (mouvement de saut). Lorsque le joueur va \`a gauche ou \`a droite, le jeu va v\'erifier que le joueur ne rentre pas en collision avec un mur. Pour cela, un algorithme va regarder la position du joueur par rapport au tableau qui repr\'esente la carte. Si le joueur entre dans une cellule du tableau repr\'esentant un mur, il sera arr\^et\'e dans son mouvement.
 
-Lorsque le joueur saute (via la touche `Espace'), le jeu va d\'etecter si celui-ci \'etait en mouvement lors du saut ou non. Si celui-ci n'était pas en mouvement, le saut sera r\'ealis\'e \`a la vertical par rapport \`a sa position de d\'epart. Dans le cas d'un saut alors que le joueur est en mouvement, le saut sera r\'ealis\'e sous la forme d'une hyperbole.
+Lorsque le joueur saute (via la touche `Espace'), le jeu va d\'etecter si celui-ci \'etait en mouvement lors du saut ou non. Si celui-ci n'\'etait pas en mouvement, le saut sera r\'ealis\'e \`a la vertical par rapport \`a sa position de d\'epart. Dans le cas d'un saut alors que le joueur est en mouvement, le saut sera r\'ealis\'e sous la forme d'une hyperbole.
 
 Lors de la p\'eriode durant laquelle saute le joueur monte, il ne sera pas bloqu\'e par les murs pr\'esents dans le niveau (seul les murs qui entourent la carte seront bloquant). Par contre, lors de la chute, les murs bloqueront le joueur.
 
@@ -159,7 +159,31 @@ typedef struct personnage {
 	int nombreVie;
 	char *image;
 	bool amical;
+	int nombrePoint;
+	int vitesse;
 } Personnage;
+\end{lstlisting}
+
+\subsubsection{Structure de la liste des personnages}
+
+Chaque \'el\'ement de la liste cha\^in\'e sera repr\'esent\'e via une structure contenant une r\'ef\'erence vers un personnage ainsi qu'une deuxi\`eme r\'ef\'erence vers l'\'l\'ement suivant.
+
+\begin{lstlisting}[style=CStyle]
+typedef struct personnageListItem {
+	Personnage *personnage;
+	PersonnageListItem *next;
+} PersonnageListItem;
+\end{lstlisting}
+
+\subsubsection{Structure des scores}
+
+Sera utilis\'e pour sauvegarde le score des joueurs ainsi que le nom du joueur.
+
+\begin{lstlisting}[style=CStyle]
+typedef struct score {
+	int score;
+	char *nom;
+} Score;
 \end{lstlisting}
 
 \subsection{Stuctures de donn\'ees dynamiques utilis\'ees}
@@ -171,6 +195,59 @@ Afin de faciliter la recherche de collision entre deux \'el\'ements du jeu, une 
 \subsubsection{Ennemis}
 
 Les ennemis seront eux aussi pr\'esents dans une liste cha\^in\'ee afin de pouvoir facilement ajouter ou retirer des ennemis du jeu.
+
+\subsection{Utilisation des fichiers}
+
+Des fichiers seront utilis\'es pour les niveaux ainsi que pour la sauvegarde des scores des joueurs.
+
+\subsubsection{Sauvegarde des niveaux}
+
+Chaque niveau sera sauvegard\'e dans un fichier, le fichier sera au format binaire afin de pouvoir facilement sauvegarder l'ensemble des structures \emph{hitbox} composant le niveau. 
+
+Les fichiers des niveaux seront g\'en\'er\'e par le programme au lancement de celui-ci si ceux-ci n'existent pas. Dans les versions suivantes du jeu, il sera possible via une interface de créer des niveaux directement dans le jeu afin de faciliter leur cr\'eation.
+
+\subsubsection{Sauvegarde des scores}
+
+Seul les 10 scores les plus importants seront gard\'es dans un fichier binaire. L'utilisation du fichier binaire permettra de directement aller lire puis \'ecrire les nouveaux scores \`a l'endroit souhait\'e.
+
+\subsection{D\'ecoupage du programme}
+
+Le programme sera divis\'e en plusieurs composants afin de faciliter la gestion du code.
+
+\subsubsection{Core}
+
+Le \emph{Core} contiendra les fonctions appel\'e par GLUT pour r\'ealiser l'affichage, la gestion du clavier, ...
+
+\begin{lstlisting}[style=CStyle]
+void init(void);
+void display(void);
+void reshape(int w, int h);
+void processNormalKeys(unsigned char key, int x, int y);
+void processSpecialKeys(int key, int x, int y);
+\end{lstlisting}
+
+\subsubsection{Engine}
+
+L'\emph{engine} contiendra les fonctions qui permettront de g\'erer le d\'eplacement du joueur, l'intelligence des ennemis, les collisions entre le joueurs et les ennemis ou encore lorsqu'un ennemi est touch\'e par une bulle et que celui-ci doit se transformer en bonbon.
+
+\begin{lstlisting}[style=CStyle]
+bool collision(Hitbox *hitbox1, Hitbox *hitbox2);
+void deplacement(Personnage *personnage);
+bool toucher(Hitbox *hitbox1, Hitbox *hitbox2);
+\end{lstlisting}
+
+\subsubsection{FileManager}
+
+Le \emph{FileManager} contiendra toutes les fonctions permettant de charger ou d'\'ecrire dans les fichiers utilis\'es par le joueur.
+
+\begin{lstlisting}[style=CStyle]
+void chargementNiveau(char *path);
+void chargementImage(char *path);
+void chargementScore(char *path);
+void sauvegardeScore(char *path, Score score); 
+\end{lstlisting}
+
+Les fonctions de chargement ne re\c oivent pour le moment que le chemin du fichier \`a charger car la fa\c on de retourner le r\'esultat va d\'ependre de l'impl\'ementation des chargement \`a proprement dit.
 
 \section{Conclusion}
 
