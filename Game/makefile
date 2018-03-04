@@ -1,23 +1,24 @@
-CC=gcc
-CFLAGS=-Wall -std=c99 -framework OpenGL -framework GLUT -lm -g
-OBJ=texture.o tga.o glut.o main.o
+TARGET = amaze
+LIBS =
+CC = gcc
+CFLAGS = -std=c99 -Wall
 
-bubble: $(OBJ)
-	$(CC) -o BubbleBobble $(OBJ) $(CFLAGS)
+.PHONY: default all clean
 
-tga.o: Engine/tga.h Engine/tga.c
-	$(CC) -c Engine/tga.c -o tga.o $(CFLAGS)
+default: $(TARGET)
+all: default
 
-texture.o: Engine/texture.h Engine/texture.c
-	$(CC) -c Engine/texture.c -o texture.o $(CFLAGS)
+OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
+HEADERS = $(wildcard *.h)
 
-glut.o: Core/glut.h Core/glut.c
-	$(CC) -c Core/glut.c -o glut.o $(CFLAGS)
+%.o: %.c $(HEADERS)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-main.o: main.c
-	$(CC) -c main.c -o main.o $(CFLAGS)
+.PRECIOUS: $(TARGET) $(OBJECTS)
+
+$(TARGET): $(OBJECTS)
+	$(CC) $(OBJECTS) $(CFLAGS) $(LIBS) -o $@
 
 clean:
-	rm -f *.o
-	rm -f BubbleBobble
-	rm -f *~
+	-rm -f *.o
+	-rm -f $(TARGET)
