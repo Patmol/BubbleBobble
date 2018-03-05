@@ -5,17 +5,20 @@
 #endif
 
 #include <string.h>
+#include <stdlib.h>
 #include <stdio.h>
 
 #include "game.h"
 
 Texture *bloc = NULL;
+int levelStructure[32][25];
 
 void initGame(int level) {
     char blocLevelName[100];
     sprintf(blocLevelName, "bloc-level-%d", level);
 
     bloc = getTexture(blocLevelName);
+    loadLevel(level);
 }
 void displayGame() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -47,4 +50,27 @@ void displayGame() {
 void timerGame() {
 }
 void keyboardGame(unsigned char key) {
+}
+
+void loadLevel(int level) {
+    FILE *file = NULL;
+
+    char levelFileName[100];
+    sprintf(levelFileName, "datas/level-%d.txt", level);
+
+    file = fopen(levelFileName, "r");
+
+    if (file == NULL) {
+        // The file with the level structure was not found, the application must exit.
+        printf("The file %s cannot be found\n", levelFileName);   
+        exit (EXIT_FAILURE);
+    } else {
+        for (int i = 0; i < 25; i++) {
+            for (int j = 0; j < 32; j++) {
+                fscanf(file, "%d ", &levelStructure[j][i]);
+            }
+        }
+    }
+
+    fclose(file);
 }

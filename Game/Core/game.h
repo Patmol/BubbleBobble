@@ -12,3 +12,5 @@ void timerGame();
 void keyboardGame(unsigned char key);
 
 #endif
+
+void loadLevel(int);
