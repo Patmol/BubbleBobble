@@ -12,10 +12,12 @@
 #include "texture.h"
 #include "tga.h"
 
+Texture* textures;
+
 // We will load all the textures used by the application
 //  sourcesPath: path to the file with the path to the textures
 //  return: return the 
-Texture* loadTextures(char* sourcesPath) {
+void loadTextures(char* sourcesPath) {
     char path[100], 
          name[40];
     FILE *file = NULL;
@@ -58,5 +60,19 @@ Texture* loadTextures(char* sourcesPath) {
 
     fclose(file);
 
-    return firstTexture;
+    textures = firstTexture;
+}
+
+Texture* getTexture(char *name) {
+    Texture *currentTexture = textures;
+    Texture *texture = NULL;
+
+    do {
+        if(strcmp(name, currentTexture->name) == 0) {
+            texture = currentTexture;
+        }
+        currentTexture = currentTexture->next;
+    } while (currentTexture != NULL && texture == NULL);
+
+    return texture;
 }

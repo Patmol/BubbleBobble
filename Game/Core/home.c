@@ -15,24 +15,17 @@
 Texture* logo = NULL;
 float logoYPosition = 2.5f;
 
-void initHome(Texture *textures) {
-    Texture *currentTexture = textures;
-
-    do {
-        if(strcmp("logo", currentTexture->name) == 0) {
-            logo = currentTexture;
-        }
-        currentTexture = currentTexture->next;
-    } while (currentTexture != NULL && logo == NULL);
+void initLogo() {
+    logo = getTexture("logo");
 }
-
-void displayHome() {
+void displayLogo() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, logo->textureId);
 
+    // Display the logo
+    glBindTexture(GL_TEXTURE_2D, logo->textureId);
     glTranslatef(0.0, logoYPosition, -3.5);
     glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 0.0f);
@@ -52,9 +45,40 @@ void displayHome() {
     
     glutSwapBuffers();
 }
-
-void timerHome() {
+void timerLogo() {
     if (logoYPosition > 0.4f) {
         logoYPosition -= LOGO_Y_TRANSLATION;
     }
+}
+
+void initHome() {
+}
+void displayHome() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, logo->textureId);
+
+    // Display the logo
+    glTranslatef(0.0, 1.0f, -5.0f);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(-1.0f, -0.6f, 0.0f);
+
+        glTexCoord2f(1.0f, 0.0f);
+        glVertex3f(1.0f, -0.6f, 0.0f);
+
+        glTexCoord2f(1.0f, 1.0f);
+        glVertex3f(1.0f, 0.6f, 0.0f);
+
+        glTexCoord2f(0.0f, 1.0f);
+        glVertex3f(-1.0f, 0.6f, 0.0f);
+    glEnd();
+    
+    glDisable(GL_TEXTURE_2D);
+    
+    glutSwapBuffers();
+}
+void timerHome() {
 }

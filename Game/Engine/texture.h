@@ -14,6 +14,7 @@ typedef struct texture {
     struct texture *next;
 } Texture;
 
-Texture* loadTextures(char* sourcesPath);
+void loadTextures(char* sourcesPath);
+Texture* getTexture(char *name);
 
 #endif

@@ -22,6 +22,7 @@ int main(int argc, char** argv) {
     glutDisplayFunc(display);
     glutIdleFunc(display);
     glutTimerFunc(TIMER, timer, 0);
+    glutKeyboardFunc(keyboard);
     glutMainLoop();
 
     return 0;
