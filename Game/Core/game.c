@@ -74,7 +74,7 @@ void displayGame() {
     // We need to display the character of the player
     glBindTexture(GL_TEXTURE_2D, bubble->textureId);
     glPushMatrix();
-    glTranslatef(0.0f, 0.23f, -4.0f);
+    glTranslatef(0.0f, 0.15f, -4.0f);
     glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 0.0f);
         glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * 44), 0.0f);
@@ -106,7 +106,7 @@ void loadLevel(int level) {
     FILE *file = NULL;
 
     char levelFileName[100];
-    sprintf(levelFileName, "datas/level-%d.txt", level);
+    sprintf(levelFileName, "data/level-%d.txt", level);
 
     file = fopen(levelFileName, "r");
 

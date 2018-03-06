@@ -15,8 +15,15 @@ enum gameState state = LOGO;
 
 // Initalize all data require for the game
 void init(void) {
+    glShadeModel (GL_SMOOTH);
+
+    glEnable (GL_DEPTH_TEST);
+
+    glEnable (GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     // We need to load all textures of the application at the initialisation
-    loadTextures("datas/images.txt");
+    loadTextures("data/images.txt");
     // Initialise the logo data
     initLogo();
     // Initialise the data for the game
