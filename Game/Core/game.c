@@ -19,6 +19,8 @@
 
 // The texture of the bloc
 Texture *bloc = NULL;
+// The texture of Bubble
+Texture *bubble = NULL;
 // An array contening the structure of the level
 int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT];
 
@@ -28,6 +30,7 @@ void initGame(int level) {
     sprintf(blocLevelName, "bloc-level-%d", level);
 
     bloc = getTexture(blocLevelName);
+    bubble = getTexture("bubble");
     loadLevel(level);
 }
 // Display the game screen
@@ -69,6 +72,23 @@ void displayGame() {
     }
 
     // We need to display the character of the player
+    glBindTexture(GL_TEXTURE_2D, bubble->textureId);
+    glPushMatrix();
+    glTranslatef(0.0f, 0.23f, -4.0f);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * 44), 0.0f);
+
+        glTexCoord2f(1.0f, 0.0f);
+        glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * 44), 0.0f);
+
+        glTexCoord2f(1.0f, 1.0f);
+        glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * 44), 0.0f);
+
+        glTexCoord2f(0.0f, 1.0f);
+        glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * 44), 0.0f);        
+    glEnd();
+    glPopMatrix();
 
     glDisable(GL_TEXTURE_2D);
     
