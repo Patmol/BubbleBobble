@@ -25,5 +25,3 @@ main.o: main.c
 
 clean:
 	rm -f *.o
-	rm -f BubbleBobble
-	rm -f *~
