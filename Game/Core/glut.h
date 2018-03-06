@@ -2,6 +2,8 @@
 #define _GLUT_H_
 
 #define TIMER 10
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGH 600
 
 enum gameState { GAME, HELP, HOME, LOGO, SCORE  };
 

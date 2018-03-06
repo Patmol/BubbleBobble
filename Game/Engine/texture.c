@@ -12,18 +12,21 @@
 #include "texture.h"
 #include "tga.h"
 
+// Contains the list of all texture used by the application
 Texture* textures;
 
-// We will load all the textures used by the application
+// Load all the textures used by the application
 //  sourcesPath: path to the file with the path to the textures
-//  return: return the 
 void loadTextures(char* sourcesPath) {
     char path[100], 
          name[40];
     FILE *file = NULL;
 
+    // The first texture of the list
     Texture *firstTexture = NULL;
+    // The previous texture of the list (used to link the texture between them)
     Texture *previousTexture = NULL;
+    // The new texture that we will add in the list
     Texture *newTexture = NULL;
 
     // Open the file
@@ -63,10 +66,14 @@ void loadTextures(char* sourcesPath) {
     textures = firstTexture;
 }
 
+// Get a specific texture
+//  name: the name of the texture to get
+//  return: the texture structure
 Texture* getTexture(char *name) {
     Texture *currentTexture = textures;
     Texture *texture = NULL;
-
+    
+    // Search through the list of texture, the one we need.
     do {
         if(strcmp(name, currentTexture->name) == 0) {
             texture = currentTexture;

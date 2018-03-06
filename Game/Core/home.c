@@ -15,9 +15,12 @@
 Texture* logo = NULL;
 float logoYPosition = 2.5f;
 
+// Initialiaze the data for the logo screen
 void initLogo() {
+    // Load the texture of the logo
     logo = getTexture("logo");
 }
+// Display the logo screen
 void displayLogo() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
@@ -45,14 +48,18 @@ void displayLogo() {
     
     glutSwapBuffers();
 }
+// Timer function to handle update of the logo screen
 void timerLogo() {
+    // Move the logo down to create the logo animation on the first screen
     if (logoYPosition > 0.4f) {
         logoYPosition -= LOGO_Y_TRANSLATION;
     }
 }
 
+// Initialiaze the data for the home screen
 void initHome() {
 }
+// Display the home screen
 void displayHome() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
@@ -80,5 +87,6 @@ void displayHome() {
     
     glutSwapBuffers();
 }
+// Timer function to handle update of the home screen
 void timerHome() {
 }

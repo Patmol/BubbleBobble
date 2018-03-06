@@ -10,6 +10,7 @@
 #ifndef _TGA_H_
 #define _TGA_H_
 
+// Load a TGA texture
 GLuint loadTGATexture(char filename[]);
 
 #endif

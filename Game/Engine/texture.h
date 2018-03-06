@@ -8,13 +8,19 @@
 #define _DATA_H_
 
 typedef struct texture {
+    // The name of the file
     char filename[100];
+    // The name of the texture
     char name[40];
+    // The texture ID use by OpenGL
     GLuint textureId;
+    // The next texture in the list
     struct texture *next;
 } Texture;
 
-void loadTextures(char* sourcesPath);
-Texture* getTexture(char *name);
+// Load all the textures used by the application
+void loadTextures(char*);
+// Get a specific texture
+Texture* getTexture(char*);
 
 #endif

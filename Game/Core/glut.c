@@ -13,6 +13,7 @@
 
 enum gameState state = LOGO;
 
+// Initalize all data require for the game
 void init(void) {
     // We need to load all textures of the application at the initialisation
     loadTextures("datas/images.txt");
@@ -22,6 +23,7 @@ void init(void) {
     initGame(1);
 }
 
+// Function call by GLUT to display the screen
 void display(void) {
     switch (state) {
         case GAME:
@@ -39,7 +41,7 @@ void display(void) {
             break;
     }
 }
-
+// Function call by GLUT every X secondes
 void timer(int value) {
     switch (state) {
         case GAME:
@@ -60,7 +62,7 @@ void timer(int value) {
     glutPostRedisplay();
     glutTimerFunc(TIMER, timer, 0);
 }
-
+// Function call by GLUT when the window is resize
 void reshape(int w, int h) {
     if (h == 0) {
         h = 1;
@@ -77,7 +79,7 @@ void reshape(int w, int h) {
     
     glutPostRedisplay();
 }
-
+// Function call by GLUT to handle the keyboard
 void keyboard(unsigned char key, int x, int y) {
     /* Escape */
     if (key == 27) {
