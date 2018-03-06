@@ -95,6 +95,7 @@ void keyboard(unsigned char key, int x, int y) {
 
     switch (state) {
         case GAME:
+            keyboardGame(key);
             break;
         case HELP:
             break;
