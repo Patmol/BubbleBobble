@@ -10,7 +10,7 @@
 #include "texture.h"
 #include "character.h"
 
-Character *initializeCharacter(char *name, float x, float y, float height, float width, char *textureName) {
+Character *initializeCharacter(char *name, float x, float y, float height, float width, char *textureName1, char *textureName2) {
     Character *character = malloc(sizeof(Character));
     strcpy(character->name, name);
     character->position = malloc(sizeof(Position));
@@ -20,6 +20,7 @@ Character *initializeCharacter(char *name, float x, float y, float height, float
     character->hitbox->origin = character->position;
     character->hitbox->height = height;
     character->hitbox->width = width;
-    character->textureId = getTexture(textureName)->textureId;
+    character->textureId1 = getTexture(textureName1)->textureId;
+    character->textureId2 = getTexture(textureName2)->textureId;
     return character;
 }

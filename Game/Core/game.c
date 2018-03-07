@@ -18,6 +18,12 @@
 #define BLOC_HEIGH 22
 #define TOP_SPACE 50
 
+#define MOVEMENT 5
+enum movement { LEFT, RIGHT, NONE };
+enum movement move;
+int incMovement;
+GLuint bubbleTextureId;
+
 // The texture of the bloc
 Texture *bloc = NULL;
 // The character 'Bubble'
@@ -31,7 +37,9 @@ void initGame(int level) {
     sprintf(blocLevelName, "bloc-level-%d", level);
 
     bloc = getTexture(blocLevelName);
-    bubble = initializeCharacter("Bubble", 0.0f, 0.23f, 10.0f, 10.0f, "bubble");
+    bubble = initializeCharacter("Bubble", 0.0f, 0.23f, 10.0f, 10.0f, "bubble-left", "bubble-right");
+    bubbleTextureId = bubble->textureId1;
+    move = NONE;
 
     loadLevel(level);
 }
@@ -52,7 +60,7 @@ void displayGame() {
                 glPushMatrix();
                 // We move to the position where we want to display our bloc
                 glTranslatef(
-                    -((((WINDOW_WIDTH - 25.0) - (BLOC_WIDTH * 2) * i) / 146.0)), 
+                    -(((WINDOW_WIDTH - 25.0) - (BLOC_WIDTH * 2) * i) / 146.0), 
                     ((((WINDOW_HEIGH - 19.0) - (BLOC_HEIGH * 2) * j) - TOP_SPACE) / 146.0), 
                     -10.0f);
                 glBegin(GL_QUADS);
@@ -73,24 +81,31 @@ void displayGame() {
         }
     }
 
-    // We need to display the character of the player
-    glBindTexture(GL_TEXTURE_2D, bubble->textureId);
-    glPushMatrix();
-    glTranslatef(bubble->position->x, bubble->position->y, -4.0f);
-    glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f);
-        glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * 44), 0.0f);
+    switch(move) {
+        case NONE:
+            break;
+        case LEFT:
+            if (incMovement < MOVEMENT) {
+                bubble->position->x += 0.03f;
+                bubbleTextureId = bubble->textureId1;
+            } else {
+                move = NONE;
+            }
+            break;
+        case RIGHT:
+        if (incMovement < MOVEMENT) {
+                bubble->position->x -= 0.03f;
+                bubbleTextureId = bubble->textureId2;
+            } else {
+                move = NONE;
+            }
+            break;
+    }
 
-        glTexCoord2f(1.0f, 0.0f);
-        glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * 44), 0.0f);
+    glBindTexture(GL_TEXTURE_2D, bubbleTextureId);
+    displayPlayer();
 
-        glTexCoord2f(1.0f, 1.0f);
-        glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * 44), 0.0f);
-
-        glTexCoord2f(0.0f, 1.0f);
-        glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * 44), 0.0f);        
-    glEnd();
-    glPopMatrix();
+    incMovement++;
 
     glDisable(GL_TEXTURE_2D);
     
@@ -103,10 +118,12 @@ void timerGame() {
 void keyboardGame(unsigned char key) {
     switch (key) {
         case 'd':
-            bubble->position->x += 0.02f;
+            move = LEFT;
+            incMovement = 0;
             break;
         case 'q':
-            bubble->position->x -= 0.02f;
+            move = RIGHT;
+            incMovement = 0;
             break;
     }
 }
@@ -134,4 +151,24 @@ void loadLevel(int level) {
     }
 
     fclose(file);
+}
+
+void displayPlayer() {
+    // We need to display the character of the player
+    glPushMatrix();
+    glTranslatef(bubble->position->x, bubble->position->y, -4.0f);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * 44), 0.0f);
+
+        glTexCoord2f(1.0f, 0.0f);
+        glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * 44), 0.0f);
+
+        glTexCoord2f(1.0f, 1.0f);
+        glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * 44), 0.0f);
+
+        glTexCoord2f(0.0f, 1.0f);
+        glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * 44), 0.0f);        
+    glEnd();
+    glPopMatrix();
 }

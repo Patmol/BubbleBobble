@@ -25,9 +25,10 @@ typedef struct character {
     int life;
     Position *position;
     Hitbox *hitbox;
-    GLuint textureId;
+    GLuint textureId1;
+    GLuint textureId2;
 } Character;
 
-Character *initializeCharacter(char *name, float x, float y, float height, float width, char *textureName);
+Character *initializeCharacter(char *name, float x, float y, float height, float width, char *textureName1, char *textureName2);
 
 #endif

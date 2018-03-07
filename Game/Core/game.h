@@ -15,6 +15,8 @@ void timerGame();
 // Handle the keyboard input
 void keyboardGame(unsigned char key);
 
+void displayPlayer();
+
 #endif
 
 // Load a level (send in parameter) from a file
