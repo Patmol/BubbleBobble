@@ -17,10 +17,10 @@ enum gameState state = LOGO;
 void init(void) {
     glShadeModel (GL_SMOOTH);
 
-    glEnable (GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
 
-    glEnable (GL_BLEND);
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // We need to load all textures of the application at the initialisation
     loadTextures("data/images.txt");

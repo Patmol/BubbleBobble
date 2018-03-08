@@ -1,4 +1,5 @@
 #include "../Engine/texture.h"
+#include "../Engine/character.h"
 
 #ifndef _HOME_H_
 #define _HOME_H_
@@ -15,9 +16,6 @@ void timerGame();
 // Handle the keyboard input
 void keyboardGame(unsigned char key);
 
-void displayPlayer();
+void characterDisplay(Character *character, GLuint textureId);
 
 #endif
-
-// Load a level (send in parameter) from a file
-void loadLevel(int);

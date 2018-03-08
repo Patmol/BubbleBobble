@@ -17,12 +17,12 @@
 #define BLOC_WIDTH 25
 #define BLOC_HEIGH 22
 #define TOP_SPACE 50
+#define PLAY_SIZE 1260
 
-#define MOVEMENT 5
-enum movement { LEFT, RIGHT, NONE };
-enum movement move;
-int incMovement;
-GLuint bubbleTextureId;
+// Load a level (send in parameter) from a file
+void loadLevel(int);
+void levelDisplay();
+void characterDisplay();
 
 // The texture of the bloc
 Texture *bloc = NULL;
@@ -37,9 +37,9 @@ void initGame(int level) {
     sprintf(blocLevelName, "bloc-level-%d", level);
 
     bloc = getTexture(blocLevelName);
-    bubble = initializeCharacter("Bubble", 0.0f, 0.23f, 10.0f, 10.0f, "bubble-left", "bubble-right");
-    bubbleTextureId = bubble->textureId1;
-    move = NONE;
+    bubble = initializeCharacter("bubble", 0.0f, 0.0f, 126.0f, 133.0f);
+    addCharacterTexture(bubble, "bubble-left", "left");
+    addCharacterTexture(bubble, "bubble-right", "right");
 
     loadLevel(level);
 }
@@ -50,62 +50,21 @@ void displayGame() {
 
     glEnable(GL_TEXTURE_2D);
 
-    // Display the bloc of the level
-    // We load the texture of the bloc
-    glBindTexture(GL_TEXTURE_2D, bloc->textureId);
-    for (int i = 0; i < LEVEL_WIDTH; i++) {
-        for (int j = 0; j < LEVEL_HEIGHT; j++) {
-            // We use the PushMatrix and PopMatrix to always start from the center of the window for our coordonates
-            if (levelStructure[i][j] != 0) {
-                glPushMatrix();
-                // We move to the position where we want to display our bloc
-                glTranslatef(
-                    -(((WINDOW_WIDTH - 25.0) - (BLOC_WIDTH * 2) * i) / 146.0), 
-                    ((((WINDOW_HEIGH - 19.0) - (BLOC_HEIGH * 2) * j) - TOP_SPACE) / 146.0), 
-                    -10.0f);
-                glBegin(GL_QUADS);
-                    glTexCoord2f(0.0f, 0.0f);
-                    glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * 44), 0.0f);
-
-                    glTexCoord2f(1.0f, 0.0f);
-                    glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * 44), 0.0f);
-
-                    glTexCoord2f(1.0f, 1.0f);
-                    glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * 44), 0.0f);
-
-                    glTexCoord2f(0.0f, 1.0f);
-                    glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * 44), 0.0f);
-                glEnd();
-                glPopMatrix();
-            }
-        }
-    }
-
-    switch(move) {
+    // Display Bubble character
+    switch (bubble->move) {
         case NONE:
+            characterDisplay(bubble, getCharacterTexture(bubble, "right"));
             break;
         case LEFT:
-            if (incMovement < MOVEMENT) {
-                bubble->position->x += 0.03f;
-                bubbleTextureId = bubble->textureId1;
-            } else {
-                move = NONE;
-            }
+            characterDisplay(bubble, getCharacterTexture(bubble, "left"));
             break;
         case RIGHT:
-        if (incMovement < MOVEMENT) {
-                bubble->position->x -= 0.03f;
-                bubbleTextureId = bubble->textureId2;
-            } else {
-                move = NONE;
-            }
+            characterDisplay(bubble, getCharacterTexture(bubble, "right"));
             break;
     }
 
-    glBindTexture(GL_TEXTURE_2D, bubbleTextureId);
-    displayPlayer();
-
-    incMovement++;
+    // Display the bloc of the level
+    levelDisplay();
 
     glDisable(GL_TEXTURE_2D);
     
@@ -118,12 +77,18 @@ void timerGame() {
 void keyboardGame(unsigned char key) {
     switch (key) {
         case 'd':
-            move = LEFT;
-            incMovement = 0;
+            bubble->move = RIGHT;
+            if (bubble->position->x + 40 < PLAY_SIZE)
+                bubble->position->x += 40;
+            else
+                bubble->position->x = PLAY_SIZE;
             break;
         case 'q':
-            move = RIGHT;
-            incMovement = 0;
+            bubble->move = LEFT;
+            if (bubble->position->x - 40 > 0)
+                bubble->position->x -= 40;
+            else
+                bubble->position->x = 0;
             break;
     }
 }
@@ -153,22 +118,61 @@ void loadLevel(int level) {
     fclose(file);
 }
 
-void displayPlayer() {
-    // We need to display the character of the player
+void levelDisplay() {
+     // We load the texture of the bloc
+    glBindTexture(GL_TEXTURE_2D, bloc->textureId);
+    for (int i = 0; i < LEVEL_WIDTH; i++) {
+        for (int j = 0; j < LEVEL_HEIGHT; j++) {
+            // We use the PushMatrix and PopMatrix to always start from the center of the window for our coordonates
+            if (levelStructure[i][j] != 0) {
+                glPushMatrix();
+                // We move to the position where we want to display our bloc
+                glTranslatef(
+                    -(((WINDOW_WIDTH - 25.0) - (BLOC_WIDTH * 2) * i) / 146.0), 
+                    ((((WINDOW_HEIGH - 19.0) - (BLOC_HEIGH * 2) * j) - TOP_SPACE) / 146.0), 
+                    -10.0f);
+                glBegin(GL_QUADS);
+                    glTexCoord2f(0.0f, 0.0f);
+                    glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * (BLOC_HEIGH * 2)), 0.0f);
+
+                    glTexCoord2f(1.0f, 0.0f);
+                    glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * (BLOC_HEIGH * 2)), 0.0f);
+
+                    glTexCoord2f(1.0f, 1.0f);
+                    glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * (BLOC_HEIGH * 2)), 0.0f);
+
+                    glTexCoord2f(0.0f, 1.0f);
+                    glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * (BLOC_HEIGH * 2)), 0.0f);
+                glEnd();
+                glPopMatrix();
+            }
+        }
+    }
+}
+
+void characterDisplay(Character *character, GLuint textureId) {
+    glBindTexture(GL_TEXTURE_2D, textureId);
+
+    // Transform x/y position in pixel of the character in OpenGL (0,0) center position
+    float x = -(WINDOW_WIDTH - (character->hitbox->width / 2) - character->position->x - ((BLOC_WIDTH * 2)) * 2) / 146.0;
+    float y = -(WINDOW_HEIGH - ((character->hitbox->height / 2) + 6) - character->position->y - (BLOC_HEIGH * 2) - TOP_SPACE) / 146.0;
+    
     glPushMatrix();
-    glTranslatef(bubble->position->x, bubble->position->y, -4.0f);
+
+    // We move to the position where we want to display our bloc
+    glTranslatef(x, y, -10.0f);
     glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 0.0f);
-        glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * 44), 0.0f);
+        glVertex3f(-((1.0/292.0) * (character->hitbox->width)), -((1.0/282.0) * (character->hitbox->height)), 0.0f);
 
         glTexCoord2f(1.0f, 0.0f);
-        glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * 44), 0.0f);
+        glVertex3f(((1.0/292.0) * (character->hitbox->width)), -((1.0/282.0) * (character->hitbox->height)), 0.0f);
 
         glTexCoord2f(1.0f, 1.0f);
-        glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * 44), 0.0f);
+        glVertex3f(((1.0/292.0) * (character->hitbox->width)), ((1.0/282.0) * (character->hitbox->height)), 0.0f);
 
         glTexCoord2f(0.0f, 1.0f);
-        glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * 44), 0.0f);        
+        glVertex3f(-((1.0/292.0) * (character->hitbox->width)), ((1.0/282.0) * (character->hitbox->height)), 0.0f);
     glEnd();
     glPopMatrix();
 }
