@@ -37,6 +37,8 @@ void initGame(int level) {
     sprintf(blocLevelName, "bloc-level-%d", level);
 
     bloc = getTexture(blocLevelName);
+
+    // We generate the Bubble character with his texture
     bubble = initializeCharacter("bubble", 0.0f, 0.0f, 126.0f, 133.0f);
     addCharacterTexture(bubble, "bubble-left", "left");
     addCharacterTexture(bubble, "bubble-right", "right");
@@ -50,7 +52,8 @@ void displayGame() {
 
     glEnable(GL_TEXTURE_2D);
 
-    // Display Bubble character
+    // Display Bubble
+    //  Depending of the movement of Bubble, we use a different texture
     switch (bubble->move) {
         case NONE:
             characterDisplay(bubble, getCharacterTexture(bubble, "right"));
@@ -118,6 +121,7 @@ void loadLevel(int level) {
     fclose(file);
 }
 
+// Display the level
 void levelDisplay() {
      // We load the texture of the bloc
     glBindTexture(GL_TEXTURE_2D, bloc->textureId);
@@ -150,6 +154,9 @@ void levelDisplay() {
     }
 }
 
+// Display a character
+//  character: the character to display
+//  textureId: the texture used to display the character
 void characterDisplay(Character *character, GLuint textureId) {
     glBindTexture(GL_TEXTURE_2D, textureId);
 
