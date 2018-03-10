@@ -12,7 +12,8 @@
 typedef enum movement {
     NONE,
     LEFT,
-    RIGHT
+    RIGHT,
+    JUMP
 } Movement;
 
 typedef struct position {

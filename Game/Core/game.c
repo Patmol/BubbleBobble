@@ -17,7 +17,8 @@
 #define BLOC_WIDTH 25
 #define BLOC_HEIGH 22
 #define TOP_SPACE 50
-#define PLAY_SIZE 1260
+#define PLAY_WIDTH_SIZE 1260
+#define PLAY_HEIGHT_SIZE 880
 
 // Load a level (send in parameter) from a file
 void loadLevel(int);
@@ -64,6 +65,9 @@ void displayGame() {
         case RIGHT:
             characterDisplay(bubble, getCharacterTexture(bubble, "right"));
             break;
+        case JUMP:
+            characterDisplay(bubble, getCharacterTexture(bubble, "right"));
+            break;
     }
 
     // Display the bloc of the level
@@ -81,10 +85,10 @@ void keyboardGame(unsigned char key) {
     switch (key) {
         case 'd':
             bubble->move = RIGHT;
-            if (bubble->position->x + 40 < PLAY_SIZE)
+            if (bubble->position->x + 40 < PLAY_WIDTH_SIZE)
                 bubble->position->x += 40;
             else
-                bubble->position->x = PLAY_SIZE;
+                bubble->position->x = PLAY_WIDTH_SIZE;
             break;
         case 'q':
             bubble->move = LEFT;
@@ -92,6 +96,13 @@ void keyboardGame(unsigned char key) {
                 bubble->position->x -= 40;
             else
                 bubble->position->x = 0;
+            break;
+        case 'z':
+            bubble->move = JUMP;
+            if (bubble->position->y + 40 < PLAY_HEIGHT_SIZE)
+                bubble->position->y += 40;
+            else
+                bubble->position->y = PLAY_HEIGHT_SIZE;
             break;
     }
 }
