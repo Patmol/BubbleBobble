@@ -11,6 +11,8 @@
 #include "character.h"
 
 #define X_MOVEMENT 10
+#define Y_MOVEMENT 15
+#define JUMP_HEIGHT 290
 
 int startJump = 0;
 
@@ -28,6 +30,8 @@ Character *initializeCharacter(char *name, float x, float y, float height, float
     character->hitbox->height = height;
     character->hitbox->width = width;
     character->indexTexture = 0;
+    character->isJumping = false;
+    character->jumpHeight = -1;
     return character;
 }
 
@@ -82,11 +86,28 @@ void move(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]) {
             break;
     }
 
-    // Check if the character is on a solid zone or not, if not, he fall
+    if (character->isJumping) {
+        if (character->jumpHeight < 0) {
+            character->jumpHeight = character->position->y + JUMP_HEIGHT;
+        }
 
-    /*
-    if (levelStructure[xLevelStructure][yLevelStructure] == 1) {
-        bubble->position->y = (23 - yLevelStructure + 1) * 45;
+        if (character->position->y < character->jumpHeight) {
+            character->position->y += Y_MOVEMENT;
+        } else {
+            character->jumpHeight = -1;
+            character->isJumping = false;
+        }
+    } else {
+        // If the character is not jumping, we need to check if we are 
+        //   on a solid zone
+        int bloc = levelStructure[xLevelStructure][yLevelStructure];
+
+        if (bloc == 0) {
+            if (character->position->y - Y_MOVEMENT >= 0) {
+                character->position->y -= Y_MOVEMENT;
+            } else {
+                character->position->y = 0;
+            }
+        }
     }
-    */
 }

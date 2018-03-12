@@ -21,7 +21,7 @@ void loadLevel(int);
 void levelDisplay();
 void characterDisplay();
 
-char previousKey;
+bool keyStates[256]; 
 
 // The texture of the bloc
 Texture *bloc = NULL;
@@ -60,8 +60,6 @@ void displayGame() {
         case RIGHT:
             characterDisplay(bubble, getCharacterTexture(bubble, "right"));
             break;
-        case JUMP:
-        case FALL:
         case NONE:
             switch (bubble->prevMove) {
                 case LEFT:
@@ -71,13 +69,12 @@ void displayGame() {
                     characterDisplay(bubble, getCharacterTexture(bubble, "right"));
                     break;
                 case NONE:
-                case JUMP:
-                case FALL:
                     break;
             }
             break;
     }
-
+    
+    bubbleMovement();
     move(bubble, levelStructure);
 
     // Display the bloc of the level
@@ -93,25 +90,10 @@ void timerGame() {
 }
 // Handle the keyboard input
 void keyboardGame(unsigned char key) {
-    previousKey = key;
-    switch (key) {
-        case 'd':
-            bubble->prevMove = RIGHT;
-            bubble->move = RIGHT;
-            break;
-        case 'q':
-            bubble->prevMove = LEFT;
-            bubble->move = LEFT;
-            break;
-        case 'z':
-            bubble->move = JUMP;
-            break;
-    }
+    keyStates[key] = true;
 }
 void keyboardUpGame(unsigned char key) {
-    if (previousKey == key) {
-        bubble->move = NONE;
-    }
+    keyStates[key] = false;
 }
 
 // Load a level (send in parameter) from a file
@@ -200,4 +182,23 @@ void characterDisplay(Character *character, GLuint textureId) {
         glVertex3f(-((1.0/292.0) * (character->hitbox->width)), ((1.0/282.0) * (character->hitbox->height)), 0.0f);
     glEnd();
     glPopMatrix();
+}
+
+// Depending on the state of the key, we apply a movement to Bubble
+void bubbleMovement() {
+    if (keyStates['q'] && keyStates['d']) {
+        bubble->move = NONE;
+    } else if (keyStates['q']) {
+        bubble->move = LEFT;
+        bubble->prevMove = LEFT;
+    } else if (keyStates['d']) {
+        bubble->move = RIGHT;
+        bubble->prevMove = RIGHT;
+    } else if (!keyStates['q'] && !keyStates['d']) {
+        bubble->move = NONE;
+    }
+
+    if (keyStates['z']) {
+        bubble->isJumping = true;
+    }
 }

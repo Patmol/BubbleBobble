@@ -18,5 +18,6 @@ void keyboardGame(unsigned char key);
 void keyboardUpGame(unsigned char key);
 
 void characterDisplay(Character *character, GLuint textureId);
+void bubbleMovement();
 
 #endif
