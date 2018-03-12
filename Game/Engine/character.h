@@ -4,16 +4,22 @@
 #include <GL/glut.h>
 #endif
 
+#include <stdbool.h>
+
 #include "texture.h"
 
 #ifndef _CHARACTER_H_
 #define _CHARACTER_H_
 
+#define LEVEL_WIDTH 32
+#define LEVEL_HEIGHT 25
+#define PLAY_WIDTH_SIZE 1260
+#define PLAY_HEIGHT_SIZE 880
+
 typedef enum movement {
     NONE,
     LEFT,
-    RIGHT,
-    JUMP
+    RIGHT
 } Movement;
 
 typedef struct position {
@@ -38,12 +44,19 @@ typedef struct character {
     Position *position;
     Hitbox *hitbox;
     Movement move;
+    Movement prevMove;
     int indexTexture;
+    float jumpHeight;
+    bool isJumping;
     CharacterTexture characterTexture[10];
 } Character;
 
 Character *initializeCharacter(char *name, float x, float y, float height, float width);
+/* Functions for the textures */
 void addCharacterTexture(Character *character, char *textureName, char name[50]);
 GLuint getCharacterTexture(Character *character, char name[50]);
+/* Functions use to move the character */
+void move(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]);
+void endMove(Character *character);
 
 #endif

@@ -15,7 +15,7 @@ enum gameState state = LOGO;
 
 // Initalize all data require for the game
 void init(void) {
-    glShadeModel (GL_SMOOTH);
+    glShadeModel(GL_SMOOTH);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -110,6 +110,22 @@ void keyboard(unsigned char key, int x, int y) {
             if (key == 13) {
                 state = HOME;
             }
+            break;
+        case SCORE:
+            break;
+    }
+}
+// Function call by GLUT to handle the keyboard
+void keyboardUp(unsigned char key, int x, int y) {
+    switch (state) {
+        case GAME:
+            keyboardUpGame(key);
+            break;
+        case HELP:
+            break;
+        case HOME:
+            break;
+        case LOGO:
             break;
         case SCORE:
             break;

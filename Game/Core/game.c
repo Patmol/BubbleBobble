@@ -12,18 +12,16 @@
 #include "game.h"
 #include "../Engine/character.h"
 
-#define LEVEL_WIDTH 32
-#define LEVEL_HEIGHT 25
 #define BLOC_WIDTH 25
-#define BLOC_HEIGH 22
+#define BLOC_HEIGHT 22
 #define TOP_SPACE 50
-#define PLAY_WIDTH_SIZE 1260
-#define PLAY_HEIGHT_SIZE 880
 
 // Load a level (send in parameter) from a file
 void loadLevel(int);
 void levelDisplay();
 void characterDisplay();
+
+char previousKey;
 
 // The texture of the bloc
 Texture *bloc = NULL;
@@ -56,9 +54,6 @@ void displayGame() {
     // Display Bubble
     //  Depending of the movement of Bubble, we use a different texture
     switch (bubble->move) {
-        case NONE:
-            characterDisplay(bubble, getCharacterTexture(bubble, "right"));
-            break;
         case LEFT:
             characterDisplay(bubble, getCharacterTexture(bubble, "left"));
             break;
@@ -66,9 +61,24 @@ void displayGame() {
             characterDisplay(bubble, getCharacterTexture(bubble, "right"));
             break;
         case JUMP:
-            characterDisplay(bubble, getCharacterTexture(bubble, "right"));
+        case FALL:
+        case NONE:
+            switch (bubble->prevMove) {
+                case LEFT:
+                    characterDisplay(bubble, getCharacterTexture(bubble, "left"));
+                    break;
+                case RIGHT:
+                    characterDisplay(bubble, getCharacterTexture(bubble, "right"));
+                    break;
+                case NONE:
+                case JUMP:
+                case FALL:
+                    break;
+            }
             break;
     }
+
+    move(bubble, levelStructure);
 
     // Display the bloc of the level
     levelDisplay();
@@ -79,31 +89,28 @@ void displayGame() {
 }
 // Timer function to handle update of the game screen
 void timerGame() {
+    move(bubble, levelStructure);
 }
 // Handle the keyboard input
 void keyboardGame(unsigned char key) {
+    previousKey = key;
     switch (key) {
         case 'd':
+            bubble->prevMove = RIGHT;
             bubble->move = RIGHT;
-            if (bubble->position->x + 40 < PLAY_WIDTH_SIZE)
-                bubble->position->x += 40;
-            else
-                bubble->position->x = PLAY_WIDTH_SIZE;
             break;
         case 'q':
+            bubble->prevMove = LEFT;
             bubble->move = LEFT;
-            if (bubble->position->x - 40 > 0)
-                bubble->position->x -= 40;
-            else
-                bubble->position->x = 0;
             break;
         case 'z':
             bubble->move = JUMP;
-            if (bubble->position->y + 40 < PLAY_HEIGHT_SIZE)
-                bubble->position->y += 40;
-            else
-                bubble->position->y = PLAY_HEIGHT_SIZE;
             break;
+    }
+}
+void keyboardUpGame(unsigned char key) {
+    if (previousKey == key) {
+        bubble->move = NONE;
     }
 }
 
@@ -144,20 +151,20 @@ void levelDisplay() {
                 // We move to the position where we want to display our bloc
                 glTranslatef(
                     -(((WINDOW_WIDTH - 25.0) - (BLOC_WIDTH * 2) * i) / 146.0), 
-                    ((((WINDOW_HEIGH - 19.0) - (BLOC_HEIGH * 2) * j) - TOP_SPACE) / 146.0), 
+                    ((((WINDOW_HEIGH - 19.0) - (BLOC_HEIGHT * 2) * j) - TOP_SPACE) / 146.0), 
                     -10.0f);
                 glBegin(GL_QUADS);
                     glTexCoord2f(0.0f, 0.0f);
-                    glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * (BLOC_HEIGH * 2)), 0.0f);
+                    glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * (BLOC_HEIGHT * 2)), 0.0f);
 
                     glTexCoord2f(1.0f, 0.0f);
-                    glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * (BLOC_HEIGH * 2)), 0.0f);
+                    glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), -((1.0/282.0) * (BLOC_HEIGHT * 2)), 0.0f);
 
                     glTexCoord2f(1.0f, 1.0f);
-                    glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * (BLOC_HEIGH * 2)), 0.0f);
+                    glVertex3f(((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * (BLOC_HEIGHT * 2)), 0.0f);
 
                     glTexCoord2f(0.0f, 1.0f);
-                    glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * (BLOC_HEIGH * 2)), 0.0f);
+                    glVertex3f(-((1.0/292.0) * (BLOC_WIDTH * 2)), ((1.0/282.0) * (BLOC_HEIGHT * 2)), 0.0f);
                 glEnd();
                 glPopMatrix();
             }
@@ -173,7 +180,7 @@ void characterDisplay(Character *character, GLuint textureId) {
 
     // Transform x/y position in pixel of the character in OpenGL (0,0) center position
     float x = -(WINDOW_WIDTH - (character->hitbox->width / 2) - character->position->x - ((BLOC_WIDTH * 2)) * 2) / 146.0;
-    float y = -(WINDOW_HEIGH - ((character->hitbox->height / 2) + 6) - character->position->y - (BLOC_HEIGH * 2) - TOP_SPACE) / 146.0;
+    float y = -(WINDOW_HEIGH - ((character->hitbox->height / 2) + 6) - character->position->y - (BLOC_HEIGHT * 2) - TOP_SPACE) / 146.0;
     
     glPushMatrix();
 
