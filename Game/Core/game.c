@@ -199,6 +199,6 @@ void bubbleMovement() {
     }
 
     if (keyStates['z']) {
-        bubble->isJumping = true;
+        jump(bubble, levelStructure);
     }
 }
