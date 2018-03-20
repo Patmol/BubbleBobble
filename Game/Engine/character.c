@@ -13,7 +13,8 @@
 
 #define X_MOVEMENT 10
 #define Y_MOVEMENT 15
-#define JUMP_HEIGHT 290
+#define JUMP_HEIGHT 350
+#define POSITION_TRANSFORM 45
 
 int startJump = 0;
 
@@ -58,15 +59,8 @@ GLuint getCharacterTexture(Character *character, char name[50]) {
 }
 
 void move(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]) {
-    // We get the position of Bubble to know where he is in the levelStructure
-    //  The minus 4 is for the 4 bloc we always have on each side of the level
-    //  The xLevelStructure need to be increase by 2 to avoid the 2 first bloc
-    int xLevelStructure = 2 + (character->position->x / 45);
-    //  The minus 2 is for the 2 bloc we always have at the top and the bottom of the level.
-    //    The one at the top is not always display but we cannot stop Bubble at this position
-    //    The yLevelStructure found is at the bottom of the array so, when we have are in 0 on the Y, we are in reality at the 23 or,
-    //    when we are at the 5, we are at 23 - 5 = 18 and so on ...
-    int yLevelStructure = (LEVEL_HEIGHT - 2) - (character->position->y / 54);
+    int yGroundPosition = 0;
+    Position groundPosition;
 
     switch (character->move) {
         case RIGHT:
@@ -87,6 +81,8 @@ void move(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]) {
             break;
     }
 
+    groundPosition = getCharacterGround(character, levelStructure);
+
     if (character->isJumping) {
         if (character->jumpHeight < 0) {
             character->jumpHeight = character->position->y + JUMP_HEIGHT;
@@ -98,32 +94,79 @@ void move(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]) {
             character->isJumping = false;
         }
     } else {
-        // If the character is not jumping, we need to check if we are 
-        //   on a solid zone
-        if (levelStructure[xLevelStructure][yLevelStructure] == 0) {
-            if (character->position->y - Y_MOVEMENT >= 0) {
-                character->position->y -= Y_MOVEMENT;
+        if (character->position->y - Y_MOVEMENT >= 0) {
+            yGroundPosition = getYGroundPosition(groundPosition.y);
+
+            if (character->position->y - Y_MOVEMENT <= yGroundPosition) {
+                character->position->y = yGroundPosition;
+                character->jumpHeight = -1;
             } else {
-                character->position->y = 0;
+                character->position->y -= Y_MOVEMENT;
             }
         } else {
-            character->jumpHeight = -1;
+            character->position->y = 0;
         }
     }
 }
 
 void jump(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]) {
+    int yLevelStructure = getYLevelStructureCharacterPosition(character);
+    Position groundPosition = getCharacterGround(character, levelStructure);
+
+    // We need to check for the yLevelStructure + 1 when the character is at the ground level
+    //  and just yLevelStructure when the character is on a platform
+    if (yLevelStructure + 1 == groundPosition.y || yLevelStructure == groundPosition.y) {
+        character->isJumping = true;
+    }
+}
+
+Position getCharacterGround(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]) {
+    int xLevelStructure = getXLevelStructureCharacterPosition(character);
+    int yLevelStructure = getYLevelStructureCharacterPosition(character);
+
+    Position position;
+
+    // We check if the x and y for the levelStructure are between our range
+    if (xLevelStructure < 2) {
+        xLevelStructure = 2;
+    } else if (xLevelStructure > LEVEL_WIDTH - 4) {
+        xLevelStructure = LEVEL_WIDTH - 4;
+    }
+
+    if (yLevelStructure < 1) {
+        yLevelStructure = 1;
+    } else if (yLevelStructure > LEVEL_HEIGHT - 2) {
+        yLevelStructure = LEVEL_HEIGHT - 2;
+    }
+
+    position.x = xLevelStructure;
+    position.y = -1;
+
+    // We check on which y axe we have the first ground
+    for (int i = yLevelStructure; i < LEVEL_HEIGHT && position.y == -1; i++) {
+        if (levelStructure[xLevelStructure][i] == 1) {
+            position.y = i;
+        }
+    }
+
+    return position;
+}
+
+int getXLevelStructureCharacterPosition(Character *character) {
     // We get the position of Bubble to know where he is in the levelStructure
     //  The minus 4 is for the 4 bloc we always have on each side of the level
     //  The xLevelStructure need to be increase by 2 to avoid the 2 first bloc
-    int xLevelStructure = 2 + (character->position->x / 45);
+    return 2 + (character->position->x / POSITION_TRANSFORM);
+}
+
+int getYLevelStructureCharacterPosition(Character *character) {
     //  The minus 2 is for the 2 bloc we always have at the top and the bottom of the level.
     //    The one at the top is not always display but we cannot stop Bubble at this position
     //    The yLevelStructure found is at the bottom of the array so, when we have are in 0 on the Y, we are in reality at the 23 or,
     //    when we are at the 5, we are at 23 - 5 = 18 and so on ...
-    int yLevelStructure = (LEVEL_HEIGHT - 2) - (character->position->y / 54);
+    return (LEVEL_HEIGHT - 2) - (int)(character->position->y / POSITION_TRANSFORM);
+}
 
-    if (levelStructure[xLevelStructure][yLevelStructure] == 1 || levelStructure[xLevelStructure][yLevelStructure + 1] == 1) {
-        character->isJumping = true;
-    }
+int getYGroundPosition(int yPosition) {
+    return ((LEVEL_HEIGHT - 1 - yPosition) * (POSITION_TRANSFORM - 1));
 }

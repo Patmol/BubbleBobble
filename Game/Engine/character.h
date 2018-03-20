@@ -58,5 +58,10 @@ GLuint getCharacterTexture(Character *character, char name[50]);
 /* Functions use to move the character */
 void move(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]);
 void jump(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]);
+Position getCharacterGround(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]);
+
+int getXLevelStructureCharacterPosition(Character *character);
+int getYLevelStructureCharacterPosition(Character *character);
+int getYGroundPosition(int position);
 
 #endif
