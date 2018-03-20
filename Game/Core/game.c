@@ -18,8 +18,10 @@
 
 // Load a level (send in parameter) from a file
 void loadLevel(int);
+// Display the level
 void levelDisplay();
-void characterDisplay();
+// Display a character
+void characterDisplay(Character *character, GLuint textureId);
 
 bool keyStates[256]; 
 

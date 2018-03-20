@@ -7,10 +7,6 @@
 #include <stdio.h>
 #include "Core/glut.h"
 
-/*
- * Request double buffer display mode
- * Register mouse input callback functions
- */
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
