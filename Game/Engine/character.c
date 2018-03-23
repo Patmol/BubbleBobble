@@ -46,6 +46,16 @@ void addCharacterTexture(Character *character, char *textureName, char name[50])
     }
 }
 
+//! Set the texture of the weapon.
+/*!
+  \param character is a pointer to a character.
+  \param textureName is a constant charater pointer.
+*/
+void setBulletTexture(Character *character, char *textureName) {
+    Texture *texture = getTexture(textureName);
+    character->bulletTextureId = texture->textureId;
+}
+
 GLuint getCharacterTexture(Character *character, char name[50]) {
     GLuint textureId = -1;
     

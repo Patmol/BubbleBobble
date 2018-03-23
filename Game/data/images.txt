@@ -2,3 +2,4 @@ images/bloc-level-1.tga bloc-level-1
 images/logo.tga logo
 images/bubble-left.tga bubble-left
 images/bubble-right.tga bubble-right
+images/green-bubble.tga bubble-bullet
