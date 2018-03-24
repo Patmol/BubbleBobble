@@ -42,6 +42,15 @@ typedef struct characterTexture {
     GLuint textureId;   /*!< The OpenGL texture identifiant. */
 } CharacterTexture;
 
+//! The structure for a bullet shot by the character
+typedef struct bullet {
+    GLuint textureId;   /*!< The texture of the bullet */
+    Position *position; /*!< The position of the bullet in the space (at the bottom left). */
+    Hitbox *hitbox;     /*!< The hitbox of the bullet. */
+    Movement move;      /*!< The movement of the bullet */
+    float speed;        /*!< The speed of the bullet */
+} Bullet;
+
 //! The structure for a character.
 typedef struct character {
     char name[100];             /*!< The name of the character. */
@@ -54,7 +63,7 @@ typedef struct character {
     float jumpHeight;           /*!< The maximum height of the jump. */
     bool isJumping;             /*!< If the character is jumping or not. */
     CharacterTexture characterTexture[10];  /*!< An array contening all textures of the character */
-    GLuint bulletTextureId;     /*!< The texture identifier for the bullet */  
+    Bullet *bullet;              /*< The bullet use by the character */
 } Character;
 
 //! Initialize a character.
@@ -76,13 +85,6 @@ Character *initializeCharacter(char *name, float x, float y, float height, float
 */ 
 void addCharacterTexture(Character *character, char *textureName, char name[50]);
 
-//! Set the texture of the weapon.
-/*!
-  \param character is a pointer to a character.
-  \param textureName is a constant charater pointer.
-*/
-void setBulletTexture(Character *character, char *textureName);
-
 //! Get the texture ID of a character.
 /*!
   \param character is a pointer to a character.
@@ -96,14 +98,14 @@ GLuint getCharacterTexture(Character *character, char name[50]);
   \param character is a pointer to a character.
   \param levelStructure is a 2D array (LEVEL_WIDTH/LEVEL_HEIGHT)
 */
-void move(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]);
+void moveCharacter(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]);
 
 //! Make a character jump.
 /*!
   \param character is a pointer to a character.
   \param levelStructure is a 2D array (LEVEL_WIDTH/LEVEL_HEIGHT)
 */
-void jump(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]);
+void jumpCharacter(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]);
 
 //! Get the position of the groun under the character.
 /*!

@@ -16,6 +16,11 @@
 #define BLOC_WIDTH 25
 #define BLOC_HEIGHT 22
 #define TOP_SPACE 50
+#define BULLET_WIDTH 38
+#define BULLET_HEIGHT 32
+#define BULLET_SPEED 20
+#define SHOT_LIMIT 15
+#define SHOT_REMOVE_SAFE_ZONE 200
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/
@@ -27,6 +32,11 @@
 void loadLevel(int);
 //! Display a level
 void levelDisplay();
+//! Manage the way the character is display. The character must have a left and a right texture.
+/*!
+  \param character is a pointer to a character.
+*/
+void characterDisplayManagement(Character *character);
 //! Display a character
 /*!
   \param character is a pointer to a character.
@@ -37,17 +47,22 @@ void characterDisplay(Character *character, GLuint textureId);
 void bulletsDisplay();
 //! Handle the action of the bubble character
 void bubbleAction();
+//! Make all bullets move
+void bulletsMovement();
 
 /**************************************************************************/
 /******************************* VARIABLES ********************************/
 /**************************************************************************/
+//! The state of the keyboard key
 bool keyStates[256]; 
+//! The shot timer
+int shotTimer = 0;
+//! An array contening the structure of the level
+int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT];
 //! The texture of the bloc
 Texture *bloc = NULL;
 //! The character 'Bubble'
 Character *bubble = NULL;
-//! An array contening the structure of the level
-int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT];
 //! The first pointer to the list of bullets
 Bullets *bullets = NULL;
 
@@ -68,7 +83,7 @@ void initGame(int level) {
     bubble = initializeCharacter("bubble", 0.0f, 0.0f, 126.0f, 133.0f);
     addCharacterTexture(bubble, "bubble-left", "left");
     addCharacterTexture(bubble, "bubble-right", "right");
-    setBulletTexture(bubble, "bubble-bullet");
+    setBullet(bubble, "bubble-bullet", BULLET_HEIGHT, BULLET_WIDTH, BULLET_SPEED);
 
     loadLevel(level);
 }
@@ -79,35 +94,18 @@ void displayGame() {
 
     glEnable(GL_TEXTURE_2D);
 
+    // Display the bullets
+    bulletsDisplay();
+
     // Display Bubble
-    //  Depending of the movement of Bubble, we use a different texture
-    switch (bubble->move) {
-        case LEFT:
-            characterDisplay(bubble, getCharacterTexture(bubble, "left"));
-            break;
-        case RIGHT:
-            characterDisplay(bubble, getCharacterTexture(bubble, "right"));
-            break;
-        case NONE:
-            switch (bubble->prevMove) {
-                case LEFT:
-                    characterDisplay(bubble, getCharacterTexture(bubble, "left"));
-                    break;
-                case RIGHT:
-                    characterDisplay(bubble, getCharacterTexture(bubble, "right"));
-                    break;
-                case NONE:
-                    break;
-            }
-            break;
-    }
+    characterDisplayManagement(bubble);
     
     bubbleAction();
-    move(bubble, levelStructure);
+    moveCharacter(bubble, levelStructure);
+    bulletsMovement();
 
     // Display the bloc of the level
     levelDisplay();
-    bulletsDisplay();
 
     glDisable(GL_TEXTURE_2D);
     
@@ -115,7 +113,8 @@ void displayGame() {
 }
 //! Timer function to handle update of the game screen.
 void timerGame() {
-    move(bubble, levelStructure);
+    moveCharacter(bubble, levelStructure);
+    bulletsMovement();
 }
 //! Handle when a key is press on the keyboard.
 /*!
@@ -190,6 +189,33 @@ void levelDisplay() {
         }
     }
 }
+//! Manage the way the character is display. The character must have a left and a right texture.
+/*!
+  \param character is a pointer to a character.
+*/
+void characterDisplayManagement(Character *character) {
+    //  Depending of the movement of character, we use a different texture
+    switch (character->move) {
+        case LEFT:
+            characterDisplay(character, getCharacterTexture(character, "left"));
+            break;
+        case RIGHT:
+            characterDisplay(character, getCharacterTexture(character, "right"));
+            break;
+        case NONE:
+            switch (character->prevMove) {
+                case LEFT:
+                    characterDisplay(character, getCharacterTexture(character, "left"));
+                    break;
+                case RIGHT:
+                    characterDisplay(character, getCharacterTexture(character, "right"));
+                    break;
+                case NONE:
+                    break;
+            }
+            break;
+    }
+}
 //! Display a character
 /*!
   \param character is a pointer to a character.
@@ -234,7 +260,7 @@ void bulletsDisplay() {
             
         glPushMatrix();
 
-            // We move to the position where we want to display our bloc
+        // We move to the position where we want to display our bloc
         glTranslatef(x, y, -10.0f);
         glBegin(GL_QUADS);
             glTexCoord2f(0.0f, 0.0f);
@@ -269,23 +295,59 @@ void bubbleAction() {
     }
 
     if (keyStates['z']) {
-        jump(bubble, levelStructure);
+        jumpCharacter(bubble, levelStructure);
     }
 
     if (keyStates['e']) {
-        Bullet *bullet = shot(bubble);
+        if (shotTimer == 0) {
+            shotTimer++;
+            Bullet *bullet = shot(bubble);
 
-        // There is no bullets yet shot
-        if (bullets == NULL) {
-            bullets = malloc(sizeof(Bullets));
-            bullets->bullet = bullet;
-            bullets->next = NULL;
-        } else {
-            // Otherwise, we add the bullet at the begin of the list of bullets shot
-            Bullets *newBullets = malloc(sizeof(Bullets));
-            newBullets->bullet = bullet;
-            newBullets->next = bullets;
-            bullets = newBullets;
+            // There is no bullets yet shot
+            if (bullets == NULL) {
+                bullets = malloc(sizeof(Bullets));
+                bullets->bullet = bullet;
+                bullets->next = NULL;
+            } else {
+                // Otherwise, we add the bullet at the begin of the list of bullets shot
+                Bullets *newBullets = malloc(sizeof(Bullets));
+                newBullets->bullet = bullet;
+                newBullets->next = bullets;
+                bullets = newBullets;
+            }
         }
+    }
+}
+//! Make all bullets move
+void bulletsMovement() {
+    Bullets *displayBullets = bullets;
+    Bullets *prevDisplayBullets = NULL;
+
+    while (displayBullets != NULL) {
+        moveBullet(displayBullets->bullet);
+
+        // We need to check the position of the bullet, if this bullet is out of the screen,
+        // we need to free the memory for it
+        if (displayBullets->bullet->position->x < (0 - SHOT_REMOVE_SAFE_ZONE) || 
+            displayBullets->bullet->position->x > (PLAY_WIDTH_SIZE + SHOT_REMOVE_SAFE_ZONE)) {
+                if (prevDisplayBullets == NULL) {
+                    bullets = displayBullets->next;
+                    free(displayBullets);
+                    displayBullets = bullets;
+                } else {
+                    prevDisplayBullets->next = displayBullets->next;
+                    free(displayBullets);
+                    displayBullets = prevDisplayBullets->next;
+                }
+            } else {
+                prevDisplayBullets = displayBullets;
+                displayBullets = displayBullets->next;
+            }
+    }
+
+    if (shotTimer > 0 && shotTimer < SHOT_LIMIT) {
+        shotTimer++;
+    } else {
+        shotTimer = 0;
     }
 }

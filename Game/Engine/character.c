@@ -46,16 +46,6 @@ void addCharacterTexture(Character *character, char *textureName, char name[50])
     }
 }
 
-//! Set the texture of the weapon.
-/*!
-  \param character is a pointer to a character.
-  \param textureName is a constant charater pointer.
-*/
-void setBulletTexture(Character *character, char *textureName) {
-    Texture *texture = getTexture(textureName);
-    character->bulletTextureId = texture->textureId;
-}
-
 GLuint getCharacterTexture(Character *character, char name[50]) {
     GLuint textureId = -1;
     
@@ -68,7 +58,7 @@ GLuint getCharacterTexture(Character *character, char name[50]) {
     return textureId;
 }
 
-void move(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]) {
+void moveCharacter(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]) {
     int yGroundPosition = 0;
     Position groundPosition;
 
@@ -119,7 +109,7 @@ void move(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]) {
     }
 }
 
-void jump(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]) {
+void jumpCharacter(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]) {
     int yLevelStructure = getYLevelStructureCharacterPosition(character);
     Position groundPosition = getCharacterGround(character, levelStructure);
 
