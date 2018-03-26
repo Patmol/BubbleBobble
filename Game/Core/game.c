@@ -21,6 +21,7 @@
 #define BULLET_SPEED 20
 #define SHOT_LIMIT 15
 #define SHOT_REMOVE_SAFE_ZONE 200
+#define ENNEMIES_NUMBER 4
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/
@@ -49,6 +50,12 @@ void bulletsDisplay();
 void bubbleAction();
 //! Make all bullets move
 void bulletsMovement();
+//! Initialize the ennemies
+void ennemiesInit();
+//! Display the ennemies
+void ennemiesDisplay();
+//! Check if a bullet hit an ennemy
+void ennemiesHits();
 
 /**************************************************************************/
 /******************************* VARIABLES ********************************/
@@ -65,6 +72,8 @@ Texture *bloc = NULL;
 Character *bubble = NULL;
 //! The first pointer to the list of bullets
 Bullets *bullets = NULL;
+//! The first pointer to the list of ennemies
+Ennemies *ennemies = NULL;
 
 /**************************************************************************/
 /************************ FUNCTIONS IMPLEMENTATION ************************/
@@ -86,6 +95,7 @@ void initGame(int level) {
     setBullet(bubble, "bubble-bullet", BULLET_HEIGHT, BULLET_WIDTH, BULLET_SPEED);
 
     loadLevel(level);
+    ennemiesInit();
 }
 //! Display the game screen.
 void displayGame() {
@@ -99,6 +109,7 @@ void displayGame() {
 
     // Display Bubble
     characterDisplayManagement(bubble);
+    ennemiesDisplay();
     
     bubbleAction();
     moveCharacter(bubble, levelStructure);
@@ -351,3 +362,35 @@ void bulletsMovement() {
         shotTimer = 0;
     }
 }
+//! Initialize the ennemies
+void ennemiesInit() {
+    Ennemies *prevEnnemy = NULL;
+    Ennemies *ennemy = NULL;
+
+    for (int i = 0; i < ENNEMIES_NUMBER; i++) {
+        ennemy = malloc(sizeof(Ennemies));
+        ennemy->ennemy = initializeCharacter("ennemi", 0, 0,  126.0f, 133.0f);
+        addCharacterTexture(ennemy->ennemy, "ennemi-1", "left");
+        addCharacterTexture(ennemy->ennemy, "ennemi-1", "right");
+        ennemy->next = NULL;
+
+        if (ennemies == NULL) {
+            ennemies = ennemy;
+            prevEnnemy = ennemy;
+        } else {
+            prevEnnemy->next = ennemy;
+            prevEnnemy = ennemy;
+        }
+    }
+}
+//! Display the ennemies
+void ennemiesDisplay() {
+    Ennemies *displayEnnemy = ennemies;
+
+    while (displayEnnemy != NULL) {
+        characterDisplayManagement(displayEnnemy->ennemy);
+        displayEnnemy = displayEnnemy->next;
+    }
+}
+//! Check if a bullet hit an ennemy
+void ennemiesHits();

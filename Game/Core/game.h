@@ -14,6 +14,11 @@ typedef struct bullets {
     struct bullets *next;          /*!< The next bullet in the list */
 } Bullets;
 
+typedef struct ennemies {
+    Character *ennemy;
+    struct ennemies *next;
+} Ennemies;
+
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/
 /**************************************************************************/

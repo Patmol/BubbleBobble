@@ -3,3 +3,4 @@ images/logo.tga logo
 images/bubble-left.tga bubble-left
 images/bubble-right.tga bubble-right
 images/green-bubble.tga bubble-bullet
+images/ennemi-1.tga ennemi-1
