@@ -7,6 +7,7 @@
 #include <stdbool.h>
 
 #include "texture.h"
+#include "hitbox.h"
 
 #ifndef _CHARACTER_H_
 #define _CHARACTER_H_
@@ -22,19 +23,6 @@ typedef enum movement {
     LEFT,               /*!< The character is moving to the left. */ 
     RIGHT               /*!< The character is moving to the right. */ 
 } Movement;
-
-//! The structure for a position in a 2D space.
-typedef struct position {
-    float x;            /*!< The position on the horizontal axe. */
-    float y;            /*!< The position on the vertical axe. */
-} Position;
-
-//! The structure for a hitbox.
-typedef struct hitbox {
-    float height;       /*!< The height of the hitbox. */
-    float width;        /*!< The width of the hitbox. */
-    Position *origin;   /*!< The orgion position of the hitbox. */
-} Hitbox;
 
 //! The structure for a texture used by a character.
 typedef struct characterTexture {

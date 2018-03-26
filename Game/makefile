@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall -std=c99 -framework OpenGL -framework GLUT -lm -g -Wno-deprecated
-OBJ=texture.o character.o weapon.o tga.o home.o game.o glut.o main.o
+OBJ=texture.o character.o weapon.o hitbox.o tga.o home.o game.o glut.o main.o
 
 bubble: $(OBJ)
 	$(CC) -o BubbleBobble $(OBJ) $(CFLAGS)
@@ -10,6 +10,9 @@ tga.o: Engine/tga.h Engine/tga.c
 
 weapon.o: Engine/weapon.h Engine/weapon.c
 	$(CC) -c Engine/weapon.c -o weapon.o $(CFLAGS)
+
+hitbox.o: Engine/hitbox.h Engine/hitbox.c
+	$(CC) -c Engine/hitbox.c -o hitbox.o $(CFLAGS)
 
 character.o: Engine/character.h Engine/character.c
 	$(CC) -c Engine/character.c -o character.o $(CFLAGS)

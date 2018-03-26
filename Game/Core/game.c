@@ -19,9 +19,9 @@
 #define BULLET_WIDTH 38
 #define BULLET_HEIGHT 32
 #define BULLET_SPEED 20
-#define SHOT_LIMIT 15
+#define SHOT_LIMIT 30
 #define SHOT_REMOVE_SAFE_ZONE 200
-#define ENNEMIES_NUMBER 4
+#define ENNEMIES_NUMBER 1
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/
@@ -114,6 +114,7 @@ void displayGame() {
     bubbleAction();
     moveCharacter(bubble, levelStructure);
     bulletsMovement();
+    ennemiesHits();
 
     // Display the bloc of the level
     levelDisplay();
@@ -343,10 +344,12 @@ void bulletsMovement() {
             displayBullets->bullet->position->x > (PLAY_WIDTH_SIZE + SHOT_REMOVE_SAFE_ZONE)) {
                 if (prevDisplayBullets == NULL) {
                     bullets = displayBullets->next;
+                    // Free the bullets object
                     free(displayBullets);
                     displayBullets = bullets;
                 } else {
                     prevDisplayBullets->next = displayBullets->next;
+                    // Free the bullets object
                     free(displayBullets);
                     displayBullets = prevDisplayBullets->next;
                 }
@@ -393,4 +396,50 @@ void ennemiesDisplay() {
     }
 }
 //! Check if a bullet hit an ennemy
-void ennemiesHits();
+void ennemiesHits() {
+    Bullets *checkBullet = bullets;
+    Bullets *prevBullet = NULL;
+    Ennemies *checkEnnemy = ennemies;
+    Ennemies *prevEnnemy = NULL;
+
+    while (checkBullet != NULL) {
+        while (checkEnnemy != NULL) {
+            if (checkBullet != NULL && checkEnnemy != NULL && 
+                isHit(checkBullet->bullet->position, checkBullet->bullet->hitbox, 
+                checkEnnemy->ennemy->position, checkEnnemy->ennemy->hitbox)) {
+                // If we have a hit, we need to remove the bullet for the bullets list
+                //  and the ennemy from the ennemies list
+                // We remove the bullet
+                if (prevBullet == NULL) {
+                    // It's the first bullet of the list
+                    bullets = checkBullet->next;
+                    free(checkBullet);
+                    checkBullet = bullets;
+                } else {
+                    prevBullet->next = checkBullet->next;
+                    free(checkBullet);
+                    checkBullet = prevBullet;
+                }
+                // We remove the ennemy
+                if (prevEnnemy == NULL) {
+                    // It's the first bullet of the list
+                    ennemies = checkEnnemy->next;
+                    free(checkEnnemy);
+                    checkEnnemy = ennemies;
+                } else {
+                    prevEnnemy->next = checkEnnemy->next;
+                    free(checkEnnemy);
+                    checkEnnemy = prevEnnemy;
+                }
+            }
+
+            if (checkEnnemy != NULL) {
+                checkEnnemy = checkEnnemy->next;
+            }
+        }
+
+        if (checkBullet != NULL) {
+            checkBullet = checkBullet->next;
+        }
+    }
+}
