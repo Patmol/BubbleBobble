@@ -22,6 +22,6 @@ typedef struct hitbox {
   \param hitbox1 is a hitbox structure
   \param hitbox2 is a hitbox structure
 */
-bool isHit(Position *position1, Hitbox *hitbox1, Position *position2, Hitbox *hitbox2);
+bool isHit(Hitbox *hitbox1, Hitbox *hitbox2);
 
 #endif

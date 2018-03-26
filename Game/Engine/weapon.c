@@ -52,7 +52,7 @@ Bullet* shot(Character *character) {
     bullet->hitbox = malloc(sizeof(Hitbox));
     bullet->hitbox->height = character->bullet->hitbox->height; 
     bullet->hitbox->width = character->bullet->hitbox->width;
-    bullet->hitbox->origin = character->position;
+    bullet->hitbox->origin = bullet->position;
     bullet->speed = character->bullet->speed;
     return bullet;
 }

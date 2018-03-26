@@ -405,8 +405,7 @@ void ennemiesHits() {
     while (checkBullet != NULL) {
         while (checkEnnemy != NULL) {
             if (checkBullet != NULL && checkEnnemy != NULL && 
-                isHit(checkBullet->bullet->position, checkBullet->bullet->hitbox, 
-                checkEnnemy->ennemy->position, checkEnnemy->ennemy->hitbox)) {
+                isHit(checkBullet->bullet->hitbox, checkEnnemy->ennemy->hitbox)) {
                 // If we have a hit, we need to remove the bullet for the bullets list
                 //  and the ennemy from the ennemies list
                 // We remove the bullet
