@@ -11,17 +11,17 @@
 #include "texture.h"
 #include "character.h"
 
-#define X_MOVEMENT 10
 #define Y_MOVEMENT 15
 #define JUMP_HEIGHT 350
 #define POSITION_TRANSFORM 45
 
 int startJump = 0;
 
-Character *initializeCharacter(char *name, float x, float y, float height, float width) {
+Character *initializeCharacter(char *name, int speed, float x, float y, float height, float width) {
     Character *character = malloc(sizeof(Character));
     strcpy(character->name, name);
     character->life = 100;
+    character->speed = speed;
     character->prevMove = RIGHT;
     character->move = NONE;
     character->position = malloc(sizeof(Position));
@@ -65,15 +65,15 @@ void moveCharacter(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_H
     switch (character->move) {
         case RIGHT:
             // We move the character to the right
-            if (character->position->x + X_MOVEMENT < PLAY_WIDTH_SIZE)
-                character->position->x += X_MOVEMENT;
+            if (character->position->x + character->speed < PLAY_WIDTH_SIZE)
+                character->position->x += character->speed;
             else
                 character->position->x = PLAY_WIDTH_SIZE;
             break;
         case LEFT:
             // We move the character to the left
-            if (character->position->x - X_MOVEMENT > 0)
-                character->position->x -= X_MOVEMENT;
+            if (character->position->x - character->speed > 0)
+                character->position->x -= character->speed;
             else
                 character->position->x = 0;
             break;

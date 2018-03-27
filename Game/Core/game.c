@@ -56,6 +56,8 @@ void ennemiesInit();
 void ennemiesDisplay();
 //! Check if a bullet hit an ennemy
 void ennemiesHits();
+//! Make the ennemies move
+void ennemiesCatch();
 
 /**************************************************************************/
 /******************************* VARIABLES ********************************/
@@ -89,7 +91,7 @@ void initGame(int level) {
     bloc = getTexture(blocLevelName);
 
     // We generate the Bubble character with his texture
-    bubble = initializeCharacter("bubble", 0.0f, 0.0f, 126.0f, 133.0f);
+    bubble = initializeCharacter("bubble", 10, 0.0f, 0.0f, 126.0f, 133.0f);
     addCharacterTexture(bubble, "bubble-left", "left");
     addCharacterTexture(bubble, "bubble-right", "right");
     setBullet(bubble, "bubble-bullet", BULLET_HEIGHT, BULLET_WIDTH, BULLET_SPEED);
@@ -127,6 +129,18 @@ void displayGame() {
 void timerGame() {
     moveCharacter(bubble, levelStructure);
     bulletsMovement();
+
+    Ennemies *moveEnnemy = ennemies;
+
+    while (moveEnnemy != NULL) {
+        moveCharacter(moveEnnemy->ennemy, levelStructure);
+
+        moveEnnemy = moveEnnemy->next;
+    }
+}
+//! Timer function to handle update of the game screen.
+void longTimerGame() {
+    ennemiesCatch();
 }
 //! Handle when a key is press on the keyboard.
 /*!
@@ -372,7 +386,7 @@ void ennemiesInit() {
 
     for (int i = 0; i < ENNEMIES_NUMBER; i++) {
         ennemy = malloc(sizeof(Ennemies));
-        ennemy->ennemy = initializeCharacter("ennemi", 0, 0,  126.0f, 133.0f);
+        ennemy->ennemy = initializeCharacter("ennemi", 20, 0, (WINDOW_WIDTH * 2) + 50,  126.0f, 133.0f);
         addCharacterTexture(ennemy->ennemy, "ennemi-1", "left");
         addCharacterTexture(ennemy->ennemy, "ennemi-1", "right");
         ennemy->next = NULL;
@@ -440,5 +454,31 @@ void ennemiesHits() {
         if (checkBullet != NULL) {
             checkBullet = checkBullet->next;
         }
+    }
+}
+//! Make the ennemies move
+void ennemiesCatch() {
+    Ennemies *moveEnnemy = ennemies;
+
+    while (moveEnnemy != NULL) {
+        if (moveEnnemy->ennemy->position->y > bubble->position->y) {
+            if (bubble->position->x < WINDOW_WIDTH / 2) {
+                moveEnnemy->ennemy->move = LEFT;
+            } else {
+                moveEnnemy->ennemy->move = RIGHT;
+            }
+        } else {
+            if (moveEnnemy->ennemy->position->x > bubble->position->x) {
+                moveEnnemy->ennemy->move = LEFT;
+            } else {
+                moveEnnemy->ennemy->move = RIGHT;
+            }
+
+            if (moveEnnemy->ennemy->position->y < bubble->position->y) {
+                jumpCharacter(moveEnnemy->ennemy, levelStructure);
+            }
+        }
+
+        moveEnnemy = moveEnnemy->next;
     }
 }

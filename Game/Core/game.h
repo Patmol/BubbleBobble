@@ -31,6 +31,8 @@ void initGame(int);
 void displayGame();
 //! Timer function to handle update of the game screen.
 void timerGame();
+//! Timer function to handle update of the game screen.
+void longTimerGame();
 //! Handle when a key is press on the keyboard.
 /*!
   \param key an unsigned character

@@ -11,7 +11,14 @@
 #include "game.h"
 #include "../Engine/texture.h"
 
-enum gameState state = LOGO;
+enum gameState state = GAME;
+
+void initGame(int);
+void displayGame();
+void timerGame();
+void longTimerGame();
+void keyboardGame();
+void keyboardUpGame();
 
 // Initalize all data require for the game
 void init(void) {
@@ -68,6 +75,24 @@ void timer(int value) {
     }
     glutPostRedisplay();
     glutTimerFunc(TIMER, timer, 0);
+}
+void longTimer(int value) {
+    switch (state) {
+        case GAME:
+            longTimerGame();
+            break;
+        case HELP:
+            break;
+        case HOME:
+            break;
+        case LOGO:
+            break;
+        case SCORE:
+            break;
+        
+    }
+    glutPostRedisplay();
+    glutTimerFunc(LONG_TIMER, longTimer, 0);
 }
 // Function call by GLUT when the window is resize
 void reshape(int w, int h) {

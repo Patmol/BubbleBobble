@@ -43,6 +43,7 @@ typedef struct bullet {
 typedef struct character {
     char name[100];             /*!< The name of the character. */
     int life;                   /*!< The life of the character */
+    int speed;                  /*!< The speed of the character */
     Position *position;         /*!< The position of the character in the space (at the bottom left). */
     Hitbox *hitbox;             /*!< The hitbox of the character. */
     Movement move;              /*!< The movement of the character. */
@@ -63,7 +64,7 @@ typedef struct character {
   \param width is an integer argument for the hitbox width.
   \return The character
 */
-Character *initializeCharacter(char *name, float x, float y, float height, float width);
+Character *initializeCharacter(char *name, int speed, float x, float y, float height, float width);
 
 //! Add a texture to a character.
 /*!
