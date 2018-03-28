@@ -11,17 +11,17 @@
 #include "texture.h"
 #include "character.h"
 
-#define Y_MOVEMENT 15
 #define JUMP_HEIGHT 350
 #define POSITION_TRANSFORM 45
 
 int startJump = 0;
 
-Character *initializeCharacter(char *name, int speed, float x, float y, float height, float width) {
+Character *initializeCharacter(char *name, int speed, int fallSpeed, float x, float y, float height, float width) {
     Character *character = malloc(sizeof(Character));
     strcpy(character->name, name);
     character->life = 100;
     character->speed = speed;
+    character->fallSpeed = fallSpeed;
     character->prevMove = RIGHT;
     character->move = NONE;
     character->position = malloc(sizeof(Position));
@@ -89,19 +89,19 @@ void moveCharacter(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_H
         }
 
         if (character->position->y < character->jumpHeight) {
-            character->position->y += Y_MOVEMENT;
+            character->position->y += character->fallSpeed;
         } else {
             character->isJumping = false;
         }
     } else {
-        if (character->position->y - Y_MOVEMENT >= 0) {
+        if (character->position->y - character->fallSpeed >= 0) {
             yGroundPosition = getYGroundPosition(groundPosition.y);
 
-            if (character->position->y - Y_MOVEMENT <= yGroundPosition) {
+            if (character->position->y - character->fallSpeed <= yGroundPosition) {
                 character->position->y = yGroundPosition;
                 character->jumpHeight = -1;
             } else {
-                character->position->y -= Y_MOVEMENT;
+                character->position->y -= character->fallSpeed;
             }
         } else {
             character->position->y = 0;

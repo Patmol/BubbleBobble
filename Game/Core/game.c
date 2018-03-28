@@ -6,6 +6,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 #include <stdio.h>
 
 #include "glut.h"
@@ -85,13 +86,14 @@ Ennemies *ennemies = NULL;
   \param an integer for the level to initialize
 */
 void initGame(int level) {
+    srand(time(NULL));
     char blocLevelName[100];
     sprintf(blocLevelName, "bloc-level-%d", level);
 
     bloc = getTexture(blocLevelName);
 
     // We generate the Bubble character with his texture
-    bubble = initializeCharacter("bubble", 10, 0.0f, 0.0f, 126.0f, 133.0f);
+    bubble = initializeCharacter("bubble", 10, 15, 0.0f, 0.0f, 126.0f, 133.0f);
     addCharacterTexture(bubble, "bubble-left", "left");
     addCharacterTexture(bubble, "bubble-right", "right");
     setBullet(bubble, "bubble-bullet", BULLET_HEIGHT, BULLET_WIDTH, BULLET_SPEED);
@@ -386,9 +388,9 @@ void ennemiesInit() {
 
     for (int i = 0; i < ENNEMIES_NUMBER; i++) {
         ennemy = malloc(sizeof(Ennemies));
-        ennemy->ennemy = initializeCharacter("ennemi", 20, 0, (WINDOW_WIDTH * 2) + 50,  126.0f, 133.0f);
-        addCharacterTexture(ennemy->ennemy, "ennemi-1", "left");
-        addCharacterTexture(ennemy->ennemy, "ennemi-1", "right");
+        ennemy->ennemy = initializeCharacter("ennemi", 15 + (rand() % 15), 15 + (rand() % 15), (i * ((WINDOW_WIDTH * 2) / ENNEMIES_NUMBER)), (WINDOW_WIDTH * 2) + 50,  126.0f, 133.0f);
+        addCharacterTexture(ennemy->ennemy, "ennemi-1-left", "left");
+        addCharacterTexture(ennemy->ennemy, "ennemi-1-right", "right");
         ennemy->next = NULL;
 
         if (ennemies == NULL) {
