@@ -22,7 +22,7 @@
 #define BULLET_SPEED 20
 #define SHOT_LIMIT 30
 #define SHOT_REMOVE_SAFE_ZONE 200
-#define ENNEMIES_NUMBER 1
+#define ENNEMIES_NUMBER 4
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/
@@ -96,7 +96,7 @@ void initGame(int level) {
     bubble = initializeCharacter("bubble", 10, 15, 0.0f, 0.0f, 126.0f, 133.0f);
     addCharacterTexture(bubble, "bubble-left", "left");
     addCharacterTexture(bubble, "bubble-right", "right");
-    setBullet(bubble, "bubble-bullet", BULLET_HEIGHT, BULLET_WIDTH, BULLET_SPEED);
+    setBullet(bubble, "bubble-bullet", BULLET_HEIGHT, BULLET_WIDTH, BULLET_SPEED, 100);
 
     loadLevel(level);
     ennemiesInit();
@@ -407,7 +407,9 @@ void ennemiesDisplay() {
     Ennemies *displayEnnemy = ennemies;
 
     while (displayEnnemy != NULL) {
-        characterDisplayManagement(displayEnnemy->ennemy);
+        if (displayEnnemy->ennemy->life > 0) {
+            characterDisplayManagement(displayEnnemy->ennemy);
+        }
         displayEnnemy = displayEnnemy->next;
     }
 }
@@ -416,36 +418,30 @@ void ennemiesHits() {
     Bullets *checkBullet = bullets;
     Bullets *prevBullet = NULL;
     Ennemies *checkEnnemy = ennemies;
-    Ennemies *prevEnnemy = NULL;
 
     while (checkBullet != NULL) {
         while (checkEnnemy != NULL) {
             if (checkBullet != NULL && checkEnnemy != NULL && 
                 isHit(checkBullet->bullet->hitbox, checkEnnemy->ennemy->hitbox)) {
                 // If we have a hit, we need to remove the bullet for the bullets list
-                //  and the ennemy from the ennemies list
-                // We remove the bullet
-                if (prevBullet == NULL) {
-                    // It's the first bullet of the list
-                    bullets = checkBullet->next;
-                    free(checkBullet);
-                    checkBullet = bullets;
-                } else {
-                    prevBullet->next = checkBullet->next;
-                    free(checkBullet);
-                    checkBullet = prevBullet;
-                }
-                // We remove the ennemy
-                if (prevEnnemy == NULL) {
-                    // It's the first bullet of the list
-                    ennemies = checkEnnemy->next;
-                    free(checkEnnemy);
-                    checkEnnemy = ennemies;
-                } else {
-                    prevEnnemy->next = checkEnnemy->next;
-                    free(checkEnnemy);
-                    checkEnnemy = prevEnnemy;
-                }
+                //  and change the life of the ennemy
+
+                // We change the life of the ennemy
+                if (checkEnnemy->ennemy->life > 0) {
+                    checkEnnemy->ennemy->life -= checkBullet->bullet->dammage;
+
+                    // We remove the bullet if the life of the catch ennemy is greater than zero
+                    if (prevBullet == NULL) {
+                        // It's the first bullet of the list
+                        bullets = checkBullet->next;
+                        free(checkBullet);
+                        checkBullet = bullets;
+                    } else {
+                        prevBullet->next = checkBullet->next;
+                        free(checkBullet);
+                        checkBullet = prevBullet;
+                    }
+                } 
             }
 
             if (checkEnnemy != NULL) {
@@ -463,21 +459,24 @@ void ennemiesCatch() {
     Ennemies *moveEnnemy = ennemies;
 
     while (moveEnnemy != NULL) {
-        if (moveEnnemy->ennemy->position->y > bubble->position->y) {
-            if (bubble->position->x < WINDOW_WIDTH / 2) {
-                moveEnnemy->ennemy->move = LEFT;
+        // We only move the ennmy if his life is greater than zero
+        if (moveEnnemy->ennemy->life > 0) {
+            if (moveEnnemy->ennemy->position->y > bubble->position->y) {
+                if (bubble->position->x < WINDOW_WIDTH / 2) {
+                    moveEnnemy->ennemy->move = LEFT;
+                } else {
+                    moveEnnemy->ennemy->move = RIGHT;
+                }
             } else {
-                moveEnnemy->ennemy->move = RIGHT;
-            }
-        } else {
-            if (moveEnnemy->ennemy->position->x > bubble->position->x) {
-                moveEnnemy->ennemy->move = LEFT;
-            } else {
-                moveEnnemy->ennemy->move = RIGHT;
-            }
+                if (moveEnnemy->ennemy->position->x > bubble->position->x) {
+                    moveEnnemy->ennemy->move = LEFT;
+                } else {
+                    moveEnnemy->ennemy->move = RIGHT;
+                }
 
-            if (moveEnnemy->ennemy->position->y < bubble->position->y) {
-                jumpCharacter(moveEnnemy->ennemy, levelStructure);
+                if (moveEnnemy->ennemy->position->y < bubble->position->y) {
+                    jumpCharacter(moveEnnemy->ennemy, levelStructure);
+                }
             }
         }
 

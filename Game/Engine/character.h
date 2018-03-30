@@ -37,6 +37,7 @@ typedef struct bullet {
     Hitbox *hitbox;     /*!< The hitbox of the bullet. */
     Movement move;      /*!< The movement of the bullet */
     float speed;        /*!< The speed of the bullet */
+    int dammage;        /*!< The dammage of the bullet */
 } Bullet;
 
 //! The structure for a character.

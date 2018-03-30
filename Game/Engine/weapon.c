@@ -17,7 +17,7 @@
   \param height is an integer for the height of the bullet hitbox
   \param width is an integer for the height of the bullet width
 */
-void setBullet(Character *character, char *textureName, int height, int width, float speed) {
+void setBullet(Character *character, char *textureName, int height, int width, float speed, int dammage) {
     Bullet *bullet = malloc(sizeof(Bullet));
     Texture *texture = getTexture(textureName);
     bullet->textureId = texture->textureId;
@@ -29,6 +29,7 @@ void setBullet(Character *character, char *textureName, int height, int width, f
     bullet->hitbox->width = width * 1.5;
     bullet->hitbox->origin = bullet->position;
     bullet->speed = speed;
+    bullet->dammage = dammage;
     character->bullet = bullet;
 } 
 //! Make the character shot a bullet
