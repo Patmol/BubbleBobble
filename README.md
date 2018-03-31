@@ -1,12 +1,16 @@
 # BubbleBobble
+==
 
 ## Compilation information
+--
 
 Compilation has been done on macOS High Sierra 10.13.3
 
 ## Game keyboard
-Q: Go left
-D : Go right
-Z : Jump
-E : Shot
+--
+
+* Q: Go left
+* D : Go right
+* Z : Jump
+* E : Shot
 
