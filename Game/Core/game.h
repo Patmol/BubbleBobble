@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #include "../Engine/texture.h"
 #include "../Engine/character.h"
 #include "../Engine/weapon.h"

@@ -418,13 +418,19 @@ void ennemiesInit() {
 }
 //! Display the ennemies
 void ennemiesDisplay() {
+    int numberOfEnnemiesLeft = 0;
     Ennemies *displayEnnemy = ennemies;
 
     while (displayEnnemy != NULL) {
         if (displayEnnemy->ennemy->life > 0) {
             characterDisplayManagement(displayEnnemy->ennemy);
+            numberOfEnnemiesLeft++;
         }
         displayEnnemy = displayEnnemy->next;
+    }
+
+    if (numberOfEnnemiesLeft == 0) {
+        changeGameStatus(END_GAME);
     }
 }
 //! Check if a bullet hit an ennemy

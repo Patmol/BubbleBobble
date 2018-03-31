@@ -6,19 +6,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+
+#include "game.h"
 #include "glut.h"
 #include "home.h"
-#include "game.h"
+#include "end_game.h"
 #include "../Engine/texture.h"
 
-enum gameState state = HOME;
-
-void initGame(int);
-void displayGame();
-void timerGame();
-void longTimerGame();
-void keyboardGame();
-void keyboardUpGame();
+enum gameState state = GAME;
 
 // Initalize all data require for the game
 void init(void) {
@@ -35,6 +31,8 @@ void init(void) {
     initLogo();
     // Initialise the data for the game
     initGame(1);
+    // Initialise the end game data
+    initEndGame();
 }
 
 // Function call by GLUT to display the screen
@@ -52,6 +50,9 @@ void display(void) {
             displayLogo();
             break;
         case SCORE:
+            break;
+        case END_GAME:
+            displayEndGame();
             break;
     }
 }
@@ -71,7 +72,8 @@ void timer(int value) {
             break;
         case SCORE:
             break;
-        
+        case END_GAME:
+            break;
     }
     glutPostRedisplay();
     glutTimerFunc(TIMER, timer, 0);
@@ -89,7 +91,8 @@ void longTimer(int value) {
             break;
         case SCORE:
             break;
-        
+        case END_GAME:
+            break;
     }
     glutPostRedisplay();
     glutTimerFunc(LONG_TIMER, longTimer, 0);
@@ -138,6 +141,8 @@ void keyboard(unsigned char key, int x, int y) {
             break;
         case SCORE:
             break;
+        case END_GAME:
+            break;
     }
 }
 // Function call by GLUT to handle the keyboard
@@ -154,5 +159,11 @@ void keyboardUp(unsigned char key, int x, int y) {
             break;
         case SCORE:
             break;
+        case END_GAME:
+            break;
     }
+}
+
+void changeGameStatus(enum gameState newState) {
+    state = newState;
 }
