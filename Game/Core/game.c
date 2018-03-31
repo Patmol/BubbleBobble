@@ -441,13 +441,13 @@ void ennemiesHits() {
 
     while (checkBullet != NULL) {
         while (checkEnnemy != NULL) {
-            if (checkBullet != NULL && checkEnnemy != NULL && 
+            if (checkBullet != NULL && 
                 isHit(checkBullet->bullet->hitbox, checkEnnemy->ennemy->hitbox)) {
                 // If we have a hit, we need to remove the bullet for the bullets list
                 //  and change the life of the ennemy
 
                 // We change the life of the ennemy
-                if (checkEnnemy->ennemy->life > 0) {
+                if (checkEnnemy->ennemy->life >= 0) {
                     checkEnnemy->ennemy->life -= checkBullet->bullet->dammage;
 
                     // We remove the bullet if the life of the catch ennemy is greater than zero
@@ -463,10 +463,8 @@ void ennemiesHits() {
                     }
                 } 
             }
-
-            if (checkEnnemy != NULL) {
-                checkEnnemy = checkEnnemy->next;
-            }
+            
+            checkEnnemy = checkEnnemy->next;
         }
 
         if (checkBullet != NULL) {
