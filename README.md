@@ -2,7 +2,7 @@
 
 ## Compilation information
 
-Compilation has been done on MacOS 10.13.3
+Compilation has been done on macOS High Sierra 10.13.3
 
 ## Game keyboard
 Q: Go left
