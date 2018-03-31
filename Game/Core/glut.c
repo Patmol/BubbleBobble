@@ -11,7 +11,7 @@
 #include "game.h"
 #include "../Engine/texture.h"
 
-enum gameState state = GAME;
+enum gameState state = HOME;
 
 void initGame(int);
 void displayGame();

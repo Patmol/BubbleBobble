@@ -14,15 +14,15 @@
 #include "../Engine/character.h"
 #include "../Engine/weapon.h"
 
-#define BLOC_WIDTH 25
-#define BLOC_HEIGHT 22
-#define TOP_SPACE 50
-#define BULLET_WIDTH 38
-#define BULLET_HEIGHT 32
-#define BULLET_SPEED 20
-#define SHOT_LIMIT 30
-#define SHOT_REMOVE_SAFE_ZONE 200
-#define ENNEMIES_NUMBER 4
+#define BLOC_WIDTH 25                   //! The width of a bloc of the wall
+#define BLOC_HEIGHT 22                  //! The height of a bloc of the wall
+#define TOP_SPACE 50                    //! The space at the top of the screen
+#define BULLET_WIDTH 38                 //! The width of an image of a bullet
+#define BULLET_HEIGHT 32                //! The height of an image of a bullet
+#define BULLET_SPEED 20                 //! The default speed of a bullet
+#define SHOT_LIMIT 30                   //! The time between every shot
+#define SHOT_REMOVE_SAFE_ZONE 200       //! A pixel value outside the screen where we can safely remove the bullet from the list
+#define ENNEMIES_NUMBER 4               //! The numbers of ennemies
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/
@@ -57,7 +57,7 @@ void ennemiesInit();
 void ennemiesDisplay();
 //! Check if a bullet hit an ennemy
 void ennemiesHits();
-//! Make the ennemies move
+//! Make the ennemies catch the player
 void ennemiesCatch();
 
 /**************************************************************************/
@@ -86,45 +86,58 @@ Ennemies *ennemies = NULL;
   \param an integer for the level to initialize
 */
 void initGame(int level) {
+    // We use a random number for the speed of the ennemies
     srand(time(NULL));
+    // The name of the level
     char blocLevelName[100];
+    // We generate the name of the bloc of the level (name like bloc-level-{levelNumber})
     sprintf(blocLevelName, "bloc-level-%d", level);
-
+    
     bloc = getTexture(blocLevelName);
 
-    // We generate the Bubble character with his texture
+    // We generate the Bubble character with his texture and his weapon
     bubble = initializeCharacter("bubble", 10, 15, 0.0f, 0.0f, 126.0f, 133.0f);
     addCharacterTexture(bubble, "bubble-left", "left");
     addCharacterTexture(bubble, "bubble-right", "right");
     setBullet(bubble, "bubble-bullet", BULLET_HEIGHT, BULLET_WIDTH, BULLET_SPEED, 100);
 
+    // We load the level
     loadLevel(level);
+    // We initialize the ennemies
     ennemiesInit();
 }
 //! Display the game screen.
 void displayGame() {
+    // We clear the OpenGL bugger
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-
+    
+    // we enable the 2D texture use to display texture in the game
     glEnable(GL_TEXTURE_2D);
 
     // Display the bullets
     bulletsDisplay();
 
-    // Display Bubble
+    // Display character (bubble and ennemies)
     characterDisplayManagement(bubble);
     ennemiesDisplay();
     
+    // We check the action of bubble (depending on the key press on the keyboard)
     bubbleAction();
+    // We move the character
     moveCharacter(bubble, levelStructure);
+    // We move the bullets
     bulletsMovement();
+    // We check if some ennemies has been hit
     ennemiesHits();
 
     // Display the bloc of the level
     levelDisplay();
 
+    // We disable the 2D texture
     glDisable(GL_TEXTURE_2D);
     
+    // We swap the OpenGL buffer
     glutSwapBuffers();
 }
 //! Timer function to handle update of the game screen.
@@ -142,6 +155,7 @@ void timerGame() {
 }
 //! Timer function to handle update of the game screen.
 void longTimerGame() {
+    // ennemies try to catch Bubble
     ennemiesCatch();
 }
 //! Handle when a key is press on the keyboard.

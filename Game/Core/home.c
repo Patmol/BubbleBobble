@@ -30,6 +30,7 @@ void displayLogo() {
     // Display the logo
     glBindTexture(GL_TEXTURE_2D, logo->textureId);
     glTranslatef(0.0, logoYPosition, -3.5);
+
     glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 0.0f);
         glVertex3f(-1.0f, -0.6f, 0.0f);
