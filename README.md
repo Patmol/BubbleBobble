@@ -21,5 +21,5 @@ The end game screen is the same for both end for now.
 
 ## Known issues
 
-Some enemies can not be killed in some games
+* Some enemies can not be killed in some games
 
