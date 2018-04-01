@@ -4,6 +4,7 @@
 #include <GL/glut.h>
 #endif
 
+#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
@@ -22,7 +23,9 @@
 #define BULLET_SPEED 20                 //! The default speed of a bullet
 #define SHOT_LIMIT 30                   //! The time between every shot
 #define SHOT_REMOVE_SAFE_ZONE 200       //! A pixel value outside the screen where we can safely remove the bullet from the list
-#define ENNEMIES_NUMBER 4               //! The numbers of ennemies
+#define ENNEMIES_NUMBER 2               //! The numbers of ennemies
+#define ENNEMY_HIT 20                   //! The life remove when an ennmy touch a player
+#define ENNEMY_HIT_TEMP 30             //! The timer between two hit of an ennemy
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/
@@ -65,8 +68,12 @@ void ennemiesCatch();
 /**************************************************************************/
 //! The state of the keyboard key
 bool keyStates[256]; 
+//! Show Bubble
+bool showBubble = true;
 //! The shot timer
 int shotTimer = 0;
+//! The ennemy timer
+int ennemyTimer = 0;
 //! An array contening the structure of the level
 int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT];
 //! The texture of the bloc
@@ -119,7 +126,13 @@ void displayGame() {
     bulletsDisplay();
 
     // Display character (bubble and ennemies)
-    characterDisplayManagement(bubble);
+    if (showBubble || ennemyTimer == 0) {
+        characterDisplayManagement(bubble);
+    }
+    if (ennemyTimer != 0) {
+        showBubble = !showBubble;
+    }
+
     ennemiesDisplay();
     
     // We check the action of bubble (depending on the key press on the keyboard)
@@ -402,7 +415,11 @@ void ennemiesInit() {
 
     for (int i = 0; i < ENNEMIES_NUMBER; i++) {
         ennemy = malloc(sizeof(Ennemies));
-        ennemy->ennemy = initializeCharacter("ennemi", 15 + (rand() % 15), 15 + (rand() % 15), (i * ((WINDOW_WIDTH * 2) / ENNEMIES_NUMBER)), (WINDOW_WIDTH * 2) + 50,  126.0f, 133.0f);
+        ennemy->ennemy = initializeCharacter("ennemi", 
+            15 + (rand() % 15), 
+            15 + (rand() % 15), 
+            (i * ((WINDOW_WIDTH * 2) / ENNEMIES_NUMBER)), 
+            (WINDOW_WIDTH * 2) + 50,  126.0f, 133.0f);
         addCharacterTexture(ennemy->ennemy, "ennemi-1-left", "left");
         addCharacterTexture(ennemy->ennemy, "ennemi-1-right", "right");
         ennemy->next = NULL;
@@ -430,7 +447,7 @@ void ennemiesDisplay() {
     }
 
     if (numberOfEnnemiesLeft == 0) {
-        changeGameStatus(END_GAME);
+        changeGameStatus(END_GAME_WIN);
     }
 }
 //! Check if a bullet hit an ennemy
@@ -441,7 +458,7 @@ void ennemiesHits() {
 
     while (checkBullet != NULL) {
         while (checkEnnemy != NULL) {
-            if (checkBullet != NULL && 
+            if (checkBullet != NULL &&
                 isHit(checkBullet->bullet->hitbox, checkEnnemy->ennemy->hitbox)) {
                 // If we have a hit, we need to remove the bullet for the bullets list
                 //  and change the life of the ennemy
@@ -479,6 +496,7 @@ void ennemiesCatch() {
     while (moveEnnemy != NULL) {
         // We only move the ennmy if his life is greater than zero
         if (moveEnnemy->ennemy->life > 0) {
+            // Depending on the Bubble position, we change the direction of the ennemy
             if (moveEnnemy->ennemy->position->y > bubble->position->y) {
                 if (bubble->position->x < WINDOW_WIDTH / 2) {
                     moveEnnemy->ennemy->move = LEFT;
@@ -496,6 +514,21 @@ void ennemiesCatch() {
                     jumpCharacter(moveEnnemy->ennemy, levelStructure);
                 }
             }
+
+            if (isHit(moveEnnemy->ennemy->hitbox, bubble->hitbox) && ennemyTimer == 0) {
+                    bubble->life -= ENNEMY_HIT;
+                    ennemyTimer++;
+
+                    if (bubble->life < 0) {
+                        changeGameStatus(END_GAME_LOSE);
+                    }
+                }
+        }
+
+        if (ennemyTimer > 0 && ennemyTimer < ENNEMY_HIT_TEMP) {
+            ennemyTimer++;
+        } else {
+            ennemyTimer = 0;
         }
 
         moveEnnemy = moveEnnemy->next;

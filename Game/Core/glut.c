@@ -51,8 +51,11 @@ void display(void) {
             break;
         case SCORE:
             break;
-        case END_GAME:
-            displayEndGame();
+        case END_GAME_WIN:
+            displayEndGame(true);
+            break;
+        case END_GAME_LOSE:
+            displayEndGame(false);
             break;
     }
 }
@@ -72,7 +75,8 @@ void timer(int value) {
             break;
         case SCORE:
             break;
-        case END_GAME:
+        case END_GAME_WIN:
+        case END_GAME_LOSE:
             break;
     }
     glutPostRedisplay();
@@ -91,7 +95,8 @@ void longTimer(int value) {
             break;
         case SCORE:
             break;
-        case END_GAME:
+        case END_GAME_WIN:
+        case END_GAME_LOSE:
             break;
     }
     glutPostRedisplay();
@@ -141,7 +146,8 @@ void keyboard(unsigned char key, int x, int y) {
             break;
         case SCORE:
             break;
-        case END_GAME:
+        case END_GAME_WIN:
+        case END_GAME_LOSE:
             break;
     }
 }
@@ -159,7 +165,8 @@ void keyboardUp(unsigned char key, int x, int y) {
             break;
         case SCORE:
             break;
-        case END_GAME:
+        case END_GAME_WIN:
+        case END_GAME_LOSE:
             break;
     }
 }

@@ -5,22 +5,29 @@
 #endif
 
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "../Engine/texture.h"
 
-Texture* endGameLogo = NULL;
+Texture* endGameLogoWin = NULL;
+Texture* endGameLogoLose = NULL;
 
 void initEndGame() {
-    endGameLogo = getTexture("logo");
+    endGameLogoWin = getTexture("logo");
+    endGameLogoLose = getTexture("logo");
 }
-void displayEndGame() {
+void displayEndGame(bool win) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
     glEnable(GL_TEXTURE_2D);
 
     // Display the logo
-    glBindTexture(GL_TEXTURE_2D, endGameLogo->textureId);
+    if (win) {
+        glBindTexture(GL_TEXTURE_2D, endGameLogoWin->textureId);
+    } else {
+        glBindTexture(GL_TEXTURE_2D, endGameLogoLose->textureId);
+    }
     
     glPushMatrix();
     glTranslatef(0.0f, 0.0f, -10.0f);

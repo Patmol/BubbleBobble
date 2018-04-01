@@ -8,7 +8,7 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGH 600
 
-enum gameState { GAME, HELP, HOME, LOGO, SCORE, END_GAME  };
+enum gameState { GAME, HELP, HOME, LOGO, SCORE, END_GAME_WIN, END_GAME_LOSE  };
 
 void init(void);
 void display(void);

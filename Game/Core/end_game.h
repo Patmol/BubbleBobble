@@ -5,6 +5,6 @@
  * Functions used for the displaying of the logo
  */
 void initEndGame();
-void displayEndGame();
+void displayEndGame(bool win);
 
 #endif
