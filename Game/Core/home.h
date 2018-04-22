@@ -18,5 +18,10 @@ void initHome();
 void displayHome();
 //! Timer function to handle update of the home screen
 void timerHome();
+//! Handle when a key is press on the keyboard.
+/*!
+  \param key an unsigned character
+*/
+void keyboardHome(unsigned char key);
 
 #endif

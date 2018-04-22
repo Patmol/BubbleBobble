@@ -5,3 +5,7 @@ images/bubble-right.tga bubble-right
 images/green-bubble.tga bubble-bullet
 images/ennemi-1-left.tga ennemi-1-left
 images/ennemi-1-right.tga ennemi-1-right
+images/buttons/play.tga play
+images/buttons/play-selected.tga play-selected
+images/buttons/quit.tga quit
+images/buttons/quit-selected.tga quit-selected

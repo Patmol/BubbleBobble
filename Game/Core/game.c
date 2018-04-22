@@ -214,7 +214,7 @@ void loadLevel(int level) {
 }
 //! Display a level
 void levelDisplay() {
-     // We load the texture of the bloc
+    // We load the texture of the bloc
     glBindTexture(GL_TEXTURE_2D, bloc->textureId);
     for (int i = 0; i < LEVEL_WIDTH; i++) {
         for (int j = 0; j < LEVEL_HEIGHT; j++) {

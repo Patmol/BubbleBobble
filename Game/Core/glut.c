@@ -18,7 +18,7 @@
 /******************************* VARIABLES ********************************/
 /**************************************************************************/
 //! The state of the game
-enum gameState state = GAME;
+enum gameState state = LOGO;
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/
@@ -36,6 +36,8 @@ void init(void) {
     loadTextures("data/images.txt");
     // Initialise the logo data
     initLogo();
+    // Initialise the home data
+    initHome();
     // Initialise the data for the game
     initGame(1);
     // Initialise the end game data
@@ -141,9 +143,7 @@ void keyboard(unsigned char key, int x, int y) {
             break;
         case HOME:
             // Carriage return
-            if (key == 13) {
-                state = GAME;
-            }
+            keyboardHome(key);
             break;
         case LOGO:
             // Carriage return
