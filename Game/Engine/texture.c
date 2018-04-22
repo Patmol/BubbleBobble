@@ -12,11 +12,19 @@
 #include "texture.h"
 #include "tga.h"
 
-// Contains the list of all texture used by the application
+/**************************************************************************/
+/******************************* VARIABLES ********************************/
+/**************************************************************************/
+//! Contains the list of all texture used by the application
 Texture* textures;
 
-// Load all the textures used by the application
-//  sourcesPath: path to the file with the path to the textures
+/**************************************************************************/
+/************************** FUNCTIONS DEFINITIONS *************************/
+/**************************************************************************/
+//! Load all the textures used by the application
+/*
+  \param sourcesPath: path to the file with the path to the textures
+*/
 void loadTextures(char* sourcesPath) {
     char path[100], 
          name[40];
@@ -65,10 +73,11 @@ void loadTextures(char* sourcesPath) {
 
     textures = firstTexture;
 }
-
-// Get a specific texture
-//  name: the name of the texture to get
-//  return: the texture structure
+//! Get a specific texture
+/*
+  \param name the name of the texture to get
+  \return the texture structure
+*/
 Texture* getTexture(char *name) {
     Texture *currentTexture = textures;
     Texture *texture = NULL;

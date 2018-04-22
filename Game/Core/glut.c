@@ -14,9 +14,16 @@
 #include "end_game.h"
 #include "../Engine/texture.h"
 
+/**************************************************************************/
+/******************************* VARIABLES ********************************/
+/**************************************************************************/
+//! The state of the game
 enum gameState state = GAME;
 
-// Initalize all data require for the game
+/**************************************************************************/
+/************************** FUNCTIONS DEFINITIONS *************************/
+/**************************************************************************/
+//! Initalize all data require for the game
 void init(void) {
     glShadeModel(GL_SMOOTH);
 
@@ -34,8 +41,7 @@ void init(void) {
     // Initialise the end game data
     initEndGame();
 }
-
-// Function call by GLUT to display the screen
+//! Function call by GLUT to display the screen
 void display(void) {
     switch (state) {
         case GAME:
@@ -59,7 +65,7 @@ void display(void) {
             break;
     }
 }
-// Function call by GLUT every X secondes
+//! Function call by GLUT every X secondes 
 void timer(int value) {
     switch (state) {
         case GAME:
@@ -82,6 +88,7 @@ void timer(int value) {
     glutPostRedisplay();
     glutTimerFunc(TIMER, timer, 0);
 }
+//! Function call by GLUT every X secondes (use with a longer timer)
 void longTimer(int value) {
     switch (state) {
         case GAME:
@@ -102,7 +109,7 @@ void longTimer(int value) {
     glutPostRedisplay();
     glutTimerFunc(LONG_TIMER, longTimer, 0);
 }
-// Function call by GLUT when the window is resize
+//! Function call by GLUT when the window is resize
 void reshape(int w, int h) {
     if (h == 0) {
         h = 1;
@@ -119,7 +126,7 @@ void reshape(int w, int h) {
     
     glutPostRedisplay();
 }
-// Function call by GLUT to handle the keyboard
+//! Function call by GLUT to handle the keyboard when a key is press
 void keyboard(unsigned char key, int x, int y) {
     /* Escape */
     if (key == 27) {
@@ -151,7 +158,7 @@ void keyboard(unsigned char key, int x, int y) {
             break;
     }
 }
-// Function call by GLUT to handle the keyboard
+//! Function call by GLUT to handle the keyboard when a key is release
 void keyboardUp(unsigned char key, int x, int y) {
     switch (state) {
         case GAME:
@@ -170,7 +177,7 @@ void keyboardUp(unsigned char key, int x, int y) {
             break;
     }
 }
-
+//! Function to change the state of the game
 void changeGameStatus(enum gameState newState) {
     state = newState;
 }

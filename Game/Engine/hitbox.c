@@ -3,6 +3,9 @@
 
 #include "hitbox.h"
 
+/**************************************************************************/
+/************************** FUNCTIONS DEFINITIONS *************************/
+/**************************************************************************/
 //! Check if two hitbox hit each others
 /*!
   \param hitbox1 is a hitbox structure
@@ -19,6 +22,7 @@ bool isHit(Hitbox *hitbox1, Hitbox *hitbox2) {
            }
        }
 
+    // We check if on the X axe, we have a hit
     if ((hitbox1->origin->x >= hitbox2->origin->x && hitbox1->origin->x <= hitbox2->origin->x + hitbox2->width) ||
        (hitbox1->origin->x + hitbox1->width >= hitbox2->origin->x && hitbox1->origin->x + hitbox1->width <= hitbox2->origin->x + hitbox2->width)) {
            // If we have a hit on the X axe, we check the Y axe
@@ -28,5 +32,5 @@ bool isHit(Hitbox *hitbox1, Hitbox *hitbox2) {
            }
        }
 
-       return false;
+    return false;
 }   

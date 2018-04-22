@@ -25,7 +25,7 @@
 #define SHOT_REMOVE_SAFE_ZONE 200       //! A pixel value outside the screen where we can safely remove the bullet from the list
 #define ENNEMIES_NUMBER 2               //! The numbers of ennemies
 #define ENNEMY_HIT 20                   //! The life remove when an ennmy touch a player
-#define ENNEMY_HIT_TEMP 30             //! The timer between two hit of an ennemy
+#define ENNEMY_HIT_TEMP 30              //! The timer between two hit of an ennemy
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/

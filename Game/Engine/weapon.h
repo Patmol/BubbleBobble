@@ -10,6 +10,9 @@
 #ifndef _WEAPON_H_
 #define _WEAPON_H_
 
+/**************************************************************************/
+/************************** FUNCTIONS DEFINITIONS *************************/
+/**************************************************************************/
 //! Set the bullet use by the character
 /*!
   \param character is a pointer to a character.
@@ -28,4 +31,5 @@ Bullet* shot(Character *character);
   \param the bullet to move
 */
 void moveBullet(Bullet* bullet);
+
 #endif

@@ -11,11 +11,29 @@
 #include "texture.h"
 #include "character.h"
 
-#define JUMP_HEIGHT 350
-#define POSITION_TRANSFORM 45
+#define JUMP_HEIGHT 350             //! The jump height of a character
+#define POSITION_TRANSFORM 45       //! The position transform
 
+/**************************************************************************/
+/******************************* VARIABLES ********************************/
+/**************************************************************************/
+//! The start position when the player jump
 int startJump = 0;
 
+/**************************************************************************/
+/************************** FUNCTIONS DEFINITIONS *************************/
+/**************************************************************************/
+//! Initialize a character.
+/*!
+  \param name is a constant character pointer.
+  \param speed is an integer for the speed of the character.
+  \param fallSpeed is an integer for the speed of the character.
+  \param x is an integer argument for the position.
+  \param y is an integer argument for the position.
+  \param height is an integer argument for the hitbox height.
+  \param width is an integer argument for the hitbox width.
+  \return The character
+*/
 Character *initializeCharacter(char *name, int speed, int fallSpeed, float x, float y, float height, float width) {
     Character *character = malloc(sizeof(Character));
     strcpy(character->name, name);
@@ -36,7 +54,12 @@ Character *initializeCharacter(char *name, int speed, int fallSpeed, float x, fl
     character->jumpHeight = -1;
     return character;
 }
-
+//! Add a texture to a character.
+/*!
+  \param character is a pointer to a character.
+  \param textureName is a constant charater pointer.
+  \param name is an array (50) of character.
+*/ 
 void addCharacterTexture(Character *character, char *textureName, char name[50]) {
     if (character->indexTexture < 10) {
         Texture *texture = getTexture(textureName);
@@ -45,7 +68,12 @@ void addCharacterTexture(Character *character, char *textureName, char name[50])
         (character->indexTexture)++;
     }
 }
-
+//! Get the texture ID of a character.
+/*!
+  \param character is a pointer to a character.
+  \param name is an array (50) of character.
+  \return The texture ID for the name wanted.
+*/
 GLuint getCharacterTexture(Character *character, char name[50]) {
     GLuint textureId = -1;
     
@@ -57,7 +85,11 @@ GLuint getCharacterTexture(Character *character, char name[50]) {
 
     return textureId;
 }
-
+//! Make a character move from one position to an other.
+/*!
+  \param character is a pointer to a character.
+  \param levelStructure is a 2D array (LEVEL_WIDTH/LEVEL_HEIGHT)
+*/
 void moveCharacter(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]) {
     int yGroundPosition = 0;
     Position groundPosition;
@@ -108,7 +140,11 @@ void moveCharacter(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_H
         }
     }
 }
-
+//! Make a character jump.
+/*!
+  \param character is a pointer to a character.
+  \param levelStructure is a 2D array (LEVEL_WIDTH/LEVEL_HEIGHT)
+*/
 void jumpCharacter(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]) {
     int yLevelStructure = getYLevelStructureCharacterPosition(character);
     Position groundPosition = getCharacterGround(character, levelStructure);
@@ -119,7 +155,12 @@ void jumpCharacter(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_H
         character->isJumping = true;
     }
 }
-
+//! Get the position of the groun under the character.
+/*!
+  \param character is a pointer to a character.
+  \param levelStructure is a 2D array (LEVEL_WIDTH/LEVEL_HEIGHT)
+  \return The position of the ground
+*/
 Position getCharacterGround(Character *character, int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT]) {
     int xLevelStructure = getXLevelStructureCharacterPosition(character);
     int yLevelStructure = getYLevelStructureCharacterPosition(character);
@@ -151,14 +192,22 @@ Position getCharacterGround(Character *character, int levelStructure[LEVEL_WIDTH
 
     return position;
 }
-
+//! Get the X level character position in the structure.
+/*
+  \param character is a pointer to a character.
+  \return the X level character position in the structure.
+*/
 int getXLevelStructureCharacterPosition(Character *character) {
     // We get the position of Bubble to know where he is in the levelStructure
     //  The minus 4 is for the 4 bloc we always have on each side of the level
     //  The xLevelStructure need to be increase by 2 to avoid the 2 first bloc
     return 2 + (character->position->x / POSITION_TRANSFORM);
 }
-
+//! Get the Y level character position in the structure.
+/*
+  \param character is a pointer to a character.
+  \return the Y level character position in the structure.
+*/
 int getYLevelStructureCharacterPosition(Character *character) {
     //  The minus 2 is for the 2 bloc we always have at the top and the bottom of the level.
     //    The one at the top is not always display but we cannot stop Bubble at this position
@@ -166,7 +215,11 @@ int getYLevelStructureCharacterPosition(Character *character) {
     //    when we are at the 5, we are at 23 - 5 = 18 and so on ...
     return (LEVEL_HEIGHT - 2) - (int)(character->position->y / POSITION_TRANSFORM);
 }
-
+//! Get the Y ground position.
+/*
+  \param an integer position
+  \return the Y ground position.
+*/
 int getYGroundPosition(int yPosition) {
     return ((LEVEL_HEIGHT - 1 - yPosition) * (POSITION_TRANSFORM - 1));
 }

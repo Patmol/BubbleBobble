@@ -3,18 +3,20 @@
 #ifndef _HOME_H_
 #define _HOME_H_
 
-/*
- * Functions used for the displaying of the logo
- */
+/**************************************************************************/
+/************************** FUNCTIONS DEFINITIONS *************************/
+/**************************************************************************/
+//! Initialiaze the data for the logo screen
 void initLogo();
+//! Display the logo screen
 void displayLogo();
+//! Timer function to handle update of the logo screen
 void timerLogo();
-
-/*
- * Functions used for the displaying of the main screen of the game
- */
+//! Initialiaze the data for the home screen
 void initHome();
+//! Display the home screen
 void displayHome();
+//! Timer function to handle update of the home screen
 void timerHome();
 
 #endif

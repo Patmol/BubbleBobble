@@ -10,7 +10,14 @@
 #ifndef _TGA_H_
 #define _TGA_H_
 
-// Load a TGA texture
+/**************************************************************************/
+/************************** FUNCTIONS DEFINITIONS *************************/
+/**************************************************************************/
+//! Load a TGA texture
+/*
+  \param filename is a constant character pointer.
+  \return a OpenGL uint
+*/
 GLuint loadTGATexture(char filename[]);
 
 #endif

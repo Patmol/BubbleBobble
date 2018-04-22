@@ -4,6 +4,9 @@
 #ifndef _HITBOX_H_
 #define _HITBOX_H_
 
+/**************************************************************************/
+/************************* STRUCTURES DEFINITIONS *************************/
+/**************************************************************************/
 //! The structure for a position in a 2D space.
 typedef struct position {
     float x;            /*!< The position on the horizontal axe. */
@@ -17,6 +20,9 @@ typedef struct hitbox {
     Position *origin;   /*!< The orgion position of the hitbox. */
 } Hitbox;
 
+/**************************************************************************/
+/************************** FUNCTIONS DEFINITIONS *************************/
+/**************************************************************************/
 //! Check if two hitbox hit each others
 /*!
   \param hitbox1 is a hitbox structure

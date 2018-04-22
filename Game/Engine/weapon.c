@@ -10,6 +10,9 @@
 #include "character.h"
 #include "weapon.h"
 
+/**************************************************************************/
+/************************** FUNCTIONS DEFINITIONS *************************/
+/**************************************************************************/
 //! Set the bullet use by the character
 /*!
   \param character is a pointer to a character.
