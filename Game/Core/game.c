@@ -121,6 +121,12 @@ void displayGame() {
     
     // we enable the 2D texture use to display texture in the game
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA); //I've seen this on most tutorials
+    glDisable(GL_DEPTH_TEST);
+
+    // Display the bloc of the level
+    levelDisplay();
 
     // Display the bullets
     bulletsDisplay();
@@ -144,8 +150,7 @@ void displayGame() {
     // We check if some ennemies has been hit
     ennemiesHits();
 
-    // Display the bloc of the level
-    levelDisplay();
+    
 
     // We disable the 2D texture
     glDisable(GL_TEXTURE_2D);
