@@ -18,7 +18,7 @@
 /********************************** ENUM **********************************/
 /**************************************************************************/
 //! The different states of the game
-enum menu { PLAY, QUIT  };
+enum menu { PLAY_MENU, SCORE_MENU, HELP_MENU, QUIT_MENU };
 
 /**************************************************************************/
 /******************************* VARIABLES ********************************/
@@ -33,6 +33,16 @@ Texture* playSelected = NULL;
 Texture* quit = NULL;
 //! The texture of the quit button when selected
 Texture* quitSelected = NULL;
+
+//! The texture of the help button
+Texture* help = NULL;
+//! The texture of the help button when selected
+Texture* helpSelected = NULL;
+//! The texture of the score button
+Texture* score = NULL;
+//! The texture of the score button when selected
+Texture* scoreSelected = NULL;
+
 //! The Y position for the logo
 float logoYPosition = 2.5f;
 //! The selected menu
@@ -92,6 +102,14 @@ void initHome() {
     quit = getTexture("quit");
     // Load the texture of the quit selected button
     quitSelected = getTexture("quit-selected");
+    // Load the texture of the help button
+    help = getTexture("help");
+    // Load the texture of the help selected button
+    helpSelected = getTexture("help-selected");
+    // Load the texture of the score button
+    score = getTexture("score");
+    // Load the texture of the score selected button
+    scoreSelected = getTexture("score-selected");
 }
 //! Display the home screen
 void displayHome() {
@@ -120,7 +138,7 @@ void displayHome() {
     glPopMatrix();
 
     // Display the play button
-    selectedMenu == PLAY ? glBindTexture(GL_TEXTURE_2D, playSelected->textureId) : glBindTexture(GL_TEXTURE_2D, play->textureId);
+    selectedMenu == PLAY_MENU ? glBindTexture(GL_TEXTURE_2D, playSelected->textureId) : glBindTexture(GL_TEXTURE_2D, play->textureId);
     glPushMatrix();
     glTranslatef(0.0, 0.0f, -8.0f);
     glBegin(GL_QUADS);
@@ -138,10 +156,48 @@ void displayHome() {
     glEnd();
     glPopMatrix();
 
-    // Display the quit button
-    selectedMenu == QUIT ? glBindTexture(GL_TEXTURE_2D, quitSelected->textureId) : glBindTexture(GL_TEXTURE_2D, quit->textureId);
+    // Display the score button
+    selectedMenu == SCORE_MENU ? glBindTexture(GL_TEXTURE_2D, scoreSelected->textureId) : glBindTexture(GL_TEXTURE_2D, score->textureId);
     glPushMatrix();
     glTranslatef(0.0, -0.5f, -8.0f);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(-1.0f, -0.2f, 0.0f);
+
+        glTexCoord2f(1.0f, 0.0f);
+        glVertex3f(1.0f, -0.2f, 0.0f);
+
+        glTexCoord2f(1.0f, 1.0f);
+        glVertex3f(1.0f, 0.2f, 0.0f);
+
+        glTexCoord2f(0.0f, 1.0f);
+        glVertex3f(-1.0f, 0.2f, 0.0f);
+    glEnd();
+    glPopMatrix();
+
+    // Display the help button
+    selectedMenu == HELP_MENU ? glBindTexture(GL_TEXTURE_2D, helpSelected->textureId) : glBindTexture(GL_TEXTURE_2D, help->textureId);
+    glPushMatrix();
+    glTranslatef(0.0, -1.0f, -8.0f);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(-1.0f, -0.2f, 0.0f);
+
+        glTexCoord2f(1.0f, 0.0f);
+        glVertex3f(1.0f, -0.2f, 0.0f);
+
+        glTexCoord2f(1.0f, 1.0f);
+        glVertex3f(1.0f, 0.2f, 0.0f);
+
+        glTexCoord2f(0.0f, 1.0f);
+        glVertex3f(-1.0f, 0.2f, 0.0f);
+    glEnd();
+    glPopMatrix();
+
+    // Display the quit button
+    selectedMenu == QUIT_MENU ? glBindTexture(GL_TEXTURE_2D, quitSelected->textureId) : glBindTexture(GL_TEXTURE_2D, quit->textureId);
+    glPushMatrix();
+    glTranslatef(0.0, -1.5f, -8.0f);
     glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 0.0f);
         glVertex3f(-1.0f, -0.2f, 0.0f);
@@ -172,10 +228,13 @@ void keyboardHome(unsigned char key) {
     switch (key) {
         case 13:
             switch (selectedMenu) {
-                case PLAY:
+                case PLAY_MENU:
                     changeGameStatus(GAME);
                     break;
-                case QUIT:
+                case SCORE_MENU:
+                case HELP_MENU:
+                    break;
+                case QUIT_MENU:
                     exit(0);
                     break;
             }
@@ -188,10 +247,10 @@ void keyboardHome(unsigned char key) {
             }
             break;
         case 's':
-        if (selectedMenu < 1) {
+        if (selectedMenu < 3) {
                 selectedMenu++;
             } else {
-                selectedMenu = 1;
+                selectedMenu = 3;
             }
             break;
     }

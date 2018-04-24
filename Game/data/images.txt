@@ -9,3 +9,7 @@ images/buttons/play.tga play
 images/buttons/play-selected.tga play-selected
 images/buttons/quit.tga quit
 images/buttons/quit-selected.tga quit-selected
+images/buttons/help.tga help
+images/buttons/help-selected.tga help-selected
+images/buttons/score.tga score
+images/buttons/score-selected.tga score-selected
