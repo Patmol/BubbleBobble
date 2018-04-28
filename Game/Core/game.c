@@ -14,6 +14,7 @@
 #include "game.h"
 #include "../Engine/character.h"
 #include "../Engine/weapon.h"
+#include "../Engine/item.h"
 
 #define BLOC_WIDTH 25                   //! The width of a bloc of the wall
 #define BLOC_HEIGHT 22                  //! The height of a bloc of the wall
@@ -26,6 +27,7 @@
 #define ENNEMIES_NUMBER 2               //! The numbers of ennemies
 #define ENNEMY_HIT 20                   //! The life remove when an ennmy touch a player
 #define ENNEMY_HIT_TEMP 30              //! The timer between two hit of an ennemy
+#define START_SCORE 500                 //! The starting score
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/
@@ -62,6 +64,10 @@ void ennemiesDisplay();
 void ennemiesHits();
 //! Make the ennemies catch the player
 void ennemiesCatch();
+//! Display the items
+void itemsDisplay();
+//! Pickup the items
+void itemsPickup();
 
 /**************************************************************************/
 /******************************* VARIABLES ********************************/
@@ -84,6 +90,8 @@ Character *bubble = NULL;
 Bullets *bullets = NULL;
 //! The first pointer to the list of ennemies
 Ennemies *ennemies = NULL;
+//! The first pointer to the list of items
+Items *items = NULL;
 
 /**************************************************************************/
 /************************ FUNCTIONS IMPLEMENTATION ************************/
@@ -128,8 +136,9 @@ void displayGame() {
     // Display the bloc of the level
     levelDisplay();
 
-    // Display the bullets
+    // Display the UI elements under the character
     bulletsDisplay();
+    itemsDisplay();
 
     // Display character (bubble and ennemies)
     if (showBubble || ennemyTimer == 0) {
@@ -139,6 +148,7 @@ void displayGame() {
         showBubble = !showBubble;
     }
 
+    // Display the UI elements over the character
     ennemiesDisplay();
     
     // We check the action of bubble (depending on the key press on the keyboard)
@@ -149,8 +159,6 @@ void displayGame() {
     bulletsMovement();
     // We check if some ennemies has been hit
     ennemiesHits();
-
-    
 
     // We disable the 2D texture
     glDisable(GL_TEXTURE_2D);
@@ -452,7 +460,7 @@ void ennemiesDisplay() {
     }
 
     if (numberOfEnnemiesLeft == 0) {
-        changeGameStatus(END_GAME_WIN);
+        // changeGameStatus(END_GAME_WIN);
     }
 }
 //! Check if a bullet hit an ennemy
@@ -469,7 +477,7 @@ void ennemiesHits() {
                 //  and change the life of the ennemy
 
                 // We change the life of the ennemy
-                if (checkEnnemy->ennemy->life >= 0) {
+                if (checkEnnemy->ennemy->life > 0) {
                     checkEnnemy->ennemy->life -= checkBullet->bullet->dammage;
 
                     // We remove the bullet if the life of the catch ennemy is greater than zero
@@ -483,7 +491,28 @@ void ennemiesHits() {
                         free(checkBullet);
                         checkBullet = prevBullet;
                     }
-                } 
+
+                    // If the life of the ennemy is 0, we generate an item
+                    if (checkEnnemy->ennemy->life == 0) {
+                        Item* item = initializeItem("item-pepper", 100, 
+                            checkEnnemy->ennemy->position->x,
+                            checkEnnemy->ennemy->position->y,
+                            checkEnnemy->ennemy->hitbox->height,
+                            checkEnnemy->ennemy->hitbox->width);
+
+                        // It's the first item we generate
+                        if (items == NULL) {
+                            items = malloc(sizeof(Items));
+                            items->item = item;
+                            items->next = NULL;
+                        } else {
+                            Items* newItems = malloc(sizeof(Items));
+                            newItems->item = item;
+                            newItems->next = items;
+                            items = newItems;
+                        }
+                    } 
+                }
             }
             
             checkEnnemy = checkEnnemy->next;
@@ -494,7 +523,7 @@ void ennemiesHits() {
         }
     }
 }
-//! Make the ennemies move
+//! Make the ennemies move to catch the player
 void ennemiesCatch() {
     Ennemies *moveEnnemy = ennemies;
 
@@ -538,4 +567,40 @@ void ennemiesCatch() {
 
         moveEnnemy = moveEnnemy->next;
     }
+}
+//! Display the item
+void itemsDisplay() {
+    Items *displayItem = items;
+
+    while (displayItem != NULL) {
+        glBindTexture(GL_TEXTURE_2D, displayItem->item->textureId);
+
+        // Transform x/y position in pixel of the character in OpenGL (0,0) center position
+        float x = -(WINDOW_WIDTH - (displayItem->item->hitbox->width / 2) - displayItem->item->position->x - ((BLOC_WIDTH * 2)) * 2) / 146.0;
+        float y = -(WINDOW_HEIGH - ((displayItem->item->hitbox->height / 2) + 6) - displayItem->item->position->y - (BLOC_HEIGHT * 2) - TOP_SPACE) / 146.0;
+            
+        glPushMatrix();
+
+        // We move to the position where we want to display our bloc
+        glTranslatef(x, y, -10.0f);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f);
+            glVertex3f(-((1.0/292.0) * (displayItem->item->hitbox->width)), -((1.0/282.0) * (displayItem->item->hitbox->height)), 0.0f);
+
+            glTexCoord2f(1.0f, 0.0f);
+            glVertex3f(((1.0/292.0) * (displayItem->item->hitbox->width)), -((1.0/282.0) * (displayItem->item->hitbox->height)), 0.0f);
+
+            glTexCoord2f(1.0f, 1.0f);
+            glVertex3f(((1.0/292.0) * (displayItem->item->hitbox->width)), ((1.0/282.0) * (displayItem->item->hitbox->height)), 0.0f);
+
+            glTexCoord2f(0.0f, 1.0f);
+            glVertex3f(-((1.0/292.0) * (displayItem->item->hitbox->width)), ((1.0/282.0) * (displayItem->item->hitbox->height)), 0.0f);
+        glEnd();
+        glPopMatrix();
+
+        displayItem = displayItem->next;
+    }
+}
+void itemsPickup() {
+
 }

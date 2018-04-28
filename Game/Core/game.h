@@ -3,6 +3,7 @@
 #include "../Engine/texture.h"
 #include "../Engine/character.h"
 #include "../Engine/weapon.h"
+#include "../Engine/item.h"
 
 #ifndef _HOME_H_
 #define _HOME_H_
@@ -12,14 +13,19 @@
 /**************************************************************************/
 //! The structure for a list of bullets
 typedef struct bullets {
-    Bullet *bullet;         /*!< A bullet */
-    struct bullets *next;          /*!< The next bullet in the list */
+    Bullet *bullet;                 /*!< A bullet */
+    struct bullets *next;           /*!< The next bullet in the list */
 } Bullets;
 
 typedef struct ennemies {
-    Character *ennemy;
-    struct ennemies *next;
+    Character *ennemy;              /*!< An ennemy */
+    struct ennemies *next;          /*!< The next ennemies in the list */
 } Ennemies;
+
+typedef struct items {
+    Item *item;                     /*!< An item */
+    struct items *next;             /*!< The next item in the list */
+} Items;
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/

@@ -21,19 +21,18 @@
   \param width is an integer for the height of the bullet width
 */
 void setBullet(Character *character, char *textureName, int height, int width, float speed, int dammage) {
-    Bullet *bullet = malloc(sizeof(Bullet));
+    character->bullet = malloc(sizeof(Bullet));
     Texture *texture = getTexture(textureName);
-    bullet->textureId = texture->textureId;
-    bullet->position = malloc(sizeof(Position));
-    bullet->position->x = 0;
-    bullet->position->y = 0;
-    bullet->hitbox = malloc(sizeof(Hitbox));
-    bullet->hitbox->height = height * 1.5;
-    bullet->hitbox->width = width * 1.5;
-    bullet->hitbox->origin = bullet->position;
-    bullet->speed = speed;
-    bullet->dammage = dammage;
-    character->bullet = bullet;
+    character->bullet->textureId = texture->textureId;
+    character->bullet->position = malloc(sizeof(Position));
+    character->bullet->position->x = 0;
+    character->bullet->position->y = 0;
+    character->bullet->hitbox = malloc(sizeof(Hitbox));
+    character->bullet->hitbox->height = height * 1.5;
+    character->bullet->hitbox->width = width * 1.5;
+    character->bullet->hitbox->origin = character->bullet->position;
+    character->bullet->speed = speed;
+    character->bullet->dammage = dammage;
 } 
 //! Make the character shot a bullet
 /*!
@@ -58,6 +57,7 @@ Bullet* shot(Character *character) {
     bullet->hitbox->width = character->bullet->hitbox->width;
     bullet->hitbox->origin = bullet->position;
     bullet->speed = character->bullet->speed;
+    bullet->dammage = character->bullet->dammage;
     return bullet;
 }
 //! Make a bullet move
