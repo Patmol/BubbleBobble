@@ -80,6 +80,8 @@ bool showBubble = true;
 int shotTimer = 0;
 //! The ennemy timer
 int ennemyTimer = 0;
+//! The score of the player
+int playerScore = START_SCORE;
 //! An array contening the structure of the level
 int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT];
 //! The texture of the bloc
@@ -159,6 +161,8 @@ void displayGame() {
     bulletsMovement();
     // We check if some ennemies has been hit
     ennemiesHits();
+    // We check if the player pick an item
+    itemsPickup();
 
     // We disable the 2D texture
     glDisable(GL_TEXTURE_2D);
@@ -573,34 +577,47 @@ void itemsDisplay() {
     Items *displayItem = items;
 
     while (displayItem != NULL) {
-        glBindTexture(GL_TEXTURE_2D, displayItem->item->textureId);
+        if (displayItem->item->scoreValue != 0) {
+            glBindTexture(GL_TEXTURE_2D, displayItem->item->textureId);
 
-        // Transform x/y position in pixel of the character in OpenGL (0,0) center position
-        float x = -(WINDOW_WIDTH - (displayItem->item->hitbox->width / 2) - displayItem->item->position->x - ((BLOC_WIDTH * 2)) * 2) / 146.0;
-        float y = -(WINDOW_HEIGH - ((displayItem->item->hitbox->height / 2) + 6) - displayItem->item->position->y - (BLOC_HEIGHT * 2) - TOP_SPACE) / 146.0;
-            
-        glPushMatrix();
+            // Transform x/y position in pixel of the character in OpenGL (0,0) center position
+            float x = -(WINDOW_WIDTH - (displayItem->item->hitbox->width / 2) - displayItem->item->position->x - ((BLOC_WIDTH * 2)) * 2) / 146.0;
+            float y = -(WINDOW_HEIGH - ((displayItem->item->hitbox->height / 2) + 6) - displayItem->item->position->y - (BLOC_HEIGHT * 2) - TOP_SPACE) / 146.0;
+                
+            glPushMatrix();
 
-        // We move to the position where we want to display our bloc
-        glTranslatef(x, y, -10.0f);
-        glBegin(GL_QUADS);
-            glTexCoord2f(0.0f, 0.0f);
-            glVertex3f(-((1.0/292.0) * (displayItem->item->hitbox->width)), -((1.0/282.0) * (displayItem->item->hitbox->height)), 0.0f);
+            // We move to the position where we want to display our bloc
+            glTranslatef(x, y, -10.0f);
+            glBegin(GL_QUADS);
+                glTexCoord2f(0.0f, 0.0f);
+                glVertex3f(-((1.0/292.0) * (displayItem->item->hitbox->width)), -((1.0/282.0) * (displayItem->item->hitbox->height)), 0.0f);
 
-            glTexCoord2f(1.0f, 0.0f);
-            glVertex3f(((1.0/292.0) * (displayItem->item->hitbox->width)), -((1.0/282.0) * (displayItem->item->hitbox->height)), 0.0f);
+                glTexCoord2f(1.0f, 0.0f);
+                glVertex3f(((1.0/292.0) * (displayItem->item->hitbox->width)), -((1.0/282.0) * (displayItem->item->hitbox->height)), 0.0f);
 
-            glTexCoord2f(1.0f, 1.0f);
-            glVertex3f(((1.0/292.0) * (displayItem->item->hitbox->width)), ((1.0/282.0) * (displayItem->item->hitbox->height)), 0.0f);
+                glTexCoord2f(1.0f, 1.0f);
+                glVertex3f(((1.0/292.0) * (displayItem->item->hitbox->width)), ((1.0/282.0) * (displayItem->item->hitbox->height)), 0.0f);
 
-            glTexCoord2f(0.0f, 1.0f);
-            glVertex3f(-((1.0/292.0) * (displayItem->item->hitbox->width)), ((1.0/282.0) * (displayItem->item->hitbox->height)), 0.0f);
-        glEnd();
-        glPopMatrix();
-
+                glTexCoord2f(0.0f, 1.0f);
+                glVertex3f(-((1.0/292.0) * (displayItem->item->hitbox->width)), ((1.0/282.0) * (displayItem->item->hitbox->height)), 0.0f);
+            glEnd();
+            glPopMatrix();
+        }
+        
         displayItem = displayItem->next;
     }
 }
+//! Pickup the items
 void itemsPickup() {
+    Items *pickItem = items;
 
+    while (pickItem != NULL) {
+        if (isHit(pickItem->item->hitbox, bubble->hitbox)) {
+            playerScore += pickItem->item->scoreValue;
+            // We change the score of the item pick
+            pickItem->item->scoreValue = 0;
+        }
+
+        pickItem = pickItem->next;
+    }
 }
