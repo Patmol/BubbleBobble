@@ -12,13 +12,14 @@
 
 #include "glut.h"
 #include "game.h"
+#include "end_game.h"
 #include "../Engine/character.h"
 #include "../Engine/weapon.h"
 #include "../Engine/item.h"
 
 #define BLOC_WIDTH 25                   //! The width of a bloc of the wall
 #define BLOC_HEIGHT 22                  //! The height of a bloc of the wall
-#define NUMBER_WIDTH 12                  //! The width of a number
+#define NUMBER_WIDTH 12                 //! The width of a number
 #define NUMBER_HEIGHT 18                //! The height of a number
 #define TOP_SPACE 50                    //! The space at the top of the screen
 #define BULLET_WIDTH 38                 //! The width of an image of a bullet
@@ -30,6 +31,7 @@
 #define ENNEMY_HIT 20                   //! The life remove when an ennmy touch a player
 #define ENNEMY_HIT_TEMP 30              //! The timer between two hit of an ennemy
 #define START_SCORE 500                 //! The starting score
+#define ENNMIE_HIT_SCORE 50             //! The score we lose when an ennemy hit the player
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/
@@ -194,6 +196,7 @@ void displayGame() {
     glutSwapBuffers();
 
     if (numberOfEnnemiesLeft == 0 && numberOfItemsLeft == 0) {
+        setScore(playerScore);
         changeGameStatus(END_GAME_WIN);
     }
 }
@@ -582,6 +585,7 @@ void ennemiesCatch() {
 
             if (isHit(moveEnnemy->ennemy->hitbox, bubble->hitbox) && ennemyTimer == 0) {
                     bubble->life -= ENNEMY_HIT;
+                    playerScore -= ENNMIE_HIT_SCORE;
                     ennemyTimer++;
 
                     if (bubble->life < 0) {

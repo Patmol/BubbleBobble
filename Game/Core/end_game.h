@@ -12,5 +12,10 @@ void initEndGame();
   \param a boolean
 */
 void displayEndGame(bool win);
+//! Set the score of the player
+/*
+  \paran the score
+*/
+void setScore(int score);
 
 #endif
