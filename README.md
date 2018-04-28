@@ -19,7 +19,3 @@ You can end the game in two different way, if you kill all ennemies or if ennemi
 
 The end game screen is the same for both end for now.
 
-## Known issues
-
-* Some enemies can not be killed in some games
-
