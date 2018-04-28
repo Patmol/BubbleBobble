@@ -5,6 +5,7 @@
 
 #define TIMER 10
 #define LONG_TIMER 40
+#define SCORE_TIMER 500
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGH 600
 
@@ -25,6 +26,8 @@ void display(void);
 void timer(int value);
 //! Function call by GLUT every X secondes (use with a longer timer)
 void longTimer(int value);
+//! Function call by GLUT every X secondes (use with a score timer)
+void scoreTimer(int value);
 //! Function call by GLUT when the window is resize
 void reshape(int w, int h);
 //! Function call by GLUT to handle the keyboard when a key is press

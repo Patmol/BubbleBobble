@@ -15,3 +15,13 @@ images/buttons/help.tga help
 images/buttons/help-selected.tga help-selected
 images/buttons/score.tga score
 images/buttons/score-selected.tga score-selected
+images/number/0.tga 0
+images/number/1.tga 1
+images/number/2.tga 2
+images/number/3.tga 3
+images/number/4.tga 4
+images/number/5.tga 5
+images/number/6.tga 6
+images/number/7.tga 7
+images/number/8.tga 8
+images/number/9.tga 9

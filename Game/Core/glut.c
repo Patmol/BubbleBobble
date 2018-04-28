@@ -111,6 +111,27 @@ void longTimer(int value) {
     glutPostRedisplay();
     glutTimerFunc(LONG_TIMER, longTimer, 0);
 }
+//! Function call by GLUT every X secondes (use with a score timer)
+void scoreTimer(int value) {
+    switch (state) {
+        case GAME:
+            scoreTimerGame();
+            break;
+        case HELP:
+            break;
+        case HOME:
+            break;
+        case LOGO:
+            break;
+        case SCORE:
+            break;
+        case END_GAME_WIN:
+        case END_GAME_LOSE:
+            break;
+    }
+    glutPostRedisplay();
+    glutTimerFunc(SCORE_TIMER, scoreTimer, 0);
+}
 //! Function call by GLUT when the window is resize
 void reshape(int w, int h) {
     if (h == 0) {

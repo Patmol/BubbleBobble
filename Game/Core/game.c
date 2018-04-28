@@ -18,6 +18,8 @@
 
 #define BLOC_WIDTH 25                   //! The width of a bloc of the wall
 #define BLOC_HEIGHT 22                  //! The height of a bloc of the wall
+#define NUMBER_WIDTH 12                  //! The width of a number
+#define NUMBER_HEIGHT 18                //! The height of a number
 #define TOP_SPACE 50                    //! The space at the top of the screen
 #define BULLET_WIDTH 38                 //! The width of an image of a bullet
 #define BULLET_HEIGHT 32                //! The height of an image of a bullet
@@ -68,6 +70,8 @@ void ennemiesCatch();
 void itemsDisplay();
 //! Pickup the items
 void itemsPickup();
+//! Display the score
+void scoreDisplay();
 
 /**************************************************************************/
 /******************************* VARIABLES ********************************/
@@ -82,10 +86,16 @@ int shotTimer = 0;
 int ennemyTimer = 0;
 //! The score of the player
 int playerScore = START_SCORE;
+//! The number of ennemies left
+int numberOfEnnemiesLeft = 0;
+//! The number of items left
+int numberOfItemsLeft = 0;
 //! An array contening the structure of the level
 int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT];
 //! The texture of the bloc
 Texture *bloc = NULL;
+//! The texture for the numbers
+Texture* numbers[10];
 //! The character 'Bubble'
 Character *bubble = NULL;
 //! The first pointer to the list of bullets
@@ -118,6 +128,18 @@ void initGame(int level) {
     addCharacterTexture(bubble, "bubble-right", "right");
     setBullet(bubble, "bubble-bullet", BULLET_HEIGHT, BULLET_WIDTH, BULLET_SPEED, 100);
 
+    // Load numbers texture
+    numbers[0] = getTexture("0");
+    numbers[1] = getTexture("1");
+    numbers[2] = getTexture("2");
+    numbers[3] = getTexture("3");
+    numbers[4] = getTexture("4");
+    numbers[5] = getTexture("5");
+    numbers[6] = getTexture("6");
+    numbers[7] = getTexture("7");
+    numbers[8] = getTexture("8");
+    numbers[9] = getTexture("9");
+
     // We load the level
     loadLevel(level);
     // We initialize the ennemies
@@ -137,6 +159,7 @@ void displayGame() {
 
     // Display the bloc of the level
     levelDisplay();
+    scoreDisplay();
 
     // Display the UI elements under the character
     bulletsDisplay();
@@ -169,6 +192,10 @@ void displayGame() {
     
     // We swap the OpenGL buffer
     glutSwapBuffers();
+
+    if (numberOfEnnemiesLeft == 0 && numberOfItemsLeft == 0) {
+        changeGameStatus(END_GAME_WIN);
+    }
 }
 //! Timer function to handle update of the game screen.
 void timerGame() {
@@ -187,6 +214,10 @@ void timerGame() {
 void longTimerGame() {
     // ennemies try to catch Bubble
     ennemiesCatch();
+}
+//! Timer function to handle update of the game screen.
+void scoreTimerGame() {
+    playerScore--;
 }
 //! Handle when a key is press on the keyboard.
 /*!
@@ -452,7 +483,7 @@ void ennemiesInit() {
 }
 //! Display the ennemies
 void ennemiesDisplay() {
-    int numberOfEnnemiesLeft = 0;
+    numberOfEnnemiesLeft = 0;
     Ennemies *displayEnnemy = ennemies;
 
     while (displayEnnemy != NULL) {
@@ -461,10 +492,6 @@ void ennemiesDisplay() {
             numberOfEnnemiesLeft++;
         }
         displayEnnemy = displayEnnemy->next;
-    }
-
-    if (numberOfEnnemiesLeft == 0) {
-        // changeGameStatus(END_GAME_WIN);
     }
 }
 //! Check if a bullet hit an ennemy
@@ -501,8 +528,8 @@ void ennemiesHits() {
                         Item* item = initializeItem("item-pepper", 100, 
                             checkEnnemy->ennemy->position->x,
                             checkEnnemy->ennemy->position->y,
-                            checkEnnemy->ennemy->hitbox->height,
-                            checkEnnemy->ennemy->hitbox->width);
+                            80,
+                            100);
 
                         // It's the first item we generate
                         if (items == NULL) {
@@ -574,6 +601,7 @@ void ennemiesCatch() {
 }
 //! Display the item
 void itemsDisplay() {
+    numberOfItemsLeft = 0;
     Items *displayItem = items;
 
     while (displayItem != NULL) {
@@ -602,6 +630,7 @@ void itemsDisplay() {
                 glVertex3f(-((1.0/292.0) * (displayItem->item->hitbox->width)), ((1.0/282.0) * (displayItem->item->hitbox->height)), 0.0f);
             glEnd();
             glPopMatrix();
+            numberOfItemsLeft++;
         }
         
         displayItem = displayItem->next;
@@ -619,5 +648,35 @@ void itemsPickup() {
         }
 
         pickItem = pickItem->next;
+    }
+}
+//! Display the score
+void scoreDisplay() {
+    int currentScore = playerScore;
+    for (int i = 0; i < 10; i++) {
+        glBindTexture(GL_TEXTURE_2D, numbers[currentScore % 10]->textureId);
+        currentScore /= 10;
+
+        glPushMatrix();
+        // We move to the position where we want to display our bloc
+        glTranslatef(
+            -(((WINDOW_WIDTH - 25.0) -200 + (NUMBER_WIDTH * 2) * i) / 146.0), 
+            (((WINDOW_HEIGH + 10) - (NUMBER_HEIGHT * 2)) / 146.0), 
+            -10.0f);
+        
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f);
+            glVertex3f(-((1.0/292.0) * (NUMBER_WIDTH * 2)), -((1.0/282.0) * (NUMBER_HEIGHT * 2)), 0.0f);
+    
+            glTexCoord2f(1.0f, 0.0f);
+            glVertex3f(((1.0/292.0) * (NUMBER_WIDTH * 2)), -((1.0/282.0) * (NUMBER_HEIGHT * 2)), 0.0f);
+
+            glTexCoord2f(1.0f, 1.0f);
+            glVertex3f(((1.0/292.0) * (NUMBER_WIDTH * 2)), ((1.0/282.0) * (NUMBER_HEIGHT * 2)), 0.0f);
+
+            glTexCoord2f(0.0f, 1.0f);
+            glVertex3f(-((1.0/292.0) * (NUMBER_WIDTH * 2)), ((1.0/282.0) * (NUMBER_HEIGHT * 2)), 0.0f);
+        glEnd();
+        glPopMatrix();
     }
 }
