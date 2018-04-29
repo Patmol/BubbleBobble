@@ -12,6 +12,9 @@
 #ifndef _ITEM_H_
 #define _ITEM_H_
 
+/**************************************************************************/
+/************************* STRUCTURES DEFINITIONS *************************/
+/**************************************************************************/
 typedef struct item {
     int textureId;              /*!< The texture identifier used to display the item. */
     int scoreValue;             /*!< The score of the item. */
@@ -19,6 +22,9 @@ typedef struct item {
     Hitbox *hitbox;             /*!< The hitbox of the character. */
 } Item;
 
+/**************************************************************************/
+/************************** FUNCTIONS DEFINITIONS *************************/
+/**************************************************************************/
 //! Initialize an item
 /*!
   \param textureName is a constant charater pointer.
