@@ -142,3 +142,14 @@ void endScoreDisplay() {
 void setScore(int score) {
     playerScore = score;
 }
+//! Handle when a key is press on the keyboard.
+/*!
+  \param key an unsigned character
+*/
+void keyboardEndGame(unsigned char key) {
+    switch (key) {
+        case 13:
+            changeGameStatus(HOME);
+            break;
+    }
+}

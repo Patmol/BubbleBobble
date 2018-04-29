@@ -7,6 +7,7 @@ images/ennemi-1-left.tga ennemi-1-left
 images/ennemi-1-right.tga ennemi-1-right
 images/item-eggplant.tga item-eggplant
 images/item-pepper.tga item-pepper
+images/texts/controls.tga controls
 images/buttons/play.tga play
 images/buttons/play-selected.tga play-selected
 images/buttons/quit.tga quit

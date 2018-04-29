@@ -8,9 +8,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "home.h"
 #include "game.h"
 #include "glut.h"
-#include "home.h"
 #include "end_game.h"
 #include "../Engine/texture.h"
 
@@ -38,6 +38,8 @@ void init(void) {
     initLogo();
     // Initialise the home data
     initHome();
+    // Initialise the controls data
+    initControls();
     // Initialise the data for the game
     initGame(1);
     // Initialise the end game data
@@ -50,6 +52,7 @@ void display(void) {
             displayGame();
             break;
         case HELP:
+            displayControls();
             break;
         case HOME:
             displayHome();
@@ -161,6 +164,7 @@ void keyboard(unsigned char key, int x, int y) {
             keyboardGame(key);
             break;
         case HELP:
+            keyboardControls(key);
             break;
         case HOME:
             // Carriage return
@@ -176,6 +180,8 @@ void keyboard(unsigned char key, int x, int y) {
             break;
         case END_GAME_WIN:
         case END_GAME_LOSE:
+            // Carriage return
+            keyboardEndGame(key);
             break;
     }
 }

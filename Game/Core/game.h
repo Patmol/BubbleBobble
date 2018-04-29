@@ -5,8 +5,8 @@
 #include "../Engine/weapon.h"
 #include "../Engine/item.h"
 
-#ifndef _HOME_H_
-#define _HOME_H_
+#ifndef _GAME_H_
+#define _GAME_H_
 
 /**************************************************************************/
 /************************* STRUCTURES DEFINITIONS *************************/

@@ -17,5 +17,10 @@ void displayEndGame(bool win);
   \paran the score
 */
 void setScore(int score);
+//! Handle when a key is press on the keyboard.
+/*!
+  \param key an unsigned character
+*/
+void keyboardEndGame(unsigned char key);
 
 #endif

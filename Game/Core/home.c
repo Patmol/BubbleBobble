@@ -27,13 +27,14 @@ enum menu { PLAY_MENU, SCORE_MENU, HELP_MENU, QUIT_MENU };
 Texture* logo = NULL;
 //! The texture of the play button
 Texture* play = NULL;
+//! The texture of the controls texrt
+Texture* controls = NULL;
 //! The texture of the play button when selected
 Texture* playSelected = NULL;
 //! The texture of the quit button
 Texture* quit = NULL;
 //! The texture of the quit button when selected
 Texture* quitSelected = NULL;
-
 //! The texture of the help button
 Texture* help = NULL;
 //! The texture of the help button when selected
@@ -232,7 +233,9 @@ void keyboardHome(unsigned char key) {
                     changeGameStatus(GAME);
                     break;
                 case SCORE_MENU:
+                    break;
                 case HELP_MENU:
+                    changeGameStatus(HELP);
                     break;
                 case QUIT_MENU:
                     exit(0);
@@ -252,6 +255,51 @@ void keyboardHome(unsigned char key) {
             } else {
                 selectedMenu = 3;
             }
+            break;
+    }
+}
+//! Initialiaze the data for the controls screen
+void initControls() {
+    // Load the texture of the controls
+    controls = getTexture("controls");
+}
+//! Display the controls screen
+void displayControls() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+
+    glEnable(GL_TEXTURE_2D);
+
+    // Display the controls
+    glBindTexture(GL_TEXTURE_2D, controls->textureId);
+    glTranslatef(0.0f, 0.0f, -3.5f);
+
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(-1.0f, -0.6f, 0.0f);
+
+        glTexCoord2f(1.0f, 0.0f);
+        glVertex3f(1.0f, -0.6f, 0.0f);
+
+        glTexCoord2f(1.0f, 1.0f);
+        glVertex3f(1.0f, 0.6f, 0.0f);
+
+        glTexCoord2f(0.0f, 1.0f);
+        glVertex3f(-1.0f, 0.6f, 0.0f);
+    glEnd();
+    
+    glDisable(GL_TEXTURE_2D);
+    
+    glutSwapBuffers();
+}
+//! Handle when a key is press on the keyboard.
+/*!
+  \param key an unsigned character
+*/
+void keyboardControls(unsigned char key) {
+    switch (key) {
+        case 13:
+            changeGameStatus(HOME);
             break;
     }
 }

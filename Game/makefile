@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -std=c99 -framework OpenGL -framework GLUT -lm -g -Wno-deprecated
+CFLAGS=-Wall -std=c99 -Wunused-command-line-argument -framework OpenGL -framework GLUT -g -Wno-deprecated
 OBJ=texture.o character.o item.o weapon.o hitbox.o tga.o home.o end_game.o game.o glut.o main.o
 
 bubble: $(OBJ)

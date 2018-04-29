@@ -23,5 +23,14 @@ void timerHome();
   \param key an unsigned character
 */
 void keyboardHome(unsigned char key);
+//! Initialiaze the data for the controls screen
+void initControls();
+//! Display the controls screen
+void displayControls();
+//! Handle when a key is press on the keyboard.
+/*!
+  \param key an unsigned character
+*/
+void keyboardControls(unsigned char key);
 
 #endif
