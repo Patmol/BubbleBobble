@@ -18,13 +18,23 @@
 /********************************** ENUM **********************************/
 /**************************************************************************/
 //! The different states of the game
-enum menu { PLAY_MENU, SCORE_MENU, HELP_MENU, QUIT_MENU };
+enum menu { PLAY_MENU, HELP_MENU, QUIT_MENU };
+
+/**************************************************************************/
+/************************** FUNCTIONS DEFINITIONS *************************/
+/**************************************************************************/
+//! Go up in the menu selection
+void menuSelectionUp();
+//! Go down in the menu selection
+void menuSelectionDown();
 
 /**************************************************************************/
 /******************************* VARIABLES ********************************/
 /**************************************************************************/
 //! The texture of the logo
 Texture* logo = NULL;
+//! The texture of the enter text
+Texture* enter = NULL;
 //! The texture of the play button
 Texture* play = NULL;
 //! The texture of the controls texrt
@@ -48,6 +58,8 @@ Texture* scoreSelected = NULL;
 float logoYPosition = 2.5f;
 //! The selected menu
 enum menu selectedMenu;
+//! Display the ENTER text
+bool displayEnter = true;
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/
@@ -56,6 +68,8 @@ enum menu selectedMenu;
 void initLogo() {
     // Load the texture of the logo
     logo = getTexture("logo");
+    // Load the texture of the logo
+    enter = getTexture("enter");
 }
 //! Display the logo screen
 void displayLogo() {
@@ -66,6 +80,7 @@ void displayLogo() {
 
     // Display the logo
     glBindTexture(GL_TEXTURE_2D, logo->textureId);
+    glPushMatrix();
     glTranslatef(0.0, logoYPosition, -3.5);
 
     glBegin(GL_QUADS);
@@ -81,7 +96,29 @@ void displayLogo() {
         glTexCoord2f(0.0f, 1.0f);
         glVertex3f(-1.0f, 0.6f, 0.0f);
     glEnd();
-    
+    glPopMatrix();
+
+    // Display the enter text
+    if (displayEnter) {
+        glBindTexture(GL_TEXTURE_2D, enter->textureId); 
+        glPushMatrix();
+        glTranslatef(0.0, -1.0f, -8.0f);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f);
+            glVertex3f(-1.0f, -0.15f, 0.0f);
+
+            glTexCoord2f(1.0f, 0.0f);
+            glVertex3f(1.0f, -0.15f, 0.0f);
+
+            glTexCoord2f(1.0f, 1.0f);
+            glVertex3f(1.0f, 0.15f, 0.0f);
+
+            glTexCoord2f(0.0f, 1.0f);
+            glVertex3f(-1.0f, 0.15f, 0.0f);
+        glEnd();
+        glPopMatrix();
+    }
+
     glDisable(GL_TEXTURE_2D);
     
     glutSwapBuffers();
@@ -92,6 +129,10 @@ void timerLogo() {
     if (logoYPosition > 0.4f) {
         logoYPosition -= LOGO_Y_TRANSLATION;
     }
+}
+//! Timer function to handle update of the display of the enter text
+void timerEnterText() {
+    displayEnter = !displayEnter;
 }
 //! Initialiaze the data for the home screen
 void initHome() {
@@ -213,8 +254,6 @@ void keyboardHome(unsigned char key) {
                 case PLAY_MENU:
                     changeGameStatus(GAME);
                     break;
-                case SCORE_MENU:
-                    break;
                 case HELP_MENU:
                     changeGameStatus(HELP);
                     break;
@@ -224,18 +263,22 @@ void keyboardHome(unsigned char key) {
             }
             break;
         case 'z':
-            if (selectedMenu > 0) {
-                selectedMenu--;
-            } else {
-                selectedMenu = 0;
-            }
+            menuSelectionUp();
             break;
         case 's':
-        if (selectedMenu < 3) {
-                selectedMenu++;
-            } else {
-                selectedMenu = 3;
-            }
+            menuSelectionDown();
+            break;
+    }
+}
+//! Handle the special keys
+void specialInputHome(int key, int x, int y) {
+    switch(key)
+    {
+        case GLUT_KEY_UP:
+            menuSelectionUp();
+            break;
+        case GLUT_KEY_DOWN:
+            menuSelectionDown();
             break;
     }
 }
@@ -282,5 +325,21 @@ void keyboardControls(unsigned char key) {
         case 13:
             changeGameStatus(HOME);
             break;
+    }
+}
+//! Go up in the menu selection
+void menuSelectionUp() {
+    if (selectedMenu > 0) {
+        selectedMenu--;
+    } else {
+        selectedMenu = 0;
+    }
+}
+//! Go down in the menu selection
+void menuSelectionDown() {
+    if (selectedMenu < 2) {
+        selectedMenu++;
+    } else {
+        selectedMenu = 2;
     }
 }

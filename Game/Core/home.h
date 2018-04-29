@@ -12,6 +12,8 @@ void initLogo();
 void displayLogo();
 //! Timer function to handle update of the logo screen
 void timerLogo();
+//! Timer function to handle update of the display of the enter text
+void timerEnterText();
 //! Initialiaze the data for the home screen
 void initHome();
 //! Display the home screen
@@ -23,6 +25,8 @@ void timerHome();
   \param key an unsigned character
 */
 void keyboardHome(unsigned char key);
+//! Handle the special keys
+void specialInputHome();
 //! Initialiaze the data for the controls screen
 void initControls();
 //! Display the controls screen

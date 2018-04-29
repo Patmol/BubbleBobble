@@ -115,7 +115,7 @@ void longTimer(int value) {
     glutTimerFunc(LONG_TIMER, longTimer, 0);
 }
 //! Function call by GLUT every X secondes (use with a score timer)
-void scoreTimer(int value) {
+void longerTimer(int value) {
     switch (state) {
         case GAME:
             scoreTimerGame();
@@ -125,6 +125,7 @@ void scoreTimer(int value) {
         case HOME:
             break;
         case LOGO:
+            timerEnterText();
             break;
         case SCORE:
             break;
@@ -133,7 +134,7 @@ void scoreTimer(int value) {
             break;
     }
     glutPostRedisplay();
-    glutTimerFunc(SCORE_TIMER, scoreTimer, 0);
+    glutTimerFunc(SCORE_TIMER, longerTimer, 0);
 }
 //! Function call by GLUT when the window is resize
 void reshape(int w, int h) {
@@ -167,7 +168,6 @@ void keyboard(unsigned char key, int x, int y) {
             keyboardControls(key);
             break;
         case HOME:
-            // Carriage return
             keyboardHome(key);
             break;
         case LOGO:
@@ -180,7 +180,6 @@ void keyboard(unsigned char key, int x, int y) {
             break;
         case END_GAME_WIN:
         case END_GAME_LOSE:
-            // Carriage return
             keyboardEndGame(key);
             break;
     }
@@ -194,6 +193,25 @@ void keyboardUp(unsigned char key, int x, int y) {
         case HELP:
             break;
         case HOME:
+            break;
+        case LOGO:
+            break;
+        case SCORE:
+            break;
+        case END_GAME_WIN:
+        case END_GAME_LOSE:
+            break;
+    }
+}
+//! Handle the special keys
+void specialInput(int key, int x, int y) {
+    switch (state) {
+        case GAME:
+            break;
+        case HELP:
+            break;
+        case HOME:
+            specialInputHome(key, x, y);
             break;
         case LOGO:
             break;

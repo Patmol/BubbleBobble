@@ -27,13 +27,15 @@ void timer(int value);
 //! Function call by GLUT every X secondes (use with a longer timer)
 void longTimer(int value);
 //! Function call by GLUT every X secondes (use with a score timer)
-void scoreTimer(int value);
+void longerTimer(int value);
 //! Function call by GLUT when the window is resize
 void reshape(int w, int h);
 //! Function call by GLUT to handle the keyboard when a key is press
 void keyboard(unsigned char key, int x, int y);
 //! Function call by GLUT to handle the keyboard when a key is release
 void keyboardUp(unsigned char key, int x, int y);
+//! Handle the special keys
+void specialInput(int key, int x, int y);
 //! Function to change the state of the game
 void changeGameStatus(enum gameState newState);
 
