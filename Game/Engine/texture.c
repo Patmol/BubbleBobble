@@ -56,16 +56,6 @@ void loadTextures(char* sourcesPath) {
             strcpy(newTexture->filename, path);
             strcpy(newTexture->name, name);
             newTexture->textureId = loadTGATexture(path);
-            newTexture->next = NULL;
-
-            // Depending of the state of the variable, we are at the first item of the list or not
-            if (firstTexture == NULL) {
-                firstTexture = newTexture;
-                previousTexture = newTexture;
-            } else {
-                previousTexture->next = newTexture;
-                previousTexture = newTexture;
-            }
         } while(!feof(file));
     }
 

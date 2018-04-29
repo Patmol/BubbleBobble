@@ -13,7 +13,15 @@
 /********************************** ENUM **********************************/
 /**************************************************************************/
 //! The different states of the game
-enum gameState { GAME, HELP, HOME, LOGO, SCORE, END_GAME_WIN, END_GAME_LOSE  };
+enum gameState { 
+    GAME,               /*!< The game screen */
+    HELP,               /*!< The help screen */
+    HOME,               /*!< The home screen */
+    LOGO,               /*!< The logo screen */
+    SCORE,              /*!< The score screen */
+    END_GAME_WIN,       /*!< The end game with a win screen */
+    END_GAME_LOSE       /*!< The end game with a lost screen */
+};
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/

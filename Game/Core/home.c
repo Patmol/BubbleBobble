@@ -18,7 +18,11 @@
 /********************************** ENUM **********************************/
 /**************************************************************************/
 //! The different states of the game
-enum menu { PLAY_MENU, HELP_MENU, QUIT_MENU };
+enum menu { 
+    PLAY_MENU,          /*!< The play menu is selected */
+    HELP_MENU,          /*!< The help menu is selected */
+    QUIT_MENU           /*!< The quit menu is selected */
+};
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/
