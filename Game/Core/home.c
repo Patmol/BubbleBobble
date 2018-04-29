@@ -157,29 +157,10 @@ void displayHome() {
     glEnd();
     glPopMatrix();
 
-    // Display the score button
-    selectedMenu == SCORE_MENU ? glBindTexture(GL_TEXTURE_2D, scoreSelected->textureId) : glBindTexture(GL_TEXTURE_2D, score->textureId);
-    glPushMatrix();
-    glTranslatef(0.0, -0.5f, -8.0f);
-    glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f);
-        glVertex3f(-1.0f, -0.2f, 0.0f);
-
-        glTexCoord2f(1.0f, 0.0f);
-        glVertex3f(1.0f, -0.2f, 0.0f);
-
-        glTexCoord2f(1.0f, 1.0f);
-        glVertex3f(1.0f, 0.2f, 0.0f);
-
-        glTexCoord2f(0.0f, 1.0f);
-        glVertex3f(-1.0f, 0.2f, 0.0f);
-    glEnd();
-    glPopMatrix();
-
     // Display the help button
     selectedMenu == HELP_MENU ? glBindTexture(GL_TEXTURE_2D, helpSelected->textureId) : glBindTexture(GL_TEXTURE_2D, help->textureId);
     glPushMatrix();
-    glTranslatef(0.0, -1.0f, -8.0f);
+    glTranslatef(0.0, -0.5f, -8.0f);
     glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 0.0f);
         glVertex3f(-1.0f, -0.2f, 0.0f);
@@ -198,7 +179,7 @@ void displayHome() {
     // Display the quit button
     selectedMenu == QUIT_MENU ? glBindTexture(GL_TEXTURE_2D, quitSelected->textureId) : glBindTexture(GL_TEXTURE_2D, quit->textureId);
     glPushMatrix();
-    glTranslatef(0.0, -1.5f, -8.0f);
+    glTranslatef(0.0, -1.0f, -8.0f);
     glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 0.0f);
         glVertex3f(-1.0f, -0.2f, 0.0f);
