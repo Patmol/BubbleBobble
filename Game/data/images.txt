@@ -7,6 +7,8 @@ images/ennemi-1-left.tga ennemi-1-left
 images/ennemi-1-right.tga ennemi-1-right
 images/item-eggplant.tga item-eggplant
 images/item-pepper.tga item-pepper
+images/heart.tga heart
+images/half-heart.tga half-heart
 images/texts/controls.tga controls
 images/texts/enter.tga enter
 images/buttons/play.tga play

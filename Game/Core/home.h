@@ -26,7 +26,7 @@ void timerHome();
 */
 void keyboardHome(unsigned char key);
 //! Handle the special keys
-void specialInputHome();
+void specialInputHome(int key, int x, int y);
 //! Initialiaze the data for the controls screen
 void initControls();
 //! Display the controls screen

@@ -37,7 +37,7 @@ int startJump = 0;
 Character *initializeCharacter(char *name, int speed, int fallSpeed, float x, float y, float height, float width) {
     Character *character = malloc(sizeof(Character));
     strcpy(character->name, name);
-    character->life = 100;
+    character->life = CHARACTER_LIFE;
     character->speed = speed;
     character->fallSpeed = fallSpeed;
     character->prevMove = RIGHT;

@@ -7,7 +7,7 @@
 #define LONG_TIMER 40
 #define SCORE_TIMER 500
 #define WINDOW_WIDTH 800
-#define WINDOW_HEIGH 600
+#define WINDOW_HEIGHT 600
 
 /**************************************************************************/
 /********************************** ENUM **********************************/

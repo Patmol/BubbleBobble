@@ -16,6 +16,7 @@
 #define LEVEL_HEIGHT 25           //! The number of bloc on the height
 #define PLAY_WIDTH_SIZE 1260      //! The width size of the screen game
 #define PLAY_HEIGHT_SIZE 880      //! The height size of the screen game
+#define CHARACTER_LIFE 100          //! The life of the character
 
 /**************************************************************************/
 /************************* STRUCTURES DEFINITIONS *************************/

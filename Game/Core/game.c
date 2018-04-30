@@ -21,6 +21,8 @@
 #define BLOC_HEIGHT 22                  //! The height of a bloc of the wall
 #define NUMBER_WIDTH 12                 //! The width of a number
 #define NUMBER_HEIGHT 18                //! The height of a number
+#define HEART_WIDTH 25                  //! The width of a heart
+#define HEART_HEIGHT 22                 //! The height of a heart
 #define TOP_SPACE 50                    //! The space at the top of the screen
 #define BULLET_WIDTH 38                 //! The width of an image of a bullet
 #define BULLET_HEIGHT 32                //! The height of an image of a bullet
@@ -32,6 +34,7 @@
 #define ENNEMY_HIT_TEMP 30              //! The timer between two hit of an ennemy
 #define START_SCORE 500                 //! The starting score
 #define ENNMIE_HIT_SCORE 50             //! The score we lose when an ennemy hit the player
+#
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/
@@ -74,6 +77,8 @@ void itemsDisplay();
 void itemsPickup();
 //! Display the score
 void scoreDisplay();
+//! Display the life of the player
+void lifeDisplay();
 
 /**************************************************************************/
 /******************************* VARIABLES ********************************/
@@ -96,6 +101,12 @@ int numberOfItemsLeft = 0;
 int levelStructure[LEVEL_WIDTH][LEVEL_HEIGHT];
 //! The texture of the bloc
 Texture *bloc = NULL;
+//! The texture for the numbers
+Texture* numbers[10];
+//! The texture for the heart
+Texture* heart;
+//! The texture for the half heart
+Texture* halfHeart;
 //! The texture for the numbers
 Texture* numbers[10];
 //! The character 'Bubble'
@@ -142,6 +153,10 @@ void initGame(int level) {
     numbers[8] = getTexture("8");
     numbers[9] = getTexture("9");
 
+    // Load the hearts texture
+    heart = getTexture("heart");
+    halfHeart = getTexture("half-heart");
+
     // We load the level
     loadLevel(level);
     // We initialize the ennemies
@@ -159,9 +174,10 @@ void displayGame() {
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA); //I've seen this on most tutorials
     glDisable(GL_DEPTH_TEST);
 
-    // Display the bloc of the level
+    // Display the level and the HUD
     levelDisplay();
     scoreDisplay();
+    lifeDisplay();
 
     // Display the UI elements under the character
     bulletsDisplay();
@@ -275,7 +291,7 @@ void levelDisplay() {
                 // We move to the position where we want to display our bloc
                 glTranslatef(
                     -(((WINDOW_WIDTH - 25.0) - (BLOC_WIDTH * 2) * i) / 146.0), 
-                    ((((WINDOW_HEIGH - 19.0) - (BLOC_HEIGHT * 2) * j) - TOP_SPACE) / 146.0), 
+                    ((((WINDOW_HEIGHT - 19.0) - (BLOC_HEIGHT * 2) * j) - TOP_SPACE) / 146.0), 
                     -10.0f);
                 glBegin(GL_QUADS);
                     glTexCoord2f(0.0f, 0.0f);
@@ -332,7 +348,7 @@ void characterDisplay(Character *character, GLuint textureId) {
 
     // Transform x/y position in pixel of the character in OpenGL (0,0) center position
     float x = -(WINDOW_WIDTH - (character->hitbox->width / 2) - character->position->x - ((BLOC_WIDTH * 2)) * 2) / 146.0;
-    float y = -(WINDOW_HEIGH - ((character->hitbox->height / 2) + 6) - character->position->y - (BLOC_HEIGHT * 2) - TOP_SPACE) / 146.0;
+    float y = -(WINDOW_HEIGHT - ((character->hitbox->height / 2) + 6) - character->position->y - (BLOC_HEIGHT * 2) - TOP_SPACE) / 146.0;
     
     glPushMatrix();
 
@@ -362,7 +378,7 @@ void bulletsDisplay() {
 
         // Transform x/y position in pixel of the character in OpenGL (0,0) center position
         float x = -(WINDOW_WIDTH - (displayBullets->bullet->hitbox->width / 2) - displayBullets->bullet->position->x - ((BLOC_WIDTH * 2)) * 2) / 146.0;
-        float y = -(WINDOW_HEIGH - ((displayBullets->bullet->hitbox->height / 2) + 6) - displayBullets->bullet->position->y - (BLOC_HEIGHT * 2) - TOP_SPACE) / 146.0;
+        float y = -(WINDOW_HEIGHT - ((displayBullets->bullet->hitbox->height / 2) + 6) - displayBullets->bullet->position->y - (BLOC_HEIGHT * 2) - TOP_SPACE) / 146.0;
             
         glPushMatrix();
 
@@ -588,7 +604,7 @@ void ennemiesCatch() {
                     playerScore -= ENNMIE_HIT_SCORE;
                     ennemyTimer++;
 
-                    if (bubble->life < 0) {
+                    if (bubble->life <= 0) {
                         changeGameStatus(END_GAME_LOSE);
                     }
                 }
@@ -614,7 +630,7 @@ void itemsDisplay() {
 
             // Transform x/y position in pixel of the character in OpenGL (0,0) center position
             float x = -(WINDOW_WIDTH - (displayItem->item->hitbox->width / 2) - displayItem->item->position->x - ((BLOC_WIDTH * 2)) * 2) / 146.0;
-            float y = -(WINDOW_HEIGH - ((displayItem->item->hitbox->height / 2) + 6) - displayItem->item->position->y - (BLOC_HEIGHT * 2) - TOP_SPACE) / 146.0;
+            float y = -(WINDOW_HEIGHT - ((displayItem->item->hitbox->height / 2) + 6) - displayItem->item->position->y - (BLOC_HEIGHT * 2) - TOP_SPACE) / 146.0;
                 
             glPushMatrix();
 
@@ -657,6 +673,10 @@ void itemsPickup() {
 //! Display the score
 void scoreDisplay() {
     int currentScore = playerScore;
+    if (currentScore < 0) {
+        currentScore = 0;
+    }
+
     for (int i = 0; i < 10; i++) {
         glBindTexture(GL_TEXTURE_2D, numbers[currentScore % 10]->textureId);
         currentScore /= 10;
@@ -665,7 +685,7 @@ void scoreDisplay() {
         // We move to the position where we want to display our bloc
         glTranslatef(
             -(((WINDOW_WIDTH - 25.0) -200 + (NUMBER_WIDTH * 2) * i) / 146.0), 
-            (((WINDOW_HEIGH + 10) - (NUMBER_HEIGHT * 2)) / 146.0), 
+            (((WINDOW_HEIGHT + 10) - (NUMBER_HEIGHT * 2)) / 146.0), 
             -10.0f);
         
         glBegin(GL_QUADS);
@@ -680,6 +700,35 @@ void scoreDisplay() {
 
             glTexCoord2f(0.0f, 1.0f);
             glVertex3f(-((1.0/292.0) * (NUMBER_WIDTH * 2)), ((1.0/282.0) * (NUMBER_HEIGHT * 2)), 0.0f);
+        glEnd();
+        glPopMatrix();
+    }
+}
+//! Display the life of the player
+void lifeDisplay() {
+    int playerNumberOfHeart = bubble->life / 20;
+    for (int i = 0; i < playerNumberOfHeart; i++) {
+        glBindTexture(GL_TEXTURE_2D, heart->textureId); 
+
+        glPushMatrix();
+        // We move to the position where we want to display our bloc
+        glTranslatef(
+            -(((WINDOW_WIDTH - 25.0) - (HEART_WIDTH * 2) * i) / 146.0), 
+            -(((WINDOW_HEIGHT + 20) - (HEART_HEIGHT * 2)) / 146.0), 
+            -10.0f);
+                
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f);
+            glVertex3f(-((1.0/292.0) * (HEART_WIDTH * 2)), -((1.0/282.0) * (HEART_HEIGHT * 2)), 0.0f);
+            
+            glTexCoord2f(1.0f, 0.0f);
+            glVertex3f(((1.0/292.0) * (HEART_WIDTH * 2)), -((1.0/282.0) * (HEART_HEIGHT * 2)), 0.0f);
+
+            glTexCoord2f(1.0f, 1.0f);
+            glVertex3f(((1.0/292.0) * (HEART_WIDTH * 2)), ((1.0/282.0) * (HEART_HEIGHT * 2)), 0.0f);
+
+            glTexCoord2f(0.0f, 1.0f);
+            glVertex3f(-((1.0/292.0) * (HEART_WIDTH * 2)), ((1.0/282.0) * (HEART_HEIGHT * 2)), 0.0f);
         glEnd();
         glPopMatrix();
     }
