@@ -48,7 +48,8 @@ void init(void) {
 //! Function call by GLUT to display the screen
 void display(void) {
     switch (state) {
-        case GAME:
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
             displayGame();
             break;
         case HELP:
@@ -73,7 +74,8 @@ void display(void) {
 //! Function call by GLUT every X secondes 
 void timer(int value) {
     switch (state) {
-        case GAME:
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
             timerGame();
             break;
         case HELP:
@@ -96,7 +98,8 @@ void timer(int value) {
 //! Function call by GLUT every X secondes (use with a longer timer)
 void longTimer(int value) {
     switch (state) {
-        case GAME:
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
             longTimerGame();
             break;
         case HELP:
@@ -117,7 +120,8 @@ void longTimer(int value) {
 //! Function call by GLUT every X secondes (use with a score timer)
 void longerTimer(int value) {
     switch (state) {
-        case GAME:
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
             scoreTimerGame();
             break;
         case HELP:
@@ -161,7 +165,8 @@ void keyboard(unsigned char key, int x, int y) {
     }
 
     switch (state) {
-        case GAME:
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
             keyboardGame(key);
             break;
         case HELP:
@@ -187,7 +192,8 @@ void keyboard(unsigned char key, int x, int y) {
 //! Function call by GLUT to handle the keyboard when a key is release
 void keyboardUp(unsigned char key, int x, int y) {
     switch (state) {
-        case GAME:
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
             keyboardUpGame(key);
             break;
         case HELP:
@@ -206,7 +212,9 @@ void keyboardUp(unsigned char key, int x, int y) {
 //! Handle the special keys
 void specialInput(int key, int x, int y) {
     switch (state) {
-        case GAME:
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
+            specialInputGame(key, x, y);
             break;
         case HELP:
             break;
@@ -222,7 +230,31 @@ void specialInput(int key, int x, int y) {
             break;
     }
 }
+//! Handle the special keys
+void specialInputUp(int key, int x, int y) {
+    switch (state) {
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
+            specialInputUpGame(key, x, y);
+            break;
+        case HELP:
+            break;
+        case HOME:
+            break;
+        case LOGO:
+            break;
+        case SCORE:
+            break;
+        case END_GAME_WIN:
+        case END_GAME_LOSE:
+            break;
+    }
+}
 //! Function to change the state of the game
 void changeGameStatus(enum gameState newState) {
     state = newState;
+
+    if (state == GAME_1_PLAYER || GAME_2_PLAYER) {
+        setNumberOfPlayer(state == GAME_1_PLAYER ? 1: 2);
+    }
 }

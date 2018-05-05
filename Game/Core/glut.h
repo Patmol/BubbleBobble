@@ -14,7 +14,8 @@
 /**************************************************************************/
 //! The different states of the game
 enum gameState { 
-    GAME,               /*!< The game screen */
+    GAME_1_PLAYER,      /*!< The game screen for 1 player */
+    GAME_2_PLAYER,      /*!< The game screen for 2 player */
     HELP,               /*!< The help screen */
     HOME,               /*!< The home screen */
     LOGO,               /*!< The logo screen */
@@ -44,6 +45,8 @@ void keyboard(unsigned char key, int x, int y);
 void keyboardUp(unsigned char key, int x, int y);
 //! Handle the special keys
 void specialInput(int key, int x, int y);
+//! Handle the special keys
+void specialInputUp(int key, int x, int y);
 //! Function to change the state of the game
 void changeGameStatus(enum gameState newState);
 

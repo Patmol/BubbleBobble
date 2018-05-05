@@ -61,6 +61,8 @@ void characterDisplay(Character *character, GLuint textureId);
 void bulletsDisplay();
 //! Handle the action of the bubble character
 void bubbleAction();
+//! Handle the action of the bobble character
+void bobbleAction();
 //! Make all bullets move
 void bulletsMovement();
 //! Initialize the ennemies
@@ -78,13 +80,16 @@ void itemsPickup();
 //! Display the score
 void scoreDisplay();
 //! Display the life of the player
-void lifeDisplay();
+void lifeDisplayBubble();
+//! Display the life of the player
+void lifeDisplayBobble();
+
 
 /**************************************************************************/
 /******************************* VARIABLES ********************************/
 /**************************************************************************/
 //! The state of the keyboard key
-bool keyStates[256]; 
+bool keyStates[400]; 
 //! Show Bubble
 bool showBubble = true;
 //! The shot timer
@@ -111,6 +116,8 @@ Texture* halfHeart;
 Texture* numbers[10];
 //! The character 'Bubble'
 Character *bubble = NULL;
+//! The character 'Bubble'
+Character *bobble = NULL;
 //! The first pointer to the list of bullets
 Bullets *bullets = NULL;
 //! The first pointer to the list of ennemies
@@ -139,7 +146,13 @@ void initGame(int level) {
     bubble = initializeCharacter("bubble", 10, 15, 0.0f, 0.0f, 126.0f, 133.0f);
     addCharacterTexture(bubble, "bubble-left", "left");
     addCharacterTexture(bubble, "bubble-right", "right");
-    setBullet(bubble, "bubble-bullet", BULLET_HEIGHT, BULLET_WIDTH, BULLET_SPEED, 100);
+    setBullet(bubble, "green-bullet", BULLET_HEIGHT, BULLET_WIDTH, BULLET_SPEED, 100);
+
+    // We generate the Bobble character with his texture and his weapon if we have 2 players
+    bobble = initializeCharacter("bobble", 10, 15, 0.0f, 0.0f, 126.0f, 133.0f);
+    addCharacterTexture(bobble, "bobble-left", "left");
+    addCharacterTexture(bobble, "bobble-right", "right");
+    setBullet(bobble, "blue-bullet", BULLET_HEIGHT, BULLET_WIDTH, BULLET_SPEED, 100);
 
     // Load numbers texture
     numbers[0] = getTexture("0");
@@ -162,6 +175,12 @@ void initGame(int level) {
     // We initialize the ennemies
     ennemiesInit();
 }
+//! Set the number of player
+void setNumberOfPlayer(int numberOfPlayer) { 
+    if (numberOfPlayer == 1) {
+        bobble = NULL;
+    }
+}
 //! Display the game screen.
 void displayGame() {
     // We clear the OpenGL bugger
@@ -177,7 +196,11 @@ void displayGame() {
     // Display the level and the HUD
     levelDisplay();
     scoreDisplay();
-    lifeDisplay();
+    lifeDisplayBubble();
+
+    if (bobble != NULL) {
+        lifeDisplayBobble();
+    }
 
     // Display the UI elements under the character
     bulletsDisplay();
@@ -186,6 +209,9 @@ void displayGame() {
     // Display character (bubble and ennemies)
     if (showBubble || ennemyTimer == 0) {
         characterDisplayManagement(bubble);
+    }
+    if (bobble != NULL) {
+        characterDisplayManagement(bobble);
     }
     if (ennemyTimer != 0) {
         showBubble = !showBubble;
@@ -196,8 +222,14 @@ void displayGame() {
     
     // We check the action of bubble (depending on the key press on the keyboard)
     bubbleAction();
-    // We move the character
+    // We move the characters
     moveCharacter(bubble, levelStructure);
+    
+    // We check the action of bobble if this one exist and we move it
+    if (bobble != NULL) {
+        bobbleAction();
+        moveCharacter(bobble, levelStructure);
+    }
     // We move the bullets
     bulletsMovement();
     // We check if some ennemies has been hit
@@ -251,6 +283,14 @@ void keyboardGame(unsigned char key) {
 */
 void keyboardUpGame(unsigned char key) {
     keyStates[key] = false;
+}
+//! Handle the special keys
+void specialInputGame(int key, int x, int y) {
+    keyStates[256 + key] = true;
+}
+//! Handle the special keys
+void specialInputUpGame(int key, int x, int y) {
+    keyStates[256 + key] = false;
 }
 //! Load a level from a file
 /*!
@@ -424,6 +464,44 @@ void bubbleAction() {
         if (shotTimer == 0) {
             shotTimer++;
             Bullet *bullet = shot(bubble);
+
+            // There is no bullets yet shot
+            if (bullets == NULL) {
+                bullets = malloc(sizeof(Bullets));
+                bullets->bullet = bullet;
+                bullets->next = NULL;
+            } else {
+                // Otherwise, we add the bullet at the begin of the list of bullets shot
+                Bullets *newBullets = malloc(sizeof(Bullets));
+                newBullets->bullet = bullet;
+                newBullets->next = bullets;
+                bullets = newBullets;
+            }
+        }
+    }
+}
+//! Move the bobble character
+void bobbleAction() {
+    if (keyStates[256 + GLUT_KEY_LEFT] && keyStates[256 + GLUT_KEY_RIGHT]) {
+        bobble->move = NONE;
+    } else if (keyStates[256 + GLUT_KEY_LEFT]) {
+        bobble->move = LEFT;
+        bobble->prevMove = LEFT;
+    } else if (keyStates[256 + GLUT_KEY_RIGHT]) {
+        bobble->move = RIGHT;
+        bobble->prevMove = RIGHT;
+    } else if (!keyStates[256 + GLUT_KEY_LEFT] && !keyStates[256 + GLUT_KEY_RIGHT]) {
+        bobble->move = NONE;
+    }
+
+    if (keyStates[256 + GLUT_KEY_UP]) {
+        jumpCharacter(bobble, levelStructure);
+    }
+
+    if (keyStates[256 + GLUT_KEY_DOWN]) {
+        if (shotTimer == 0) {
+            shotTimer++;
+            Bullet *bullet = shot(bobble);
 
             // There is no bullets yet shot
             if (bullets == NULL) {
@@ -661,7 +739,14 @@ void itemsPickup() {
     Items *pickItem = items;
 
     while (pickItem != NULL) {
+        // We check if Bubble pick the item
         if (isHit(pickItem->item->hitbox, bubble->hitbox)) {
+            playerScore += pickItem->item->scoreValue;
+            // We change the score of the item pick
+            pickItem->item->scoreValue = 0;
+        }
+        // We check if Bobble pick the item
+    if (bobble != NULL && isHit(pickItem->item->hitbox, bobble->hitbox)) {
             playerScore += pickItem->item->scoreValue;
             // We change the score of the item pick
             pickItem->item->scoreValue = 0;
@@ -705,7 +790,7 @@ void scoreDisplay() {
     }
 }
 //! Display the life of the player
-void lifeDisplay() {
+void lifeDisplayBubble() {
     int playerNumberOfHeart = bubble->life / 20;
     for (int i = 0; i < playerNumberOfHeart; i++) {
         glBindTexture(GL_TEXTURE_2D, heart->textureId); 
@@ -714,6 +799,35 @@ void lifeDisplay() {
         // We move to the position where we want to display our bloc
         glTranslatef(
             -(((WINDOW_WIDTH - 25.0) - (HEART_WIDTH * 2) * i) / 146.0), 
+            -(((WINDOW_HEIGHT + 20) - (HEART_HEIGHT * 2)) / 146.0), 
+            -10.0f);
+                
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f);
+            glVertex3f(-((1.0/292.0) * (HEART_WIDTH * 2)), -((1.0/282.0) * (HEART_HEIGHT * 2)), 0.0f);
+            
+            glTexCoord2f(1.0f, 0.0f);
+            glVertex3f(((1.0/292.0) * (HEART_WIDTH * 2)), -((1.0/282.0) * (HEART_HEIGHT * 2)), 0.0f);
+
+            glTexCoord2f(1.0f, 1.0f);
+            glVertex3f(((1.0/292.0) * (HEART_WIDTH * 2)), ((1.0/282.0) * (HEART_HEIGHT * 2)), 0.0f);
+
+            glTexCoord2f(0.0f, 1.0f);
+            glVertex3f(-((1.0/292.0) * (HEART_WIDTH * 2)), ((1.0/282.0) * (HEART_HEIGHT * 2)), 0.0f);
+        glEnd();
+        glPopMatrix();
+    }
+}
+//! Display the life of the player
+void lifeDisplayBobble() {
+    int playerNumberOfHeart = bobble->life / 20;
+    for (int i = 0; i < playerNumberOfHeart; i++) {
+        glBindTexture(GL_TEXTURE_2D, heart->textureId); 
+
+        glPushMatrix();
+        // We move to the position where we want to display our bloc
+        glTranslatef(
+            (((WINDOW_WIDTH - 25.0) - (HEART_WIDTH * 2) * i) / 146.0), 
             -(((WINDOW_HEIGHT + 20) - (HEART_HEIGHT * 2)) / 146.0), 
             -10.0f);
                 
