@@ -35,5 +35,7 @@ typedef struct item {
   \param width is an integer argument for the hitbox width.
 */
 Item *initializeItem(char *textureName, int scoreValue, float x, float y, float height, float width);
+//! We clear the item memory data
+void clearItem(Item* item);
 
 #endif

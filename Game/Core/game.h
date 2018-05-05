@@ -59,5 +59,7 @@ void specialInputGame(int key, int x, int y);
 void specialInputUpGame(int key, int x, int y);
 //! Set the number of player
 void setNumberOfPlayer(int);
+//! Clear the game informa
+void clearGameInformation();
 
 #endif

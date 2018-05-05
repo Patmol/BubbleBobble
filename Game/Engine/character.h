@@ -127,5 +127,7 @@ int getYLevelStructureCharacterPosition(Character *character);
   \return the Y ground position.
 */
 int getYGroundPosition(int position);
+//! Clear the character data 
+void clearCharacter(Character* character);
 
 #endif

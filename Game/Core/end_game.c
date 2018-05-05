@@ -34,7 +34,7 @@ Texture* endGameLogoWin = NULL;
 //! The texture of the end game when the player lose
 Texture* endGameLogoLose = NULL;
 //! The score of the player
-int playerScore;
+int endPlayerScore;
 //! The texture for the numbers
 Texture* numbers[10];
 
@@ -107,7 +107,12 @@ void endLogoDisplay(bool win) {
 }
 //! Display the score
 void endScoreDisplay() {
-    int currentScore = playerScore;
+    int currentScore = endPlayerScore;
+
+    if (currentScore < 0) {
+        currentScore = 0;
+    }
+
     for (int i = 0; i < 10; i++) {
         glBindTexture(GL_TEXTURE_2D, numbers[currentScore % 10]->textureId);
         currentScore /= 10;
@@ -140,7 +145,7 @@ void endScoreDisplay() {
   \paran the score
 */
 void setScore(int score) {
-    playerScore = score;
+    endPlayerScore = score;
 }
 //! Handle when a key is press on the keyboard.
 /*!

@@ -34,15 +34,13 @@ void init(void) {
 
     // We need to load all textures of the application at the initialisation
     loadTextures("data/images.txt");
-    // Initialise the logo data
+    // Initialize the logo data
     initLogo();
-    // Initialise the home data
+    // Initialize the home data
     initHome();
-    // Initialise the controls data
+    // Initialize the controls data
     initControls();
-    // Initialise the data for the game
-    initGame(1);
-    // Initialise the end game data
+    // Initialize the end game data
     initEndGame();
 }
 //! Function call by GLUT to display the screen
@@ -65,9 +63,11 @@ void display(void) {
             break;
         case END_GAME_WIN:
             displayEndGame(true);
+            clearGameInformation();
             break;
         case END_GAME_LOSE:
             displayEndGame(false);
+            clearGameInformation();
             break;
     }
 }
@@ -255,6 +255,8 @@ void changeGameStatus(enum gameState newState) {
     state = newState;
 
     if (state == GAME_1_PLAYER || GAME_2_PLAYER) {
+        // Initialize the data for the game
+        initGame(1);
         setNumberOfPlayer(state == GAME_1_PLAYER ? 1: 2);
     }
 }

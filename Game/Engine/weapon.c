@@ -71,3 +71,11 @@ void moveBullet(Bullet* bullet) {
         bullet->position->x -= bullet->speed;
     }
 }
+//! Clean the bullet data
+void cleanBullet(Bullet* bullet) {
+    if (bullet != NULL) {
+        if (bullet->position != NULL) free(bullet->position);
+        if (bullet->hitbox != NULL) free(bullet->hitbox);
+        free(bullet);
+    }
+}

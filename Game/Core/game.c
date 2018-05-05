@@ -34,7 +34,8 @@
 #define ENNEMY_HIT_TEMP 30              //! The timer between two hit of an ennemy
 #define START_SCORE 500                 //! The starting score
 #define ENNMIE_HIT_SCORE 50             //! The score we lose when an ennemy hit the player
-#
+#define NUMBER_OF_KEY 256               //! The number of key
+#define BUFFER_SIZE 400                 //! The size of the buffer for the keyboard
 
 /**************************************************************************/
 /************************** FUNCTIONS DEFINITIONS *************************/
@@ -89,13 +90,19 @@ void lifeDisplayBobble();
 /******************************* VARIABLES ********************************/
 /**************************************************************************/
 //! The state of the keyboard key
-bool keyStates[400]; 
+bool keyStates[BUFFER_SIZE]; 
 //! Show Bubble
 bool showBubble = true;
+//! Show Bobble
+bool showBobble = true;
+//! If the data need to be clean
+bool dataNeedToBeClean = false;
 //! The shot timer
 int shotTimer = 0;
 //! The ennemy timer
-int ennemyTimer = 0;
+int ennemyTimerBubble = 0;
+//! The ennemy timer
+int ennemyTimerBobble = 0;
 //! The score of the player
 int playerScore = START_SCORE;
 //! The number of ennemies left
@@ -133,6 +140,7 @@ Items *items = NULL;
   \param an integer for the level to initialize
 */
 void initGame(int level) {
+    dataNeedToBeClean = true;
     // We use a random number for the speed of the ennemies
     srand(time(NULL));
     // The name of the level
@@ -207,14 +215,17 @@ void displayGame() {
     itemsDisplay();
 
     // Display character (bubble and ennemies)
-    if (showBubble || ennemyTimer == 0) {
+    if ((showBubble || ennemyTimerBubble == 0) && bubble->life > 0) {
         characterDisplayManagement(bubble);
     }
-    if (bobble != NULL) {
+    if (bobble != NULL && ((showBobble || ennemyTimerBobble == 0) && bobble->life > 0)) {
         characterDisplayManagement(bobble);
     }
-    if (ennemyTimer != 0) {
+    if (ennemyTimerBubble != 0) {
         showBubble = !showBubble;
+    }
+    if (ennemyTimerBobble != 0) {
+        showBobble = !showBobble;
     }
 
     // Display the UI elements over the character
@@ -245,6 +256,7 @@ void displayGame() {
 
     if (numberOfEnnemiesLeft == 0 && numberOfItemsLeft == 0) {
         setScore(playerScore);
+        playerScore = START_SCORE;
         changeGameStatus(END_GAME_WIN);
     }
 }
@@ -286,11 +298,11 @@ void keyboardUpGame(unsigned char key) {
 }
 //! Handle the special keys
 void specialInputGame(int key, int x, int y) {
-    keyStates[256 + key] = true;
+    keyStates[NUMBER_OF_KEY + key] = true;
 }
 //! Handle the special keys
 void specialInputUpGame(int key, int x, int y) {
-    keyStates[256 + key] = false;
+    keyStates[NUMBER_OF_KEY + key] = false;
 }
 //! Load a level from a file
 /*!
@@ -482,23 +494,23 @@ void bubbleAction() {
 }
 //! Move the bobble character
 void bobbleAction() {
-    if (keyStates[256 + GLUT_KEY_LEFT] && keyStates[256 + GLUT_KEY_RIGHT]) {
+    if (keyStates[NUMBER_OF_KEY + GLUT_KEY_LEFT] && keyStates[NUMBER_OF_KEY + GLUT_KEY_RIGHT]) {
         bobble->move = NONE;
-    } else if (keyStates[256 + GLUT_KEY_LEFT]) {
+    } else if (keyStates[NUMBER_OF_KEY + GLUT_KEY_LEFT]) {
         bobble->move = LEFT;
         bobble->prevMove = LEFT;
-    } else if (keyStates[256 + GLUT_KEY_RIGHT]) {
+    } else if (keyStates[NUMBER_OF_KEY + GLUT_KEY_RIGHT]) {
         bobble->move = RIGHT;
         bobble->prevMove = RIGHT;
-    } else if (!keyStates[256 + GLUT_KEY_LEFT] && !keyStates[256 + GLUT_KEY_RIGHT]) {
+    } else if (!keyStates[NUMBER_OF_KEY + GLUT_KEY_LEFT] && !keyStates[NUMBER_OF_KEY + GLUT_KEY_RIGHT]) {
         bobble->move = NONE;
     }
 
-    if (keyStates[256 + GLUT_KEY_UP]) {
+    if (keyStates[NUMBER_OF_KEY + GLUT_KEY_UP]) {
         jumpCharacter(bobble, levelStructure);
     }
 
-    if (keyStates[256 + GLUT_KEY_DOWN]) {
+    if (keyStates[NUMBER_OF_KEY + GLUT_KEY_DOWN]) {
         if (shotTimer == 0) {
             shotTimer++;
             Bullet *bullet = shot(bobble);
@@ -572,7 +584,7 @@ void ennemiesInit() {
         if (ennemies == NULL) {
             ennemies = ennemy;
             prevEnnemy = ennemy;
-        } else {
+        } else if (prevEnnemy != NULL) {
             prevEnnemy->next = ennemy;
             prevEnnemy = ennemy;
         }
@@ -654,44 +666,77 @@ void ennemiesHits() {
 //! Make the ennemies move to catch the player
 void ennemiesCatch() {
     Ennemies *moveEnnemy = ennemies;
+    int ennemyNumber = 0;
+    Character* playerToCatch =NULL;
 
     while (moveEnnemy != NULL) {
         // We only move the ennmy if his life is greater than zero
         if (moveEnnemy->ennemy->life > 0) {
+            // We chose the player to catch
+            if (bobble == NULL) {
+                playerToCatch = bubble;
+            } else {
+                if (bubble->life == 0 || (ennemyNumber % 2 == 0 && bobble->life != 0)) {
+                    playerToCatch = bobble;
+                } else {
+                    playerToCatch = bubble;
+                }
+            }
+
             // Depending on the Bubble position, we change the direction of the ennemy
-            if (moveEnnemy->ennemy->position->y > bubble->position->y) {
-                if (bubble->position->x < WINDOW_WIDTH / 2) {
+            if (moveEnnemy->ennemy->position->y > playerToCatch->position->y) {
+                if (playerToCatch->position->x < WINDOW_WIDTH / 2) {
                     moveEnnemy->ennemy->move = LEFT;
                 } else {
                     moveEnnemy->ennemy->move = RIGHT;
                 }
             } else {
-                if (moveEnnemy->ennemy->position->x > bubble->position->x) {
+                if (moveEnnemy->ennemy->position->x > playerToCatch->position->x) {
                     moveEnnemy->ennemy->move = LEFT;
                 } else {
                     moveEnnemy->ennemy->move = RIGHT;
                 }
 
-                if (moveEnnemy->ennemy->position->y < bubble->position->y) {
+                if (moveEnnemy->ennemy->position->y < playerToCatch->position->y) {
                     jumpCharacter(moveEnnemy->ennemy, levelStructure);
                 }
             }
 
-            if (isHit(moveEnnemy->ennemy->hitbox, bubble->hitbox) && ennemyTimer == 0) {
-                    bubble->life -= ENNEMY_HIT;
+            if (isHit(moveEnnemy->ennemy->hitbox, playerToCatch->hitbox)) {
+                if (playerToCatch == bubble && ennemyTimerBubble == 0) {
+                    playerToCatch->life -= ENNEMY_HIT;
                     playerScore -= ENNMIE_HIT_SCORE;
-                    ennemyTimer++;
-
-                    if (bubble->life <= 0) {
-                        changeGameStatus(END_GAME_LOSE);
-                    }
+                    ennemyTimerBubble++;
+                } else if (playerToCatch == bobble && ennemyTimerBobble == 0) {
+                    playerToCatch->life -= ENNEMY_HIT;
+                    playerScore -= ENNMIE_HIT_SCORE;
+                    ennemyTimerBobble++;
                 }
+            }
+
+            ennemyNumber++;
         }
 
-        if (ennemyTimer > 0 && ennemyTimer < ENNEMY_HIT_TEMP) {
-            ennemyTimer++;
+        if (bobble != NULL) {
+            if (bubble->life <= 0 && bobble->life <= 0) {
+                changeGameStatus(END_GAME_LOSE);
+            }
         } else {
-            ennemyTimer = 0;
+            if (bubble->life <= 0) {
+                changeGameStatus(END_GAME_LOSE);
+            }
+        }
+
+        if (ennemyTimerBubble > 0 && ennemyTimerBubble < ENNEMY_HIT_TEMP) {
+            ennemyTimerBubble++;
+        } else {
+            ennemyTimerBubble = 0;
+        }
+
+        if (ennemyTimerBobble > 0 && ennemyTimerBobble < ENNEMY_HIT_TEMP) {
+            ennemyTimerBobble++;
+        } else {
+            ennemyTimerBobble = 0;
         }
 
         moveEnnemy = moveEnnemy->next;
@@ -845,5 +890,19 @@ void lifeDisplayBobble() {
             glVertex3f(-((1.0/292.0) * (HEART_WIDTH * 2)), ((1.0/282.0) * (HEART_HEIGHT * 2)), 0.0f);
         glEnd();
         glPopMatrix();
+    }
+}
+//! Clear the game informa
+void clearGameInformation() {
+    bullets = NULL;
+    ennemies = NULL;
+    items = NULL;
+
+    bubble = NULL;
+    bobble = NULL;
+
+    // We reset all the keyboard buffer value
+    for (int i = 0; i < BUFFER_SIZE; i++) {
+        keyStates[i] = false;
     }
 }
