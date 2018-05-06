@@ -32,7 +32,7 @@
 #define START_ENNEMIES_NUMBER 2         //! The numbers of ennemies
 #define TOTAL_ENNEMIES_NUMBER 10        //! The numbers of ennemies
 #define ENNEMY_HIT 20                   //! The life remove when an ennmy touch a player
-#define ENNEMY_HIT_TEMP 30              //! The timer between two hit of an ennemy
+#define ENNEMY_HIT_TEMP 100             //! The timer between two hit of an ennemy
 #define START_SCORE 500                 //! The starting score
 #define ENNMIE_HIT_SCORE 50             //! The score we lose when an ennemy hit the player
 #define NUMBER_OF_KEY 256               //! The number of key
@@ -459,6 +459,11 @@ void bulletsDisplay() {
 }
 //! Move the bubble character
 void bubbleAction() {
+    // If the life of the player is 0, we disable the action
+    if (bubble->life <= 0) {
+        return;
+    }
+
     if (keyStates['q'] && keyStates['d']) {
         bubble->move = NONE;
     } else if (keyStates['q']) {
@@ -497,6 +502,11 @@ void bubbleAction() {
 }
 //! Move the bobble character
 void bobbleAction() {
+    // If the life of the player is 0, we disable the action
+    if (bobble->life <= 0) {
+        return;
+    }
+
     if (keyStates[NUMBER_OF_KEY + GLUT_KEY_LEFT] && keyStates[NUMBER_OF_KEY + GLUT_KEY_RIGHT]) {
         bobble->move = NONE;
     } else if (keyStates[NUMBER_OF_KEY + GLUT_KEY_LEFT]) {
