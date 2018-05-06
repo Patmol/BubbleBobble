@@ -751,11 +751,11 @@ void itemsDisplay() {
     Items *displayItem = items;
 
     while (displayItem != NULL) {
-        if (displayItem->item->scoreValue != 0 && displayItem->item->life > 0) {
+        if (displayItem->item->scoreValue != 0 && displayItem->item->lifetime > 0) {
             // At each display, we decrease the life of the item. With this the player need to pickup the
             //  item in a certain amount of time
-            displayItem->item->life--;
-            
+            displayItem->item->lifetime--;
+
             glBindTexture(GL_TEXTURE_2D, displayItem->item->textureId);
 
             // Transform x/y position in pixel of the character in OpenGL (0,0) center position
@@ -791,7 +791,7 @@ void itemsPickup() {
     Items *pickItem = items;
 
     while (pickItem != NULL) {
-        if (pickItem->item->life > 0) {
+        if (pickItem->item->lifetime > 0) {
             // We check if Bubble pick the item
             if (isHit(pickItem->item->hitbox, bubble->hitbox)) {
                 playerScore += pickItem->item->scoreValue;
