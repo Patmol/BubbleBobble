@@ -96,8 +96,6 @@ bool keyStates[BUFFER_SIZE];
 bool showBubble = true;
 //! Show Bobble
 bool showBobble = true;
-//! If the data need to be clean
-bool dataNeedToBeClean = false;
 //! The shot timer for bubble
 int bubbleShotTimer = 0;
 //! The shot timer for bobble
@@ -145,7 +143,6 @@ Items *items = NULL;
   \param an integer for the level to initialize
 */
 void initGame(int level) {
-    dataNeedToBeClean = true;
     // We use a random number for the speed of the ennemies
     srand(time(NULL));
     // The name of the level
