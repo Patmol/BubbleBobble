@@ -6,7 +6,6 @@
 /**************************************************************************/
 //! Initialize the end of the game
 void initEndGame();
-
 //! Display the end of the game
 /*!
   \param a boolean
