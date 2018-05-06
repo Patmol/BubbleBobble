@@ -3,12 +3,12 @@
 #ifndef _GLUT_H_
 #define _GLUT_H_
 
-#define TIMER 10
-#define LONG_TIMER 40
-#define SCORE_TIMER 500
-#define ENNEMI_POP_TIMER 1500
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#define TIMER 10                    //! The short timer speed
+#define LONG_TIMER 40               //! The long timer speed
+#define SCORE_TIMER 500             //! The score timer speed
+#define ENNEMI_POP_TIMER 1500       //! The ennemy pop timer speed
+#define WINDOW_WIDTH 800            //! The window width
+#define WINDOW_HEIGHT 600           //! The window height
 
 /**************************************************************************/
 /********************************** ENUM **********************************/
