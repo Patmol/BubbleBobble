@@ -53,5 +53,15 @@ void keyboardGame(unsigned char key);
   \param key an unsigned character
 */
 void keyboardUpGame(unsigned char key);
+//! Handle the special keys
+void specialInputGame(int key, int x, int y);
+//! Handle the special keys
+void specialInputUpGame(int key, int x, int y);
+//! Set the number of player
+void setNumberOfPlayer(int);
+//! Create more ennemies
+void popEnnemiTimerGame();
+//! Clear the game informa
+void clearGameInformation();
 
 #endif

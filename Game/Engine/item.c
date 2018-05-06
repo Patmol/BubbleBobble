@@ -35,5 +35,14 @@ Item *initializeItem(char *textureName, int scoreValue, float x, float y, float 
     item->hitbox->height = height;
     item->hitbox->width = width;
     item->textureId = texture->textureId;
+    item->lifetime = 200;
     return item;
+}
+//! We clear the item memory data
+void clearItem(Item* item) {
+  if (item != NULL) {
+    if (item->position != NULL) free(item->position);
+    if (item->hitbox != NULL) free(item->hitbox);
+    free(item);
+  }
 }

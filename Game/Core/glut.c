@@ -34,21 +34,20 @@ void init(void) {
 
     // We need to load all textures of the application at the initialisation
     loadTextures("data/images.txt");
-    // Initialise the logo data
+    // Initialize the logo data
     initLogo();
-    // Initialise the home data
+    // Initialize the home data
     initHome();
-    // Initialise the controls data
+    // Initialize the controls data
     initControls();
-    // Initialise the data for the game
-    initGame(1);
-    // Initialise the end game data
+    // Initialize the end game data
     initEndGame();
 }
 //! Function call by GLUT to display the screen
 void display(void) {
     switch (state) {
-        case GAME:
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
             displayGame();
             break;
         case HELP:
@@ -64,16 +63,19 @@ void display(void) {
             break;
         case END_GAME_WIN:
             displayEndGame(true);
+            clearGameInformation();
             break;
         case END_GAME_LOSE:
             displayEndGame(false);
+            clearGameInformation();
             break;
     }
 }
 //! Function call by GLUT every X secondes 
 void timer(int value) {
     switch (state) {
-        case GAME:
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
             timerGame();
             break;
         case HELP:
@@ -96,7 +98,8 @@ void timer(int value) {
 //! Function call by GLUT every X secondes (use with a longer timer)
 void longTimer(int value) {
     switch (state) {
-        case GAME:
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
             longTimerGame();
             break;
         case HELP:
@@ -117,7 +120,8 @@ void longTimer(int value) {
 //! Function call by GLUT every X secondes (use with a score timer)
 void longerTimer(int value) {
     switch (state) {
-        case GAME:
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
             scoreTimerGame();
             break;
         case HELP:
@@ -135,6 +139,28 @@ void longerTimer(int value) {
     }
     glutPostRedisplay();
     glutTimerFunc(SCORE_TIMER, longerTimer, 0);
+}
+//! Function call by GLUT every X secondes (use with to pop the ennemi)
+void ennemyTimer(int value) {
+    switch (state) {
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
+            popEnnemiTimerGame();
+            break;
+        case HELP:
+            break;
+        case HOME:
+            break;
+        case LOGO:
+            break;
+        case SCORE:
+            break;
+        case END_GAME_WIN:
+        case END_GAME_LOSE:
+            break;
+    }
+    glutPostRedisplay();
+    glutTimerFunc(ENNEMI_POP_TIMER, ennemyTimer, 0);
 }
 //! Function call by GLUT when the window is resize
 void reshape(int w, int h) {
@@ -161,7 +187,8 @@ void keyboard(unsigned char key, int x, int y) {
     }
 
     switch (state) {
-        case GAME:
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
             keyboardGame(key);
             break;
         case HELP:
@@ -187,7 +214,8 @@ void keyboard(unsigned char key, int x, int y) {
 //! Function call by GLUT to handle the keyboard when a key is release
 void keyboardUp(unsigned char key, int x, int y) {
     switch (state) {
-        case GAME:
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
             keyboardUpGame(key);
             break;
         case HELP:
@@ -206,7 +234,9 @@ void keyboardUp(unsigned char key, int x, int y) {
 //! Handle the special keys
 void specialInput(int key, int x, int y) {
     switch (state) {
-        case GAME:
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
+            specialInputGame(key, x, y);
             break;
         case HELP:
             break;
@@ -222,7 +252,33 @@ void specialInput(int key, int x, int y) {
             break;
     }
 }
+//! Handle the special keys
+void specialInputUp(int key, int x, int y) {
+    switch (state) {
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
+            specialInputUpGame(key, x, y);
+            break;
+        case HELP:
+            break;
+        case HOME:
+            break;
+        case LOGO:
+            break;
+        case SCORE:
+            break;
+        case END_GAME_WIN:
+        case END_GAME_LOSE:
+            break;
+    }
+}
 //! Function to change the state of the game
 void changeGameStatus(enum gameState newState) {
     state = newState;
+
+    if (state == GAME_1_PLAYER || GAME_2_PLAYER) {
+        // Initialize the data for the game
+        initGame(1);
+        setNumberOfPlayer(state == GAME_1_PLAYER ? 1: 2);
+    }
 }

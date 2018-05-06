@@ -31,5 +31,6 @@ Bullet* shot(Character *character);
   \param the bullet to move
 */
 void moveBullet(Bullet* bullet);
-
+//! Clean the weapon data
+void cleanBullet(Bullet* bullet);
 #endif

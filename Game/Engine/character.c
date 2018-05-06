@@ -10,6 +10,7 @@
 
 #include "texture.h"
 #include "character.h"
+#include "weapon.h"
 
 #define JUMP_HEIGHT 350             //! The jump height of a character
 #define POSITION_TRANSFORM 45       //! The position transform
@@ -222,4 +223,14 @@ int getYLevelStructureCharacterPosition(Character *character) {
 */
 int getYGroundPosition(int yPosition) {
     return ((LEVEL_HEIGHT - 1 - yPosition) * (POSITION_TRANSFORM - 1));
+}
+//! Clear the character data 
+void clearCharacter(Character* character) {
+    if (character != NULL) {
+        if (character->position != NULL) free(character->position);
+        if (character->hitbox != NULL) free(character->hitbox);
+        // TODO: Clean texture
+        free(character->bullet);
+        free(character);
+    }
 }

@@ -2,7 +2,10 @@ images/bloc-level-1.tga bloc-level-1
 images/logo.tga logo
 images/bubble-left.tga bubble-left
 images/bubble-right.tga bubble-right
-images/green-bubble.tga bubble-bullet
+images/bobble-left.tga bobble-left
+images/bobble-right.tga bobble-right
+images/green-bubble.tga green-bullet
+images/blue-bubble.tga blue-bullet
 images/ennemi-1-left.tga ennemi-1-left
 images/ennemi-1-right.tga ennemi-1-right
 images/item-eggplant.tga item-eggplant
@@ -11,8 +14,10 @@ images/heart.tga heart
 images/half-heart.tga half-heart
 images/texts/controls.tga controls
 images/texts/enter.tga enter
-images/buttons/play.tga play
-images/buttons/play-selected.tga play-selected
+images/buttons/1-player.tga 1-player
+images/buttons/1-player-selected.tga 1-player-selected
+images/buttons/2-player.tga 2-player
+images/buttons/2-player-selected.tga 2-player-selected
 images/buttons/quit.tga quit
 images/buttons/quit-selected.tga quit-selected
 images/buttons/help.tga help
