@@ -98,8 +98,10 @@ bool showBubble = true;
 bool showBobble = true;
 //! If the data need to be clean
 bool dataNeedToBeClean = false;
-//! The shot timer
-int shotTimer = 0;
+//! The shot timer for bubble
+int bubbleShotTimer = 0;
+//! The shot timer for bobble
+int bobbleShotTimer = 0;
 //! The ennemy timer
 int ennemyTimerBubble = 0;
 //! The ennemy timer
@@ -481,8 +483,8 @@ void bubbleAction() {
     }
 
     if (keyStates['e']) {
-        if (shotTimer == 0) {
-            shotTimer++;
+        if (bubbleShotTimer == 0) {
+            bubbleShotTimer++;
             Bullet *bullet = shot(bubble);
 
             // There is no bullets yet shot
@@ -524,8 +526,8 @@ void bobbleAction() {
     }
 
     if (keyStates[NUMBER_OF_KEY + GLUT_KEY_DOWN]) {
-        if (shotTimer == 0) {
-            shotTimer++;
+        if (bobbleShotTimer == 0) {
+            bobbleShotTimer++;
             Bullet *bullet = shot(bobble);
 
             // There is no bullets yet shot
@@ -572,10 +574,16 @@ void bulletsMovement() {
             }
     }
 
-    if (shotTimer > 0 && shotTimer < SHOT_LIMIT) {
-        shotTimer++;
+    if (bubbleShotTimer > 0 && bubbleShotTimer < SHOT_LIMIT) {
+        bubbleShotTimer++;
     } else {
-        shotTimer = 0;
+        bubbleShotTimer = 0;
+    }
+
+    if (bobbleShotTimer > 0 && bobbleShotTimer < SHOT_LIMIT) {
+        bobbleShotTimer++;
+    } else {
+        bobbleShotTimer = 0;
     }
 }
 //! Initialize the ennemies
