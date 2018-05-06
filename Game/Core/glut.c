@@ -140,6 +140,28 @@ void longerTimer(int value) {
     glutPostRedisplay();
     glutTimerFunc(SCORE_TIMER, longerTimer, 0);
 }
+//! Function call by GLUT every X secondes (use with to pop the ennemi)
+void ennemyTimer(int value) {
+    switch (state) {
+        case GAME_1_PLAYER:
+        case GAME_2_PLAYER:
+            popEnnemiTimerGame();
+            break;
+        case HELP:
+            break;
+        case HOME:
+            break;
+        case LOGO:
+            break;
+        case SCORE:
+            break;
+        case END_GAME_WIN:
+        case END_GAME_LOSE:
+            break;
+    }
+    glutPostRedisplay();
+    glutTimerFunc(ENNEMI_POP_TIMER, ennemyTimer, 0);
+}
 //! Function call by GLUT when the window is resize
 void reshape(int w, int h) {
     if (h == 0) {

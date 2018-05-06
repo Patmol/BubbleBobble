@@ -6,6 +6,7 @@
 #define TIMER 10
 #define LONG_TIMER 40
 #define SCORE_TIMER 500
+#define ENNEMI_POP_TIMER 1000
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
@@ -37,6 +38,8 @@ void timer(int value);
 void longTimer(int value);
 //! Function call by GLUT every X secondes (use with a score timer)
 void longerTimer(int value);
+//! Function call by GLUT every X secondes (use with to pop the ennemi)
+void ennemyTimer(int value);
 //! Function call by GLUT when the window is resize
 void reshape(int w, int h);
 //! Function call by GLUT to handle the keyboard when a key is press

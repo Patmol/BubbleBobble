@@ -35,6 +35,7 @@ Item *initializeItem(char *textureName, int scoreValue, float x, float y, float 
     item->hitbox->height = height;
     item->hitbox->width = width;
     item->textureId = texture->textureId;
+    item->life = 200;
     return item;
 }
 //! We clear the item memory data

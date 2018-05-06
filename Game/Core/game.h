@@ -59,6 +59,8 @@ void specialInputGame(int key, int x, int y);
 void specialInputUpGame(int key, int x, int y);
 //! Set the number of player
 void setNumberOfPlayer(int);
+//! Create more ennemies
+void popEnnemiTimerGame();
 //! Clear the game informa
 void clearGameInformation();
 

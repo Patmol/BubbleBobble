@@ -18,6 +18,7 @@
 typedef struct item {
     int textureId;              /*!< The texture identifier used to display the item. */
     int scoreValue;             /*!< The score of the item. */
+    int life;                   /*!> The number of turn the item stay */
     Position *position;         /*!< The position of the item in the space (at the bottom left). */
     Hitbox *hitbox;             /*!< The hitbox of the character. */
 } Item;

@@ -29,7 +29,8 @@
 #define BULLET_SPEED 20                 //! The default speed of a bullet
 #define SHOT_LIMIT 30                   //! The time between every shot
 #define SHOT_REMOVE_SAFE_ZONE 200       //! A pixel value outside the screen where we can safely remove the bullet from the list
-#define ENNEMIES_NUMBER 2               //! The numbers of ennemies
+#define START_ENNEMIES_NUMBER 2         //! The numbers of ennemies
+#define TOTAL_ENNEMIES_NUMBER 10        //! The numbers of ennemies
 #define ENNEMY_HIT 20                   //! The life remove when an ennmy touch a player
 #define ENNEMY_HIT_TEMP 30              //! The timer between two hit of an ennemy
 #define START_SCORE 500                 //! The starting score
@@ -103,6 +104,8 @@ int shotTimer = 0;
 int ennemyTimerBubble = 0;
 //! The ennemy timer
 int ennemyTimerBobble = 0;
+//! Number of ennemies created
+int numberOfEnnemiesCreated = START_ENNEMIES_NUMBER;
 //! The score of the player
 int playerScore = START_SCORE;
 //! The number of ennemies left
@@ -254,7 +257,7 @@ void displayGame() {
     // We swap the OpenGL buffer
     glutSwapBuffers();
 
-    if (numberOfEnnemiesLeft == 0 && numberOfItemsLeft == 0) {
+    if (numberOfEnnemiesLeft == 0 && numberOfItemsLeft == 0 && numberOfEnnemiesCreated == TOTAL_ENNEMIES_NUMBER) {
         setScore(playerScore);
         playerScore = START_SCORE;
         changeGameStatus(END_GAME_WIN);
@@ -570,12 +573,12 @@ void ennemiesInit() {
     Ennemies *prevEnnemy = NULL;
     Ennemies *ennemy = NULL;
 
-    for (int i = 0; i < ENNEMIES_NUMBER; i++) {
+    for (int i = 0; i < START_ENNEMIES_NUMBER; i++) {
         ennemy = malloc(sizeof(Ennemies));
         ennemy->ennemy = initializeCharacter("ennemi", 
             15 + (rand() % 15), 
-            15 + (rand() % 15), 
-            (i * ((WINDOW_WIDTH * 2) / ENNEMIES_NUMBER)), 
+            15 + (rand() % 15),
+            (i * ((WINDOW_WIDTH * 2) / START_ENNEMIES_NUMBER)), 
             (WINDOW_WIDTH * 2) + 50,  126.0f, 133.0f);
         addCharacterTexture(ennemy->ennemy, "ennemi-1-left", "left");
         addCharacterTexture(ennemy->ennemy, "ennemi-1-right", "right");
@@ -748,7 +751,11 @@ void itemsDisplay() {
     Items *displayItem = items;
 
     while (displayItem != NULL) {
-        if (displayItem->item->scoreValue != 0) {
+        if (displayItem->item->scoreValue != 0 && displayItem->item->life > 0) {
+            // At each display, we decrease the life of the item. With this the player need to pickup the
+            //  item in a certain amount of time
+            displayItem->item->life--;
+            
             glBindTexture(GL_TEXTURE_2D, displayItem->item->textureId);
 
             // Transform x/y position in pixel of the character in OpenGL (0,0) center position
@@ -784,17 +791,19 @@ void itemsPickup() {
     Items *pickItem = items;
 
     while (pickItem != NULL) {
-        // We check if Bubble pick the item
-        if (isHit(pickItem->item->hitbox, bubble->hitbox)) {
-            playerScore += pickItem->item->scoreValue;
-            // We change the score of the item pick
-            pickItem->item->scoreValue = 0;
-        }
-        // We check if Bobble pick the item
-    if (bobble != NULL && isHit(pickItem->item->hitbox, bobble->hitbox)) {
-            playerScore += pickItem->item->scoreValue;
-            // We change the score of the item pick
-            pickItem->item->scoreValue = 0;
+        if (pickItem->item->life > 0) {
+            // We check if Bubble pick the item
+            if (isHit(pickItem->item->hitbox, bubble->hitbox)) {
+                playerScore += pickItem->item->scoreValue;
+                // We change the score of the item pick
+                pickItem->item->scoreValue = 0;
+            }
+            // We check if Bobble pick the item
+            if (bobble != NULL && isHit(pickItem->item->hitbox, bobble->hitbox)) {
+                playerScore += pickItem->item->scoreValue;
+                // We change the score of the item pick
+                pickItem->item->scoreValue = 0;
+            }
         }
 
         pickItem = pickItem->next;
@@ -892,7 +901,23 @@ void lifeDisplayBobble() {
         glPopMatrix();
     }
 }
-//! Clear the game informa
+//! Create more ennemies
+void popEnnemiTimerGame() {
+    if (numberOfEnnemiesCreated < TOTAL_ENNEMIES_NUMBER) {
+        Ennemies* ennemy = malloc(sizeof(Ennemies));
+        ennemy->ennemy = initializeCharacter("ennemi", 
+            15 + (rand() % 15), 
+            15 + (rand() % 15),
+            (80 + (rand() % 80)), 
+            (WINDOW_WIDTH * 2) + 50,  126.0f, 133.0f);
+        addCharacterTexture(ennemy->ennemy, "ennemi-1-left", "left");
+        addCharacterTexture(ennemy->ennemy, "ennemi-1-right", "right");
+        ennemy->next = ennemies;
+        ennemies = ennemy;
+        numberOfEnnemiesCreated++;
+    }
+}
+//! Clear the game information
 void clearGameInformation() {
     bullets = NULL;
     ennemies = NULL;
@@ -905,4 +930,7 @@ void clearGameInformation() {
     for (int i = 0; i < BUFFER_SIZE; i++) {
         keyStates[i] = false;
     }
+
+    // We reset the number of ennemies created
+    numberOfEnnemiesCreated = START_ENNEMIES_NUMBER;
 }
