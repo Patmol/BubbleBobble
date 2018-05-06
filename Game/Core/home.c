@@ -307,6 +307,11 @@ void keyboardHome(unsigned char key) {
     }
 }
 //! Handle the special keys
+/*!
+  \param key is an integer for the key press
+  \param x is an integer for the X position of the mouse
+  \param y is an integer for the Y position of the mouse
+*/
 void specialInputHome(int key, int x, int y) {
     switch(key)
     {

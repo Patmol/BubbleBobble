@@ -299,10 +299,20 @@ void keyboardUpGame(unsigned char key) {
     keyStates[key] = false;
 }
 //! Handle the special keys
+/*!
+  \param key is an integer for the key press
+  \param x is an integer for the X position of the mouse
+  \param y is an integer for the Y position of the mouse
+*/
 void specialInputGame(int key, int x, int y) {
     keyStates[NUMBER_OF_KEY + key] = true;
 }
 //! Handle the special keys
+/*!
+  \param key is an integer for the key release
+  \param x is an integer for the X position of the mouse
+  \param y is an integer for the Y position of the mouse
+*/
 void specialInputUpGame(int key, int x, int y) {
     keyStates[NUMBER_OF_KEY + key] = false;
 }

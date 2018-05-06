@@ -54,8 +54,18 @@ void keyboardGame(unsigned char key);
 */
 void keyboardUpGame(unsigned char key);
 //! Handle the special keys
+/*!
+  \param key is an integer
+  \param x is an integer
+  \param y is an integer
+*/
 void specialInputGame(int key, int x, int y);
 //! Handle the special keys
+/*!
+  \param key is an integer
+  \param x is an integer
+  \param y is an integer
+*/
 void specialInputUpGame(int key, int x, int y);
 //! Set the number of player
 void setNumberOfPlayer(int);
